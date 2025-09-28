@@ -35,7 +35,9 @@ public class DiscountService implements IDiscountService {
                 .code(request.getCode())
                 .discountName(request.getDiscountName())
                 .description(request.getDescription())
-                .salePercent(request.getSalePercent())
+                .usageLimit(request.getUsageLimit())
+                .discountType(request.getDiscountType())
+                .discountValue(request.getDiscountValue())
                 .build();
 
         Discount savedDiscount = discountRepository.save(discount);
@@ -48,8 +50,6 @@ public class DiscountService implements IDiscountService {
                 .orElseThrow(() -> new AppException(ErrorCode.DISCOUNT_NOT_FOUND));
 
         discount.setDiscountName(request.getDiscountName());
-        discount.setDescription(request.getDescription());
-        discount.setSalePercent(request.getSalePercent());
 
         Discount updatedDiscount = discountRepository.save(discount);
         return modelMapper.map(updatedDiscount, DiscountResponse.class);

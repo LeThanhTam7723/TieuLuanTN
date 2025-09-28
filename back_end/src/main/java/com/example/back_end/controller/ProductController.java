@@ -1,19 +1,31 @@
 package com.example.back_end.controller;
 
+import com.example.back_end.dto.meilisearch.ProductSummaryForSearch;
 import com.example.back_end.dto.request.product.ProductCreationRequest;
 import com.example.back_end.dto.request.product.ProductUpdateRequest;
+import com.example.back_end.dto.response.ApiResponse;
+import com.example.back_end.dto.response.IntrospectResponse;
 import com.example.back_end.dto.response.product.ProductDetailResponse;
 import com.example.back_end.dto.response.product.ProductResponse;
 import com.example.back_end.dto.response.product.ProductSummary;
 import com.example.back_end.dto.response.PageResponse;
+import com.example.back_end.entity.Product;
+import com.example.back_end.repository.ProductRepository;
 import com.example.back_end.service.product.IProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meilisearch.sdk.Client;
+import com.meilisearch.sdk.Config;
+import com.meilisearch.sdk.Index;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -21,6 +33,45 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
     private final IProductService productService;
+    private final Client client;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+
+    @DeleteMapping("/suggest")
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_MANAGER')")
+    public void deleteProduct(@RequestParam String id) {
+        Index index = client.getIndex("products");
+        index.deleteDocument(id);
+    }
+    @PostMapping("/addSuggest")
+    public ApiResponse<List<ProductSummaryForSearch>> addProduct(Pageable pageable) throws JsonProcessingException {
+        PageResponse<ProductSummary> products =  productService.getAllProducts(pageable);
+        List<ProductSummaryForSearch> searchProducts = products.getContent().stream().map(p ->
+                ProductSummaryForSearch.builder()
+                        .id(p.getId())
+                        .name(p.getName())
+                        .basePrice(p.getBasePrice())
+                        .brandName(p.getBrandName())
+                        .slug(p.getSlug())
+                        .primaryImageUrl(p.getPrimaryImage() != null ? p.getPrimaryImage().getImageUrl() : null)
+                        .genderName(p.getGenderName())
+                        .featured(p.isFeatured())
+                        .active(p.isActive())
+                        .build()
+        ).toList();
+
+        Index index = client.getIndex("products");
+        String json = objectMapper.writeValueAsString(searchProducts);
+        index.addDocuments(json); // Bây giờ SDK sẽ serialize được
+
+        return ApiResponse.<List<ProductSummaryForSearch>>builder()
+                .code(1)
+                .result(searchProducts)
+                .message("Added successfully")
+                .build();
+    }
+
 
     /**
      * Method to create a new product
