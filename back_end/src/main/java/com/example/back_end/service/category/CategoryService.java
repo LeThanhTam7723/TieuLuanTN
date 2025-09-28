@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.back_end.dto.response.PageResponse;
 import com.example.back_end.entity.Gender;
 import com.example.back_end.repository.GenderRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -176,7 +178,12 @@ public class CategoryService implements ICategoryService {
     public List<CategoryResponse> getCategoriesByGenderSlug(String genderSlug) {
         Gender gender = genderRepository.findBySlug(genderSlug)
                 .orElseThrow(() -> new AppException(ErrorCode.GENDER_NOT_FOUND));
-        return categoryRepository.findByGender(gender).stream()
+        Gender gender1 = genderRepository.findBySlug("unisex")
+                .orElseThrow(() -> new AppException(ErrorCode.GENDER_NOT_FOUND));
+        List<Gender> genders = new ArrayList<>();
+        genders.add(gender);
+        genders.add(gender1);
+        return categoryRepository.findByGenderIn(genders).stream()
                 .map(categoryMapper::toResponse)
                 .collect(Collectors.toList());
     }
