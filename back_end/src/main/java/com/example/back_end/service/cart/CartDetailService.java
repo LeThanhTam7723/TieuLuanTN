@@ -2,11 +2,13 @@ package com.example.back_end.service.cart;
 
 import com.example.back_end.dto.CartDetailDto;
 import com.example.back_end.dto.request.CartRequest;
-import com.example.back_end.entity.Cart;
-import com.example.back_end.entity.CartDetail;
-import com.example.back_end.entity.ProductVariant;
+import com.example.back_end.dto.response.product.ProductImageSummary;
+import com.example.back_end.dto.response.product.ProductSummary;
+import com.example.back_end.dto.response.product.ProductVariantResponse;
+import com.example.back_end.entity.*;
 import com.example.back_end.exception.AppException;
 import com.example.back_end.exception.ErrorCode;
+import com.example.back_end.mapper.CartMapper;
 import com.example.back_end.repository.CartDetailRepository;
 import com.example.back_end.repository.CartRepository;
 import com.example.back_end.repository.ProductVariantRepository;
@@ -31,6 +33,7 @@ public class CartDetailService implements ICartService{
     private final IProductVariantService productService;
     private final ModelMapper modelMapper;
     private final ProductVariantRepository variantRepository;
+    private final CartMapper cartMapper;
     @Override
     public void updateCartItem(CartRequest request) {
         Cart cart = cartRepository.findByUser_IdAndIsOrdered(request.getIdUser(), false)
@@ -71,6 +74,7 @@ public class CartDetailService implements ICartService{
     @Override
     public List<CartDetailDto> listCartDetail(Long idUser) {
         List<CartDetail> list = new ArrayList<>();
+        List<CartDetailDto> listDto = new ArrayList<>();
         Cart cart = cartRepository.findByUser_IdAndIsOrdered(idUser, false)
                 .orElseGet(() -> {
                     Cart newOne = new Cart();
@@ -81,9 +85,43 @@ public class CartDetailService implements ICartService{
                 });
         if(cart.getId() != null){
             list = cartDetailRepository.findAllByIdCart(cart);
+            list.forEach(d -> {
+                System.out.println("Images: " + d.getIdProduct().getProduct().getImages().size());
+                d.getIdProduct().getProduct().getImages().stream()
+                        .filter(ProductImage::isPrimary) // hoặc img -> img.isPrimary() nếu không có getter
+                        .forEach(img -> System.out.println("Primary Image URL: " + img.getImageUrl()));
+            });
         }
-        return list.stream()
-                .map(cartDetail -> modelMapper.map(cartDetail, CartDetailDto.class))
+//        listDto = list.stream()
+//                .map(cartDetail -> modelMapper.map(cartDetail, CartDetailDto.class))
+//                .collect(Collectors.toList());
+        listDto = list.stream()
+                .map(cartDetail -> {
+                    ProductVariantResponse variantResponse = modelMapper.map(cartDetail.getIdProduct(), ProductVariantResponse.class);
+
+                    // Lấy ảnh chính
+                    Product product = cartDetail.getIdProduct().getProduct();
+                    if (product != null && product.getImages() != null) {
+                        product.getImages().stream()
+                                .filter(ProductImage::isPrimary)
+                                .findFirst()
+                                .ifPresent(primaryImage -> {
+                                    ProductSummary productSummary = variantResponse.getProduct();
+                                    if (productSummary != null) {
+                                        productSummary.setPrimaryImage(
+                                                modelMapper.map(primaryImage, ProductImageSummary.class)
+                                        );
+                                    }
+                                });
+                    }
+
+                    CartDetailDto dto = new CartDetailDto();
+                    dto.setId(cartDetail.getId());
+                    dto.setQuantity(cartDetail.getQuantity());
+                    dto.setProduct(variantResponse);
+                    return dto;
+                })
                 .collect(Collectors.toList());
+        return listDto;
     }
 }

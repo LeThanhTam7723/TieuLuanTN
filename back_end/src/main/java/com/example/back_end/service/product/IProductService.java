@@ -28,6 +28,7 @@ public interface IProductService {
     boolean existsBySlug(String slug);
 
     PageResponse<ProductSummary> getAllProducts(Pageable pageable);
+    PageResponse<ProductSummary> getProductsByBrandSlug(String slug,Pageable pageable);
 
     PageResponse<ProductSummary> getFeaturedProducts(Pageable pageable);
 

@@ -93,4 +93,8 @@ public class DiscountController {
     public ResponseEntity<DiscountResponse> getDiscountById(@PathVariable Long id) {
         return ResponseEntity.ok(discountService.getDiscountById(id));
     }
+    @GetMapping("/activated")
+    public ResponseEntity<List<DiscountResponse>> getAllDiscountsByActiveTrue() {
+        return ResponseEntity.ok(discountService.findByActive(true));
+    }
 }

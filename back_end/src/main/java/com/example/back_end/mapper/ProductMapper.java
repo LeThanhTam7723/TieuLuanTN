@@ -1,5 +1,6 @@
 package com.example.back_end.mapper;
 
+import com.example.back_end.config.ImageMapperUtil;
 import com.example.back_end.dto.BrandDto;
 import com.example.back_end.dto.ColorDto;
 import com.example.back_end.dto.SizeDto;
@@ -13,7 +14,7 @@ import java.util.List;
 @Mapper(componentModel = "spring",
         uses = {BrandMapper.class, GenderMapper.class,
                 CategoryMapper.class, ProductImageMapper.class,
-                ProductVariantMapper.class})
+                ProductVariantMapper.class, ImageMapperUtil.class})
 public interface ProductMapper {
 
     // CREATE
@@ -49,26 +50,27 @@ public interface ProductMapper {
 
     @Mapping(target = "brandName", source = "brand.name")
     @Mapping(target = "genderName", source = "gender.name")
-    @Mapping(target = "primaryImage", expression = "java(findPrimaryImage(product.getImages()))")
+//    @Mapping(target = "primaryImage", expression = "java(findPrimaryImage(product.getImages()))")
+    @Mapping(target = "primaryImage", source = "images", qualifiedByName = "findPrimaryImage")
     ProductSummary toSummary(Product product);
 
     // LIST MAPPINGS
     List<ProductSummary> toSummaryList(List<Product> products);
 
     // CUSTOM MAPPING LOGIC
-    @Named("findPrimaryImage")
-    default ProductImageSummary findPrimaryImage(List<ProductImage> images) {
-        if (images == null || images.isEmpty()) {
-            return null;
-        }
-        return images.stream()
-                .filter(ProductImage::isPrimary)
-                .findFirst()
-                .map(image -> ProductImageSummary.builder()
-                        .id(image.getId())
-                        .imageUrl(image.getImageUrl())
-                        .altText(image.getAltText())
-                        .build())
-                .orElse(null);
-    }
+//    @Named("findPrimaryImage")
+//    default ProductImageSummary findPrimaryImage(List<ProductImage> images) {
+//        if (images == null || images.isEmpty()) {
+//            return null;
+//        }
+//        return images.stream()
+//                .filter(ProductImage::isPrimary)
+//                .findFirst()
+//                .map(image -> ProductImageSummary.builder()
+//                        .id(image.getId())
+//                        .imageUrl(image.getImageUrl())
+//                        .altText(image.getAltText())
+//                        .build())
+//                .orElse(null);
+//    }
 }

@@ -180,6 +180,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByBrand(brandId));
     }
 
+    @GetMapping("/brand/slug/{slug}")
+    public ResponseEntity<PageResponse<ProductSummary>> getProductsByBrandSlug(@PathVariable String slug,Pageable pageable) {
+        return ResponseEntity.ok(productService.getProductsByBrandSlug(slug,pageable));
+    }
+
     /**
      * Method to get products by gender name
      *

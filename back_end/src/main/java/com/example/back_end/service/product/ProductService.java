@@ -162,6 +162,21 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public PageResponse<ProductSummary> getProductsByBrandSlug(String slug,Pageable pageable) {
+        Page<Product> productPage = productRepository.findByBrand_SlugAndActiveTrue(slug,pageable);
+        return PageResponse.<ProductSummary>builder()
+                .content(productPage.getContent().stream()
+                        .map(productMapper::toSummary)
+                        .toList())
+                .pageNo(productPage.getNumber())
+                .pageSize(productPage.getSize())
+                .totalElements(productPage.getTotalElements())
+                .totalPages(productPage.getTotalPages())
+                .last(productPage.isLast())
+                .build();
+    }
+
+    @Override
     public PageResponse<ProductSummary> getFeaturedProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findByFeaturedTrueAndActiveTrue(pageable);
         return PageResponse.<ProductSummary>builder()

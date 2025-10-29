@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface IDiscountService {
     Discount findByCode(String code);
+
+    List<DiscountResponse> findByActive(Boolean active);
     
     DiscountResponse createDiscount(DiscountCreationRequest request);
     

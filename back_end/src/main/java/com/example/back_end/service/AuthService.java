@@ -64,6 +64,29 @@ public class AuthService {
         }
         return IntrospectResponse.builder().valid(isValue).email(email).build();
     }
+    public AuthenticationResponse refreshToken(IntrospectRequest request) throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getToken());
+
+        var jit = signedJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken =
+                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signedJWT.getJWTClaimsSet().getSubject();
+
+        var user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+//                .expiryTime(token.expiryDate)
+                .build();
+    }
 
     public AuthenticationResponse login (LoginRequest request){
         var user = userRepository.findByEmail(request.getEmail())

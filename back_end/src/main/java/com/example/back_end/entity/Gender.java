@@ -26,4 +26,15 @@ public class Gender extends BaseEntity {
 
     @OneToMany(mappedBy = "gender", cascade = CascadeType.ALL)
     private List<Product> products = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Gender{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", slug='" + slug + '\'' +
+                ", products=" + products +
+                '}';
+    }
 }

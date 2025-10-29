@@ -24,6 +24,21 @@ public class Brand extends BaseEntity {
 
     private String website;
 
+    @Column(nullable = false, unique = true)
+    private String slug;
+
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
     private List<Product> products = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Brand{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", website='" + website + '\'' +
+                ", slug='" + slug + '\'' +
+                ", products=" + products +
+                '}';
+    }
 }

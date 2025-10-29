@@ -180,6 +180,7 @@ public class CategoryService implements ICategoryService {
                 .orElseThrow(() -> new AppException(ErrorCode.GENDER_NOT_FOUND));
         Gender gender1 = genderRepository.findBySlug("unisex")
                 .orElseThrow(() -> new AppException(ErrorCode.GENDER_NOT_FOUND));
+        System.out.println(gender1.getId());
         List<Gender> genders = new ArrayList<>();
         genders.add(gender);
         genders.add(gender1);

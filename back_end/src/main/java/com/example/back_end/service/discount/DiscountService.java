@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,18 @@ public class DiscountService implements IDiscountService {
     public Discount findByCode(String code) {
         return discountRepository.findByCode(code);
     }
+
+    @Override
+    public List<DiscountResponse> findByActive(Boolean active) {
+        List<Discount> discounts = discountRepository.findByActive(active);
+        if (discounts == null) {
+            return new ArrayList<>();
+        }
+        return discounts.stream()
+                .map(discount -> modelMapper.map(discount, DiscountResponse.class))
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public DiscountResponse createDiscount(DiscountCreationRequest request) {
