@@ -1,0 +1,506 @@
+{
+  "homepage": {
+    "loading_page": {
+      "title": "Loading homepage...",
+      "subtitle": "Please wait a moment"
+    },
+    "hero_banner": {
+      "slide1_title": "WELCOME TO MOGGO STORE!",
+      "slide1_subtitle": "Limited quantity: 200",
+      "slide1_description": "Discover amazing fashion items at incredible prices",
+      "slide1_cta": "SHOP NOW",
+      "slide2_title": "NEW COLLECTION",
+      "slide2_subtitle": "2025 Fashion Trends",
+      "slide2_description": "Unique designs, high quality from leading designers",
+      "slide2_cta": "EXPLORE",
+      "slide3_title": "SALE UP TO 50%",
+      "slide3_subtitle": "Massive Discounts",
+      "slide3_description": "A golden opportunity to own your favorite items at unbeatable prices",
+      "slide3_cta": "SHOP"
+    },
+    "categories": {
+      "men_wear_title": "MEN WEAR",
+      "men_wear_description": "Elegant, modern style",
+      "men_wear_cta": "SHOP NOW",
+      "women_active_title": "WOMEN WEAR",
+      "women_active_description": "Dynamic, confident, charming",
+      "women_active_cta": "SHOP NOW"
+    },
+    "casualwear_banner": {
+      "title": "CASUALWEAR COLLECTION",
+      "subtitle": "Use code COOLNEW to get 30k off orders from 299k",
+      "description": "Casual fashion collection with youthful, dynamic style",
+      "cta": "SHOP NOW"
+    },
+    "featured_products": {
+      "section_tag": "Trending",
+      "section_title": "Featured products",
+      "section_description": "Discover the most loved products from the fashion community",
+      "error_message": {
+        "title": "An error occurred",
+        "description": "Could not load featured products.",
+        "retry_button": "Retry"
+      },
+      "no_products_message": {
+        "title": "No featured products yet",
+        "description": "Check back later to discover amazing products"
+      },
+      "scroll_left_aria": "Scroll left",
+      "scroll_right_aria": "Scroll right"
+    }
+  },
+  "verificationPage": {
+    "title": "Verify your email",
+    "description1": "We have sent a verification link to",
+    "description2": "Please check your inbox and click the link to verify your account",
+    "resendEmail": "Resend verification email"
+  },
+  "login": {
+    "title": {
+      "login": "Login",
+      "forgotPassword": "Forgot password",
+      "verifyEmail": "Verify Email"
+    },
+    "subtitle": {
+      "signIn": "Sign in to your account",
+      "resetPassword": "Enter your email to reset password",
+      "checkEmail": "Check your email for verification"
+    },
+    "emailLabel": "Email address",
+    "emailPlaceholder": "Enter email address",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter password",
+    "rememberMe": "Remember me",
+    "forgotPasswordLink": "Forgot your password?",
+    "signInButton": "Sign in",
+    "sendEmailButton": "Send Email",
+    "orContinueWith": "Or continue with",
+    "noAccountSignUp": "Don't have an account? Sign up",
+    "backToSignIn": "Back to sign in",
+    "haveAccountSignIn": "Already have an account? Sign in",
+    "errors": {
+      "emailInvalid": "Please enter a valid email address",
+      "passwordInvalid": "Please enter the password",
+      "emailNotRegistered": "Email not registered",
+      "emailExists": "Email already exists",
+      "unknownError": "An unknown error occurred."
+    },
+    "errorPrefix": "Error: "
+  },
+  "register": {
+    "title": "Create your account",
+    "fullNameLabel": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "usernameLabel": "User name",
+    "usernamePlaceholder": "Enter your name account",
+    "phoneNumberLabel": "Phone Number",
+    "phoneNumberPlaceholder": "Enter phone number",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter password",
+    "confirmPasswordLabel": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm the password",
+    "termsAndConditions": "I accept the terms and conditions",
+    "signUpButton": "Sign up",
+    "haveAccountSignIn": "Already have an account? Sign in",
+    "passwordStrength": {
+      "enterPassword": "Enter password",
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong"
+    },
+    "errors": {
+      "emailInvalid": "Please enter a valid email address",
+      "passwordInvalid": "Password must be at least 8 characters long and include uppercase, number, and special character",
+      "passwordsMismatch": "Passwords do not match",
+      "fullNameRequired": "Full name is required",
+      "usernameRequired": "Username is required",
+      "phoneRequired": "Phone number is required"
+    }
+  },
+  "verification_page": {
+    "verify_your_email": "Verify your email",
+    "we_have_sent_a_verification_link_to": "We have sent a verification link to",
+    "please_check_your_inbox": "Please check your inbox and click the link to verify your account",
+    "resend_verification_email": "Resend verification email"
+  },
+  "send_email_page": {
+    "sending_verify": "Sending Verify",
+    "email_address": "Email address",
+    "enter_email_address": "Enter email address",
+    "send_reset_link": "Send reset link",
+    "back_to_sign_in": "Back to sign in"
+  },
+  "errors": {
+    "please_enter_a_valid_email_address": "Please enter a valid email address",
+    "password_must_be_at_least_8_characters": "Password must be at least 8 characters long and include uppercase, number, and special character",
+    "passwords_do_not_match": "Passwords do not match",
+    "full_name_is_required": "Full name is required",
+    "username_is_required": "Username is required",
+    "phone_number_is_required": "Phone number is required",
+    "please_accept_terms_and_conditions": "Please accept terms and conditions"
+  },
+  "password_strength": {
+    "enter_password": "Enter password",
+    "weak": "Weak",
+    "fair": "Fair",
+    "good": "Good",
+    "strong": "Strong"
+  },
+  "profile": {
+    "header": {
+      "title": "Profile",
+      "description": "Manage your information and account"
+    },
+    "avatarSection": {
+      "saveImage": "Save Image",
+      "fileSizeError": "File size cannot exceed 5MB",
+      "fileTypeError": "File must be an image",
+      "selectNewImage": "Please select a new image",
+      "updateAvatarSuccess": "Avatar updated successfully",
+      "updateAvatarFailed": "Failed to update avatar"
+    },
+    "quickActions": {
+      "changePassword": "Change Password",
+      "logout": "Logout"
+    },
+    "personalInfo": {
+      "title": "Personal Information",
+      "fullname": {
+        "label": "Full Name",
+        "placeholder": "Enter your full name",
+        "required": "Please enter your full name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Your email",
+        "note": "Email cannot be changed"
+      },
+      "phone": {
+        "label": "Phone Number",
+        "placeholder": "Enter your phone number",
+        "required": "Please enter your phone number",
+        "invalid": "Invalid phone number"
+      },
+      "saveChanges": "Save Changes",
+      "saving": "Saving...",
+      "updateSuccess": "Information updated successfully",
+      "updateFailed": "Failed to update information"
+    }
+  },
+  "passwordModal": {
+    "title": "Change Password",
+    "currentPassword": {
+      "label": "Current Password"
+    },
+    "newPassword": {
+      "label": "New Password"
+    },
+    "confirmNewPassword": {
+      "label": "Confirm New Password"
+    },
+    "passwordMismatch": "New passwords do not match",
+    "changePasswordSuccess": "Password changed successfully",
+    "changePasswordFailed": "Failed to change password",
+    "cancel": "Cancel",
+    "changePasswordBtn": "Change Password"
+  },
+  "session": {
+    "expired": "Session expired, please log in again",
+    "loadingProfileFailed": "Failed to load user information"
+  },
+  "header": {
+    "change_language_vi": "Tiếng Việt",
+    "change_language_en_us": "English (US)",
+    "top_bar": {
+      "free_shipping": "Free shipping from 500k",
+      "login_button": "Login"
+    },
+    "user_menu": {
+      "profile_info": "Personal Info",
+      "order_history": "Order History",
+      "admin_section_title": "Management",
+      "admin_dashboard_link": "Go to Admin Page",
+      "logout_button": "Logout",
+      "logout_success_toast": "Logged out successfully"
+    },
+    "search": {
+      "placeholder": "Search products...",
+      "speech_not_supported": "Speech recognition is not supported in your browser"
+    },
+    "mobile_menu": {
+      "title": "Menu",
+      "login_button": "Login"
+    },
+    "categories": {
+      "men_wear": "Men's Wear",
+      "women_wear": "Women's Wear",
+      "brand_wear": "Local brands"
+    }
+  },
+  "category_list": {
+    "hero": {
+      "title_prefix": "Fashion",
+      "description": "Explore a modern fashion collection with exquisite designs and superior quality"
+    },
+    "loading": {
+      "message": "Loading categories..."
+    },
+    "error_state": {
+      "heading": "An error occurred",
+      "message": "Could not load categories. Please try again later.",
+      "retry_button": "Retry"
+    },
+    "empty_state": {
+      "heading": "No categories yet",
+      "message_prefix": "Currently, there are no categories for",
+      "message_suffix": "fashion"
+    },
+    "categories_section": {
+      "title": "Product Categories",
+      "count_suffix": "categories available",
+      "filter_button": "Filter",
+      "view_button": "View"
+    },
+    "gender_names": {
+      "nam": "Men's",
+      "nu": "Women's",
+      "unisex": "Unisex",
+      "tre-em": "Kids'"
+    },
+    "errors": {
+      "loading_categories_log": "Error loading categories:"
+    }
+  },
+  "product_info": {
+    "contact_for_price": "Contact for price",
+    "reviews_count": "{{count}} review(s)",
+    "stock_status": {
+      "in_stock": "In Stock",
+      "out_of_stock": "Out of Stock"
+    },
+    "shipping_return_guarantees": {
+      "free_shipping_title": "Free Shipping",
+      "free_shipping_description": "Orders over 500k",
+      "easy_returns_title": "Easy Returns",
+      "easy_returns_description": "Within 30 days",
+      "genuine_warranty_title": "Genuine Warranty",
+      "genuine_warranty_description": "12 months",
+      "secure_payment_title": "Secure Payment",
+      "secure_payment_description": "100% Secure"
+    }
+  },
+  "product_variant_selector": {
+    "contact_for_price": "Contact for price",
+    "color_selection_title": "Color",
+    "color_selected": "Selected:",
+    "out_of_stock_parentheses": "(Out of stock)",
+    "size_selection_title": "Size",
+    "out_of_stock_no_stock": "Out of stock",
+    "out_of_stock_short": "(Out)",
+    "price_label": "Price:",
+    "stock_label": "Stock:",
+    "product_unit": "product(s)",
+    "weight_label": "Weight:",
+    "weight_unit": "kg",
+    "sku_label": "SKU:",
+    "size_guide_button": "📏 Size guide"
+  },
+  "product_actions": {
+    "quantity_label": "Quantity",
+    "quantity_remaining": "(Remaining: {{stockQuantity}} product(s))",
+    "add_to_cart_button": "Add to Cart",
+    "add_to_cart_loading": "Adding...",
+    "buy_now_button": "Buy Now",
+    "buy_now_loading": "Processing...",
+    "favorite_button_liked": "Liked",
+    "favorite_button_unliked": "Favorite",
+    "share_button": "Share",
+    "messages": {
+      "add_to_cart_success": "Product added to cart!",
+      "add_to_cart_fail": "Failed to add to cart",
+      "check_favorite_error": "Error checking favorite status:",
+      "update_favorite_error": "Error updating favorite:",
+      "add_to_cart_error": "Error adding to cart:",
+      "buy_now_error": "Error buying now:"
+    },
+    "login_required": "Please log in"
+  },
+  "facebook_comment": {
+    "title": "Facebook comments"
+  },
+  "product_detail": {
+    "description": "Product description",
+    "review": "Reviews",
+    "review_comment": "There is no review yet."
+  },
+  "product_list": {
+    "product_heading": "Product",
+    "product_subheading": "product(s)",
+    "order_by": "Order by:",
+    "order_newest": "Newest",
+    "order_price_asc": "Price Ascending",
+    "order_price_desc": "Price Descending",
+    "empty": "Can not find any products",
+    "color": "Color",
+    "size": "Size",
+    "price": "Price Range",
+    "apply_button": "Apply",
+    "price_filter": {
+      "loading_rates": "Loading exchange rates...",
+      "below_300k": "Below $12",
+      "300k_500k": "$12 - $20",
+      "500k_1m": "$20 - $26",
+      "above_1m": "Above $26",
+      "invalid_min_price": "Invalid minimum price",
+      "invalid_max_price": "Invalid maximum price",
+      "negative_price_error": "Price cannot be negative",
+      "min_greater_than_max_error": "Min price cannot be greater than max price"
+    }
+  },
+  "product_card": {
+    "quick_view": "Quick view",
+    "add_to_cart": "Add to cart",
+    "adding_to_cart": "Adding...",
+    "review_count": "reviews",
+    "in_stock": "In stock",
+    "remove_from_wishlist": "Remove from wishlist",
+    "add_to_wishlist": "Add to wishlist"
+  },
+  "cart": {
+    "continue_shopping": "Continue Shopping",
+    "title": "Cart",
+    "in_your_cart": "in your cart",
+    "your_items": "Your Items",
+    "empty_cart": "Your cart is empty.",
+    "add_some_items": "Add items to your cart.",
+    "shopping_button": "Start Shopping",
+    "clear_button": "Clear Cart",
+    "order_summary": "Order Summary",
+    "order_subtotal": "Subtotal:",
+    "order_tax": "Tax (10%):",
+    "discount": "Discount",
+    "order_total": "Total",
+    "promo_code": "Promo code",
+    "promo_apply": "Apply",
+    "promo_code_applied": "Promo code has been applied!",
+    "promo_code_heading": "Try: \"SAVE20\" or \"WELCOME10\"",
+    "checkout_span": "Secure checkout",
+    "order_shipping_heading": "Free shipping over 20$",
+    "order_return_heading": "30-day return policy"
+  },
+  "wishlist": {
+    "title": "Your Wishlist",
+    "heading": "inside wishlist",
+    "favorite": "Favorite",
+    "empty_text": "Your wishlist is empty",
+    "empty_subtext": "Discover amazing products and add them to your wishlist",
+    "shopping_button": "Start Shopping",
+    "add_to_cart": "Add to cart",
+    "remove": "Remove",
+    "removing": "Removing..."
+
+  },
+  "order_history_page": {
+    "header": {
+      "title": "Order History",
+      "description": "Track and manage your orders"
+    },
+    "search_filter": {
+      "placeholder": "Search orders by product name...",
+      "all_statuses": "All statuses",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "shipping": "Shipping",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "no_orders_found": {
+      "title": "No orders found",
+      "message": "Try changing your search filters"
+    },
+    "order_card": {
+      "order_id": "Order ID",
+      "payment_method": {
+        "vn_pay": "VN PAY",
+        "cod": "COD"
+      },
+      "status": {
+        "completed": "Completed",
+        "processing": "Processing",
+        "cancelled": "Cancelled",
+        "shipping": "Shipping"
+      },
+      "products_ordered": "Products ordered",
+      "size": "Size",
+      "review": "Review",
+      "total_amount": "Total amount",
+      "buy_again": "Buy Again",
+      "details": "Details",
+      "cancel_order": "Cancel order"
+    },
+    "cancel_modal": {
+      "title": "Confirm Order Cancellation",
+      "reason_prompt": "Please select a reason for cancellation:",
+      "select_reason": "Select a reason",
+      "reasons": {
+        "change_address": "Change of delivery address",
+        "change_payment": "Change of payment method",
+        "found_better_price": "Found a better product price",
+        "changed_mind": "Changed my mind",
+        "other_reason": "Other reason"
+      },
+      "close": "Close",
+      "confirm_cancel": "Confirm Cancellation"
+    },
+    "review_modal": {
+      "title": "Rate Product",
+      "share_experience_placeholder": "Share your experience with the product...",
+      "cancel": "Cancel",
+      "submit_review": "Submit Review"
+    }
+  },
+  "footer": {
+    "benefits": {
+      "free_shipping": "Free shipping from 500k",
+      "genuine_warranty": "Genuine Warranty",
+      "secure_payment": "Secure Payment"
+    },
+    "brand_description": "Redefining modern fashion with unique designs, high quality, and the latest fashion trends from around the world.",
+    "connect_us": "Connect with us",
+    "product_categories": "Product Categories",
+    "quick_links": {
+      "men_wear": "Men's Wear",
+      "women_wear": "Women's Wear",
+      "sale_off": "Sale Off",
+      "collections": "Collections"
+    },
+    "customer_support": "Customer Support",
+    "support_links": {
+      "return_policy": "Return Policy",
+      "buying_guide": "Buying Guide",
+      "privacy_policy": "Privacy Policy",
+      "terms_of_use": "Terms of Use"
+    },
+    "contact_info": {
+      "address": "123 ABC Street, XYZ District, HCMC",
+      "opening_hours": "8:00 AM - 10:00 PM (Mon - Sun)"
+    },
+    "newsletter": {
+      "title": "Subscribe to Newsletter",
+      "description": "Receive updates on new products, special offers, and the latest fashion trends",
+      "placeholder": "Enter your email",
+      "subscribe_success": "Thank you for subscribing!"
+    },
+    "vip_member": {
+      "title": "VIP Member",
+      "description": "Become a VIP member to receive special offers up to 30% off"
+    },
+    "bottom_bar": {
+      "all_rights_reserved": "All rights reserved.",
+      "made_with": "Made with",
+      "in_vietnam": "in Vietnam",
+      "payment_methods": "Payment Methods:"
+    }
+  }
+}
