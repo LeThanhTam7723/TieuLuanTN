@@ -1,10 +1,12 @@
 package com.example.back_end.service.cart;
 
 import com.example.back_end.dto.CartDetailDto;
-import com.example.back_end.dto.request.CartRequest;
+import com.example.back_end.dto.request.cart.AddCartRequest;
+import com.example.back_end.dto.request.cart.CartRequest;
 import com.example.back_end.dto.response.product.ProductImageSummary;
 import com.example.back_end.dto.response.product.ProductSummary;
 import com.example.back_end.dto.response.product.ProductVariantResponse;
+import com.example.back_end.dto.response.user.UserResponse;
 import com.example.back_end.entity.*;
 import com.example.back_end.exception.AppException;
 import com.example.back_end.exception.ErrorCode;
@@ -34,30 +36,24 @@ public class CartDetailService implements ICartService{
     private final ModelMapper modelMapper;
     private final ProductVariantRepository variantRepository;
     private final CartMapper cartMapper;
+
     @Override
     public void updateCartItem(CartRequest request) {
-        Cart cart = cartRepository.findByUser_IdAndIsOrdered(request.getIdUser(), false)
-                .orElseGet(() -> {
-                    Cart newOne = new Cart();
-                    newOne.setUser(userService.getUserById(request.getIdUser()));
-                    newOne.setOrdered(false);
-                    cartRepository.save(newOne);
-                    return newOne;
-                });
+        UserResponse currentUser = userService.getCurrentUser();
+//        Cart cart = cartRepository.findByUser_IdAndIsOrdered(currentUser.getId(), false)
+//                .orElseGet(() -> {
+//                    Cart newOne = new Cart();
+//                    newOne.setUser(userService.getUserById(currentUser.getId()));
+//                    newOne.setOrdered(false);
+//                    cartRepository.save(newOne);
+//                    return newOne;
+//                });
 //        ProductVariant product = productService.getById(request.getIdProduct());
-        ProductVariant product = variantRepository.findById(request.getIdProduct())
-                .orElseThrow(() -> new AppException(ErrorCode.VARIANT_NOT_FOUND));
-        System.out.println(product.getId());
-        CartDetail cartDetail = cartDetailRepository.findByIdCartAndIdProduct_Id(cart, product.getId())
-                .orElseGet(() -> {
-                    System.out.println("Ko tìm thấy");
-                    CartDetail newCartDetail = new CartDetail();
-                    newCartDetail.setIdCart(cart);
-                    newCartDetail.setIdProduct(product);
-                    newCartDetail.setQuantity(0);
-                    cartDetailRepository.save(newCartDetail);
-                    return newCartDetail;
-                });
+//        ProductVariant product = variantRepository.findById(request.getIdProduct())
+//                .orElseThrow(() -> new AppException(ErrorCode.VARIANT_NOT_FOUND));
+//        System.out.println(product.getId());
+        CartDetail cartDetail = cartDetailRepository.findById(request.getIdCartItem())
+                .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_EXISTED));
         System.out.println(cartDetail.getIdProduct().getId());
         if (cartDetail.getId() != null) {
             if(request.isAction()){
@@ -69,6 +65,39 @@ public class CartDetailService implements ICartService{
             }
             cartDetailRepository.save(cartDetail);
         }
+    }
+
+    @Override
+    public void addCartItem(AddCartRequest request) {
+        UserResponse currentUser = userService.getCurrentUser();
+        Cart cart = cartRepository.findByUser_IdAndIsOrdered(currentUser.getId(), false)
+                .orElseGet(() -> {
+                    Cart newOne = new Cart();
+                    newOne.setUser(userService.getUserById(currentUser.getId()));
+                    newOne.setOrdered(false);
+                    cartRepository.save(newOne);
+                    return newOne;
+                });
+        ProductVariant product = variantRepository.findById(request.getIdProduct())
+                .orElseThrow(() -> new AppException(ErrorCode.VARIANT_NOT_FOUND));
+        CartDetail cartDetail = cartDetailRepository.findByIdCartAndIdProduct_Id(cart, product.getId())
+                .orElseGet(() -> {
+                    System.out.println("Ko tìm thấy");
+                    CartDetail newCartDetail = new CartDetail();
+                    newCartDetail.setIdCart(cart);
+                    newCartDetail.setIdProduct(product);
+                    newCartDetail.setQuantity(0);
+                    cartDetailRepository.save(newCartDetail);
+                    return newCartDetail;
+                });
+        cartDetail.setQuantity(cartDetail.getQuantity()+ request.getAmount());
+
+        cartDetailRepository.save(cartDetail);
+    }
+
+    @Override
+    public void deleteCartItem(Long idCartItem) {
+        cartDetailRepository.deleteById(idCartItem);
     }
 
     @Override

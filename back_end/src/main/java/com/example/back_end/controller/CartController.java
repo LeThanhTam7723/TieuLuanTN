@@ -1,10 +1,10 @@
 package com.example.back_end.controller;
 
 import com.example.back_end.dto.CartDetailDto;
-import com.example.back_end.dto.request.CartRequest;
+import com.example.back_end.dto.request.cart.AddCartRequest;
+import com.example.back_end.dto.request.cart.CartRequest;
 import com.example.back_end.dto.response.ApiResponse;
 import com.example.back_end.dto.response.user.UserResponse;
-import com.example.back_end.entity.User;
 import com.example.back_end.service.cart.CartDetailService;
 import com.example.back_end.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +19,19 @@ public class CartController {
     private CartDetailService cartDetailService;
     @Autowired
     private  IUserService userService;
-    @PostMapping("/updateItem")
+    @PutMapping("/updateItem")
     public ApiResponse<Void>updateCartItem(@RequestBody CartRequest request){
         cartDetailService.updateCartItem(request);
+        return ApiResponse.<Void>builder().build();
+    }
+    @PostMapping("/addCart")
+    public ApiResponse<Void>addCart(@RequestBody AddCartRequest request){
+        cartDetailService.addCartItem(request);
+        return ApiResponse.<Void>builder().build();
+    }
+    @DeleteMapping("/deleteItem/{id}")
+    public ApiResponse<Void>deleteCartItem(@PathVariable Long id){
+        cartDetailService.deleteCartItem(id);
         return ApiResponse.<Void>builder().build();
     }
     @GetMapping("/listCartItem")

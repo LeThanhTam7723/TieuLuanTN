@@ -51,7 +51,9 @@ public enum ErrorCode {
     STATUS_NOT_FOUND(1031, "Không tìm thấy trạng thái đơn hàng", HttpStatus.NOT_FOUND),
     DISCOUNT_NOT_FOUND(1032, "Không tìm thấy khuyến mãi", HttpStatus.NOT_FOUND),
     DISCOUNT_CODE_EXISTS(1033, "Mã khuyến mãi đã tồn tại", HttpStatus.BAD_REQUEST),
-    ROLE_NOT_EXISTED(1034, "Role not existed", HttpStatus.NOT_FOUND);
+    ROLE_NOT_EXISTED(1034, "Role not existed", HttpStatus.NOT_FOUND),
+    CART_NOT_EXISTED(1035, "Cart not existed", HttpStatus.NOT_FOUND),
+    CART_ITEM_NOT_EXISTED(1036, "Cart item not existed", HttpStatus.NOT_FOUND);
 
     private final int code;
     private final String message;
