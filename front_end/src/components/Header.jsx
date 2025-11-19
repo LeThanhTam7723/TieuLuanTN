@@ -12,11 +12,11 @@ import { useAuth } from "../contexts/AuthContext.jsx";
 
 const Header = () => {
     const {t, i18n} = useTranslation();
-
+    const {user, isAdmin, loading} = useAuth();
     const {wishlistItems, clearWishlist, setSession, cartItems, clearCart} = useContext(FavoriteContext);
     const wishlistCount = wishlistItems.length;
 
-    console.log(wishlistItems.length);
+    // console.log(wishlistItems.length);
     const [isOpen, setIsOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -30,7 +30,7 @@ const Header = () => {
     const [results, setResults] = useState([]);
     const [isLogin, setIsLogin] = useState(false);
 
-    const {user, isAdmin, loading} = useAuth();
+    
     const navigate = useNavigate();
 
     const cartClick = () => {
@@ -78,6 +78,7 @@ const Header = () => {
             if (currentSession) {
                 setSession(currentSession);
                 setIsLogin(true);
+                console.log("User:", user);
 
                 const userRoles = user?.roles || [];
                 console.log("User roles:", userRoles);
@@ -131,7 +132,7 @@ const Header = () => {
             clearCart();
             localStorage.removeItem("session");
             setIsLogin(false);
-            setIsAdmin(false);
+            // setIsAdmin(false);
             clearWishlist();
             toast.success(t('header.user_menu.logout_success_toast'));
             navigate('/auth/login');
@@ -306,6 +307,7 @@ const Header = () => {
                                                 <button
                                                     onClick={() => {
                                                         setIsOpen(false);
+                                                        clearWishlist();
                                                         handleLogout();
                                                     }}
                                                     className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-all duration-200"
@@ -332,7 +334,7 @@ const Header = () => {
             </div>
 
             {/* Main Navigation */}
-            <nav className="bg-white/95 py-6">
+            <nav className="bg-white/95 py-3">
                 <div className="container mx-auto px-6">
                     <div className="flex items-center justify-between">
                         {/* Logo */}
@@ -496,7 +498,7 @@ const Header = () => {
                                         </div>
                                     ))}
 
-                                    {isAdmin && (
+                                     {isAdmin && (
                                         <>
                                             <div className="border-t border-gray-200 pt-6 mt-6">
                                                 <span
@@ -513,7 +515,7 @@ const Header = () => {
                                                 ))}
                                             </div>
                                         </>
-                                    )}
+                                    )} 
 
                                     {!isLogin && (
                                         <div className="pt-6 border-t border-gray-200">

@@ -3,17 +3,20 @@ import AppRoutes from './routes/AppRoutes'
 import MainLayout from './layouts/MainLayout'
 import {AuthProvider} from "./contexts/AuthContext.jsx";
 import {CurrencyProvider} from "./contexts/CurrencyContext.jsx";
+import { FavoriteProvider } from './contexts/FavoriteContext.jsx';
 
 function App() {
     return (
         <BrowserRouter>
-            <AuthProvider>
-                <CurrencyProvider>
-                    <MainLayout>
-                        <AppRoutes/>
-                    </MainLayout>
-                </CurrencyProvider>
-            </AuthProvider>
+            <FavoriteProvider>
+                <AuthProvider>
+                    <CurrencyProvider>
+                        <MainLayout>
+                            <AppRoutes/>
+                        </MainLayout>
+                    </CurrencyProvider>
+                </AuthProvider>
+            </FavoriteProvider>
         </BrowserRouter>
     )
 }

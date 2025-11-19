@@ -3,9 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import {useTranslation} from "react-i18next";
 import {CurrencyContext} from "../contexts/CurrencyContext";
 import {introspect} from "../API/AuthService";
-import {listCartItem, updateCartItem} from "../API/CartService";
+import {CartService} from "../API/CartService";
 import axiosClient from "../API/axiosClient";
 import {useNavigate} from "react-router-dom";
+import { FavoriteContext } from "../contexts/FavoriteContext";
 
 // Icons as simple SVG components
 const ShoppingCartIcon = () => (
@@ -45,8 +46,7 @@ const TagIcon = () => (
 );
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
-  const session = JSON.parse(localStorage.getItem("session"));
+  const { cartItems,setCartItems } = useContext(FavoriteContext);
   const [selectedItems, setSelectedItems] = useState(new Set([]));
   const [removingItem, setRemovingItem] = useState(null);
 
@@ -72,27 +72,20 @@ const Cart = () => {
     }
   };
 
-  // const updateQuantity = (id, newQuantity) => {
-  //   setCartItems(items =>
-  //     items.map(item =>
-  //       item.id === id ? { ...item, quantity: Math.max(1, newQuantity) } : item
-  //     )
-  //   );
-  // };
   const updateQuantity = async (id,idCartItem, newQuantity, action) => {
     setCartItems(items =>
         items.map(item =>
             item.id === id ? {...item, quantity: Math.max(1, newQuantity)} : item
         )
     );
-    await updateCartItem({
+    await CartService.updateCartItem({
       action: action,
       idCartItem: idCartItem,
       amount: 1
-    }, session.token);
+    });
   };
 
-  const removeItem = (id) => {
+  const removeItem = async (id) => {
     setRemovingItem(id);
     setSelectedItems(prev => {
       const newSet = new Set(prev);
@@ -103,6 +96,7 @@ const Cart = () => {
       setCartItems(items => items.filter(item => item.id !== id));
       setRemovingItem(null);
     }, 300);
+    await CartService.deleteCartItem(id);
   };
 
   const clearCart = () => {
@@ -114,13 +108,19 @@ const Cart = () => {
   const subtotal = selectedCartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const taxAmount = subtotal * tax;
   const total = subtotal + taxAmount;
+  const navigate = useNavigate();
 
   const handleCheckout = () => {
     if (selectedItems.size === 0) {
       alert("Please select at least one item to checkout");
       return;
     }
-    alert(`Proceeding to checkout with ${selectedItems.size} items!\nTotal: $${total.toFixed(2)}`);
+    // alert(`Proceeding to checkout with ${selectedItems.size} items!\nTotal: $${total.toFixed(2)}`);
+    console.log(selectedItems);
+    const selectedItemObjects = cartItems.filter(item => 
+    selectedItems.has(item.id));
+    sessionStorage.setItem("checkoutItems", JSON.stringify(selectedItemObjects));
+    navigate('/payment');
   };
   const checkToken = async (token) => {
     try {
@@ -136,26 +136,26 @@ const Cart = () => {
     convertAndGetDisplayPrice,
     formatCurrency
   } = useContext(CurrencyContext);
-  useEffect(() => {
-    const check = async () => {
-      const session = JSON.parse(localStorage.getItem("session"));
-      if (session && session !== "undefined") {
-        const isValid = await checkToken(session.token);
-        console.log("Token valid:", isValid);
-        if (isValid) {
-          await listCartItem({userId: session.currentUser.id, token: session.token})
-              .then((res) => {
-                const {code, message, result} = res.data;
-                console.log(res.data);
-                setCartItems(result);
-              })
-        } else {
-          setCartItems([]);
-        }
-      }
-    };
-    check();
-  }, []);
+  // useEffect(() => {
+  //   const check = async () => {
+  //     const session = JSON.parse(localStorage.getItem("session"));
+  //     if (session && session !== "undefined") {
+  //       const isValid = await checkToken(session.token);
+  //       console.log("Token valid:", isValid);
+  //       if (isValid) {
+  //         await listCartItem({userId: session.currentUser.id, token: session.token})
+  //             .then((res) => {
+  //               const {code, message, result} = res.data;
+  //               console.log(res.data);
+  //               setCartItems(result);
+  //             })
+  //       } else {
+  //         setCartItems([]);
+  //       }
+  //     }
+  //   };
+  //   check();
+  // }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4">

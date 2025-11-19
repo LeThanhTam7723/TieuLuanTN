@@ -1,34 +1,39 @@
 import axiosClient from "./axiosClient";
 
-const listCartItem = async (body) => {
-    return await axiosClient.get('/cart/listCartItem', {
-        headers: {
-            Authorization: `Bearer ${body.token}`
+const CartService = {
+    listCartItem: async () => {
+        try {
+            const response = await axiosClient.get('/cart/listCartItem');
+            return response;
+        } catch (error) {
+            throw error;
         }
-    });
-}
-
-const updateCartItem = async (body, token) => {
-    return await axiosClient.put('/cart/updateItem', body, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-}
-const addCart = async (body, token) => {
-    return await axiosClient.post('/cart/addCart', body, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-}
-const deleteCartItem = async (id, token) => {
-  return await axiosClient.delete(`/cart/deleteItem/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
     },
-  });
-};
+    updateCartItem: async (body) => {
+        try {
+            const response = await axiosClient.put('/cart/updateItem', body);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
+    addCart: async (body) => {
+        try {
+            const response = await axiosClient.post('/cart/addCart', body);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
+    deleteCartItem: async (id) => {
+        try {
+            const response = await axiosClient.delete(`/cart/deleteItem/${id}`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
 
+}
 
-export { listCartItem, updateCartItem ,addCart,deleteCartItem};
+export {CartService};

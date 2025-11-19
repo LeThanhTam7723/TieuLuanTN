@@ -2,7 +2,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiHeart, FiShoppingBag, FiEye, FiStar } from 'react-icons/fi';
-import { addCart, updateCartItem } from '../../API/CartService';
+import {CartService } from '../../API/CartService';
 import { FavoriteContext } from '../../contexts/FavoriteContext.jsx';
 import { CurrencyContext } from '../../contexts/CurrencyContext.jsx'; // Import CurrencyContext
 import WishlistService from '../../API/WishlistService';
@@ -22,7 +22,7 @@ const ProductCard = ({ product, onClick }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Giá trị session hiện tại:", session)
+    // console.log("Giá trị session hiện tại:", session)
     const checkFavoriteStatus = async () => {
       if (session?.currentUser?.id && product?.id) {
         try {
@@ -47,23 +47,20 @@ const ProductCard = ({ product, onClick }) => {
   };
 
   const handleAddToCart = async (e) => {
-    // e.stopPropagation();
-    // if (session?.currentUser?.id) {
-    //   setIsLoading(true);
-    //   try {
-    //     await addCart({
-    //       idProduct: product.id,
-    //       amount: 1
-    //     }, session.token);
-    //     window.dispatchEvent(new CustomEvent('cartUpdated'));
-    //   } catch (error) {
-    //     console.error('Lỗi thêm vào giỏ hàng:', error);
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    // } else {
-    //   navigate('/auth/login');
-    // }
+    e.stopPropagation();
+    if (session?.currentUser?.id) {
+      setIsLoading(true);
+      try {
+        await CartService.addCart({ idProduct: currentVariant.id, amount: quantity});
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
+      } catch (error) {
+        console.error('Lỗi thêm vào giỏ hàng:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      navigate('/auth/login');
+    }
   };
 
   const handleToggleWishlist = async (e) => {
@@ -139,7 +136,7 @@ const ProductCard = ({ product, onClick }) => {
                 className="flex-1 bg-white/90 backdrop-blur-sm text-gray-900 py-2.5 px-4 rounded-xl font-medium hover:bg-white transition-all duration-200 flex items-center justify-center gap-2"
             >
               <FiEye className="w-4 h-4" />
-              <span className="text-sm">{t("product_card.quick_view")}</span>
+              <span className="text-sm">{t("product_card.buy_now")}</span>
             </button>
             <button
                 onClick={handleAddToCart}

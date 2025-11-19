@@ -11,10 +11,10 @@ function MainLayout() {
 
   return (
     <>
-      <FavoriteProvider>
+      {/* <FavoriteProvider> */}
       {!hideHeaderFooter && <Header/>}
       <AppRoutes />
-      </FavoriteProvider>
+      {/* </FavoriteProvider> */}
       
       {!hideHeaderFooter && <Footer/>}
     </>

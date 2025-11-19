@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FiSettings, FiLogOut, FiCamera, FiSave, FiLock, FiUser, FiMail, FiPhone } from "react-icons/fi";
+import { FiSettings, FiLogOut, FiCamera, FiSave, FiLock, FiUser, FiMail, FiPhone,FiHome  } from "react-icons/fi";
 import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import UserService from "../../API/UserService";
@@ -211,14 +211,6 @@ const Profile = () => {
 
   return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-slate-900 via-gray-800 to-slate-900 text-white py-6 px-4">
-          <div className="max-w-7xl mx-auto">
-            <h1 className="text-3xl font-bold tracking-tight">{t('profile.header.title')}</h1>
-            <p className="text-gray-300 mt-2">{t('profile.header.description')}</p>
-          </div>
-        </div>
-
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -293,19 +285,27 @@ const Profile = () => {
                       className="w-full flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-amber-50 text-gray-700 hover:text-amber-600 transition-all duration-300 group"
                   >
                     <div className="p-2 rounded-lg bg-white shadow-sm group-hover:bg-amber-100 transition-colors">
+                      <FiUser className="w-5 h-5" />
+                    </div>
+                    <span className="font-medium">{t('profile.quickActions.userProfile')}</span>
+                  </button>
+                  <button
+                      onClick={() => setShowPasswordModal(true)}
+                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-amber-50 text-gray-700 hover:text-amber-600 transition-all duration-300 group"
+                  >
+                    <div className="p-2 rounded-lg bg-white shadow-sm group-hover:bg-amber-100 transition-colors">
+                      <FiHome className="w-5 h-5" />
+                    </div>
+                    <span className="font-medium">{t('profile.quickActions.myAddress')}</span>
+                  </button>
+                  <button
+                      onClick={() => setShowPasswordModal(true)}
+                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-amber-50 text-gray-700 hover:text-amber-600 transition-all duration-300 group"
+                  >
+                    <div className="p-2 rounded-lg bg-white shadow-sm group-hover:bg-amber-100 transition-colors">
                       <FiLock className="w-5 h-5" />
                     </div>
                     <span className="font-medium">{t('profile.quickActions.changePassword')}</span>
-                  </button>
-
-                  <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-red-50 text-gray-700 hover:text-red-600 transition-all duration-300 group"
-                  >
-                    <div className="p-2 rounded-lg bg-white shadow-sm group-hover:bg-red-100 transition-colors">
-                      <FiLogOut className="w-5 h-5" />
-                    </div>
-                    <span className="font-medium">{t('profile.quickActions.logout')}</span>
                   </button>
                 </div>
               </div>

@@ -79,8 +79,8 @@ public class DiscountController {
      * @return JSON body contains list of all discounts
      */
     @GetMapping
-    public ResponseEntity<List<DiscountResponse>> getAllDiscounts() {
-        return ResponseEntity.ok(discountService.getAllDiscounts());
+    public ApiResponse<List<DiscountResponse>> getAllDiscounts() {
+        return ApiResponse.<List<DiscountResponse>>builder().result(discountService.getAllDiscounts()).build();
     }
 
     /**

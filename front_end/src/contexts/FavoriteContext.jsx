@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { createContext, useEffect, useState } from 'react';
 import axiosClient from '../API/axiosClient.jsx';
-import { listCartItem } from '../API/CartService.jsx';
+import { CartService } from '../API/CartService.jsx';
 
 export const FavoriteContext = createContext();
 
@@ -30,7 +30,7 @@ export const FavoriteProvider = ({ children }) => {
       const fetchCarts = async () => {
         if (!session?.currentUser?.id || !session?.token) return;
         try {
-          const response = await listCartItem({userId:session.currentUser.id,token:session.token})
+          const response = await CartService.listCartItem()
           setCartItems(response.data.result || []);
         } catch (error) {
           console.error('Lỗi khi fetch danh sách giỏ hàng:', error);
@@ -88,13 +88,10 @@ export const FavoriteProvider = ({ children }) => {
         console.error('Lỗi khi xóa sản phẩm khỏi yêu thích:', error);
       }
     };
-    const addToCart = async(productId)=> {
-
-    }
   
    
   return (
-    <FavoriteContext.Provider value={{ wishlistItems,clearWishlist,session,setSession,removeFromWishlist,addToWishlist,cartItems,clearCart}}>
+    <FavoriteContext.Provider value={{ wishlistItems,clearWishlist,session,setSession,removeFromWishlist,addToWishlist,cartItems,setCartItems,clearCart}}>
       {children}
     </FavoriteContext.Provider>
   );

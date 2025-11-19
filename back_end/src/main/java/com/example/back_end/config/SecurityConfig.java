@@ -29,13 +29,13 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {"users/createUser",
             "auth/login", "auth/introspect", "/verifyRegister", "auth/register", "users/existUser", "/products/**",
             "/categories/**", "/users/**","/forgotPassword","/dialogflow/**" };
-    private final String[] PUBLIC_ENDPOINTS_GET = {"cart/listCartItem/**", "favorite/idUser/**","/order/**"};
+    private final String[] PUBLIC_ENDPOINTS_GET = {"cart/listCartItem/**", "favorite/idUser/**","/order/**","address/**"};
     private final String[] PUBLIC_ENDPOINTS_GET_PERMITALL = {"/users/**", "/categories/**", "/products/**",
             "/auth/verifyAccount", "/discount/**", "/genders/**", "/colors/**", "/sizes/**", "brands/**","/payment/vnpay/**","/review/comments/**"};
-    private final String[] PUBLIC_ENDPOINTS_PUT = {"/users/**", "/categories/**", "/products/**","/order/update","cart/**"};
+    private final String[] PUBLIC_ENDPOINTS_PUT = {"/users/**", "/categories/**", "/products/**","/order/update","cart/**","address/**"};
     private final String[] PUBLIC_ENDPOINTS_PATCH = {"/users/**", "/categories/**", "/products/**"};
-    private final String[] PUBLIC_ENDPOINTS_DELETE = {"/users/**", "/categories/**", "/products/**", "/favorite/delete","cart/**"};
-    private final String[] PUBLIC_ENDPOINTS_LOGIN = {"/logout", "/cart/updateItem", "/order/add", "/favorite/add","/review/**"};
+    private final String[] PUBLIC_ENDPOINTS_DELETE = {"/users/**", "/categories/**", "/products/**", "/favorite/delete","cart/**","address/**"};
+    private final String[] PUBLIC_ENDPOINTS_LOGIN = {"/logout", "/cart/updateItem", "/order/add", "/favorite/add","/review/**","/address/**"};
 
     @Value("${jwt.signer-key}")
     protected String SIGNER_KEY;

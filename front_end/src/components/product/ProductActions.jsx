@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addCart, updateCartItem } from '../../API/CartService';
+import { CartService } from '../../API/CartService';
 import WishlistService from '../../API/WishlistService';
 import { FavoriteContext } from '../../contexts/FavoriteContext.jsx';
 import { useTranslation } from 'react-i18next';
@@ -46,13 +46,7 @@ const ProductActions = ({
     if (disabled || !currentVariant) return;
     setIsAddingToCart(true);
     try {
-      await addCart(
-          {
-            idProduct: currentVariant.id,
-            amount: quantity,
-          },
-          session.token
-      );
+      await CartService.addCart({ idProduct: currentVariant.id, amount: quantity});
       console.log(currentVariant);
       window.dispatchEvent(new CustomEvent('cartUpdated'));
       alert(t('product_actions.messages.add_to_cart_success'));

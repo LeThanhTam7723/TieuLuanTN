@@ -148,10 +148,6 @@
     "strong": "Mạnh"
   },
   "profile": {
-    "header": {
-      "title": "Hồ Sơ Cá Nhân",
-      "description": "Quản lý thông tin và tài khoản của bạn"
-    },
     "avatarSection": {
       "saveImage": "Lưu ảnh",
       "fileSizeError": "Kích thước file không được vượt quá 5MB",
@@ -161,8 +157,9 @@
       "updateAvatarFailed": "Cập nhật avatar thất bại"
     },
     "quickActions": {
-      "changePassword": "Đổi mật khẩu",
-      "logout": "Đăng xuất"
+      "userProfile":"Thông tin cá nhân",
+      "myAddress":"Địa chỉ của tôi",
+      "changePassword": "Đổi mật khẩu"
     },
     "personalInfo": {
       "title": "Thông tin cá nhân",
@@ -359,7 +356,7 @@
     }
   },
   "product_card": {
-    "quick_view": "Xem nhanh",
+    "buy_now": "Mua ngay",
     "add_to_cart": "Thêm vào giỏ",
     "adding_to_cart": "Đang thêm...",
     "review_count": "đánh giá",
