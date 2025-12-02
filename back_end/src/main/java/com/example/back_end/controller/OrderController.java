@@ -33,9 +33,9 @@ public class OrderController {
      * @return JSON body contains success message if order created successfully
      */
     @PostMapping("/add")
-    public ApiResponse<Void> createOrder(@RequestBody OrderCreateRequest request) {
-        orderService.addOrder(request);
-        return ApiResponse.<Void>builder().build();
+    public ApiResponse<OrderResponse> createOrder(@RequestBody OrderCreateRequest request) {
+        OrderResponse response = orderService.addOrder(request);
+        return ApiResponse.<OrderResponse>builder().result(response).build();
     }
 
     @GetMapping("/individual/{userId}")

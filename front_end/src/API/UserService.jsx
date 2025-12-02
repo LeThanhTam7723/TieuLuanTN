@@ -117,6 +117,17 @@ const UserService = {
         } catch (error) {
             throw error;
         }
+    },
+
+    getAllUsers: async()=> {
+        try {
+            // Backend trả về void, chúng ta chỉ cần biết request thành công
+            const response = await axiosClient.get(`/users/all`);
+            return response; // response này có thể trống hoặc là object rỗng
+        } catch (error) {
+            throw error;
+        }
+
     }
 };
 

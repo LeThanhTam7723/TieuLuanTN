@@ -17,17 +17,18 @@ function HomePage() {
   const [loadingFeaturedProducts, setLoadingFeaturedProducts] = useState(true);
   const [errorFeatured, setErrorFeatured] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  console.log("a");
 
   const productsContainerRef = useRef(null);
   const navigate = useNavigate();
 
   // Auto-slide for hero banner
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % 3);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentSlide((prev) => (prev + 1) % 3);
+  //   }, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
@@ -317,13 +318,6 @@ function HomePage() {
               </div>
           )}
         </section>
-        {/* <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script> */}
-        {/* <df-messenger
-          intent="WELCOME"
-          chat-title="Trợ lý Handmade"
-          agent-id="19855501-d748-463c-969e-ee1ff94c19c6"
-          language-code="vi"
-        ></df-messenger> */}
 
 
         <style>{`

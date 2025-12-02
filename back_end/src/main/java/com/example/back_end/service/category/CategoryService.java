@@ -20,6 +20,7 @@ import com.example.back_end.repository.GenderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,10 +41,12 @@ public class CategoryService implements ICategoryService {
         if (categoryRepository.existsBySlug(slug)) {
             throw new AppException(ErrorCode.CATEGORY_SLUG_EXISTS);
         }
-
+        Gender gender = genderRepository.findById(request.getGenderId())
+                .orElseThrow(() -> new AppException(ErrorCode.GENDER_NOT_FOUND));
         Category category = Category.builder()
                 .name(request.getName())
                 .slug(slug)
+                .gender(gender)
                 .description(request.getDescription())
                 .active(request.isActive())
                 .build();
@@ -115,7 +118,7 @@ public class CategoryService implements ICategoryService {
                         .map(categoryMapper::toResponse)
                         .toList())
                 .pageNo(categoryPage.getNumber())
-                .pageSize(categoryPage.getSize())
+                .pageSize(10)
                 .totalElements(categoryPage.getTotalElements())
                 .totalPages(categoryPage.getTotalPages())
                 .last(categoryPage.isLast())

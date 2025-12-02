@@ -91,7 +91,7 @@ const AdminHeader = () => {
                 <div className="container mx-auto px-4 flex justify-between items-center">
                     <div className="flex items-center space-x-4">
                         <MdAdminPanelSettings className="text-white text-2xl"/>
-                        <span className="text-white font-semibold text-lg">Admin Panel</span>
+                        <span className="text-white font-semibold text-lg">Moggo Admin</span>
                     </div>
 
                     <div className="flex items-center space-x-6">
@@ -176,16 +176,14 @@ const AdminHeader = () => {
             <nav className="bg-white py-4 border-b border-gray-200">
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-between">
-                        {/* Logo & Title - Liên kết về trang quản lý sản phẩm mặc định */}
                         <div className="flex items-center space-x-4">
-                            <Link to="/admin/products"> {/* Thay đổi link từ /admin/dashboard sang /admin/products */}
+                            <Link to="/admin/products"> 
                                 <h1 className="text-2xl font-bold text-indigo-900 hover:text-purple-900 transition-colors duration-300">
                                     Moggo Admin
                                 </h1>
                             </Link>
                         </div>
 
-                        {/* Desktop Admin Menu - Adjusted justify-center for centered links */}
                         <div className="hidden lg:flex items-center justify-center flex-1 space-x-8">
                             {adminMenuItems.map((item, index) => (
                                 <Link
@@ -199,9 +197,7 @@ const AdminHeader = () => {
                             ))}
                         </div>
 
-                        {/* Right section: Mobile Menu Button */}
                         <div className="flex items-center space-x-4">
-                            {/* Mobile Menu Button */}
                             <button
                                 className="lg:hidden text-gray-600 hover:text-indigo-900 transition-colors duration-300"
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -212,7 +208,6 @@ const AdminHeader = () => {
                     </div>
                 </div>
 
-                {/* Mobile Menu */}
                 {isMenuOpen && (
                     <div className="lg:hidden fixed inset-0 z-50">
                         <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"

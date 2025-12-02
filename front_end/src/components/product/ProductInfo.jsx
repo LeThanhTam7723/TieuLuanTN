@@ -23,7 +23,7 @@ const ProductInfo = ({ product, reviewsCount }) => {
   };
 
   // Determine stock status based on selectedVariant or product overall
-  const isInStock = product.variants && product.variants.some(v => v.stock > 0);
+  const isInStock = product.variants && product.variants.some(v => v.stockQuantity > 0);
 
   return (
       <div className="space-y-6">

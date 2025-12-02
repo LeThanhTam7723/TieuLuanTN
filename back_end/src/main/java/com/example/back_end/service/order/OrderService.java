@@ -5,6 +5,7 @@ import com.example.back_end.dto.OrderDetailDto;
 import com.example.back_end.dto.OrderDto;
 import com.example.back_end.dto.StatusDto;
 import com.example.back_end.dto.request.OrderCreateRequest;
+import com.example.back_end.dto.response.user.UserResponse;
 import com.example.back_end.entity.*;
 import com.example.back_end.mapper.OrderDetailMapper;
 import com.example.back_end.mapper.OrderMapper;
@@ -49,31 +50,46 @@ public class OrderService implements IOrderService {
     private final ProductImageMapper productImageMapper;
 
     @Override
-    public void addOrder(OrderCreateRequest request) {
-        Cart cart = cartRepository.findByUser_IdAndIsOrdered(request.getIdUser(),false)
+    public OrderResponse addOrder(OrderCreateRequest request) {
+        UserResponse currentUser = userService.getCurrentUser();
+        System.out.println(request.getOrderItems());
+        Cart cart = cartRepository.findByUser_IdAndIsOrdered(currentUser.getId(),false)
                 .orElseThrow(() -> new IllegalArgumentException("Cart không tồn tại cho User này."));
-        List<CartDetail> cartDetails = cartDetailRepository.findAllByIdCart(cart);
+        List<Long> cartItemIds = request.getOrderItems();
+        if (cartItemIds == null || cartItemIds.isEmpty()) {
+            throw new IllegalArgumentException("Không có sản phẩm nào được chọn để đặt hàng.");
+        }
+        List<CartDetail> cartDetails = cartDetailRepository.findAllById(cartItemIds);
+        for (CartDetail detail : cartDetails) {
+            if (!detail.getIdCart().getId().equals(cart.getId())) {
+                throw new IllegalArgumentException("Phát hiện sản phẩm không thuộc giỏ hàng của bạn.");
+            }
+        }
+
         if (cartDetails.isEmpty()) {
-            throw new IllegalArgumentException("Giỏ hàng trống, không thể đặt đơn.");
+            throw new IllegalArgumentException("Không tìm thấy các sản phẩm cần đặt.");
         }
         PaymentMethod paymentMethod = paymentRepository.findById(request.getIdPaymentMethod())
                 .orElseThrow(() -> new IllegalArgumentException("Phương thức thanh toán không hợp lệ."));
         Status status = statusRepository.findById(request.getIdStatus())
                 .orElseThrow(() -> new IllegalArgumentException("Trạng thái không tồn tại."));
         Order order = new Order();
-        order.setIdUser(userService.getUserById(request.getIdUser()));
+        order.setIdUser(userService.getUserById(currentUser.getId()));
         order.setDateOrder(LocalDate.now());
         order.setAddress(request.getAddress());
         order.setIdPaymentMethod(paymentMethod);
         order.setIdStatus(status);
         order.setReceiver(request.getReceiver());
         order.setPhone(request.getPhone());
-        orderRepository.save(order);
+        order.setTotal(request.getTotal());
+        order=orderRepository.save(order);
+        OrderResponse response = modelMapper.map(order, OrderResponse.class);
+        System.out.println("Đơn hàng mới tạo"+response);
 
         for (CartDetail cartDetail : cartDetails) {
             ProductVariant product = cartDetail.getIdProduct();
             Integer cartQuantity = cartDetail.getQuantity();
-            System.out.println(product.getId());
+//            System.out.println(product.getId());
 
             OrderDetail oderDetail = new OrderDetail();
             oderDetail.setIdOrder(order);
@@ -85,11 +101,8 @@ public class OrderService implements IOrderService {
 
             orderDetailRepository.save(oderDetail);
         }
-        cart.setOrdered(true);
-        cartRepository.save(cart);
-
-//        cartDetailRepository.deleteAll(cartDetails);
-
+        cartDetailRepository.deleteAll(cartDetails);
+        return response;
     }
 
     @Override
@@ -213,4 +226,14 @@ public class OrderService implements IOrderService {
                 .last(orderPage.isLast())
                 .build();
     }
+
+    @Override
+    public void updateIsPaid(Long orderId, boolean paidStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        order.setPaid(paidStatus);
+        orderRepository.save(order);
+    }
+    // update trạng thái thanh toán.
+
 }

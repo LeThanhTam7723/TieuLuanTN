@@ -4,11 +4,18 @@ import {
     MdCategory,
     MdPeople,
     MdShoppingCart,
+    MdInsights ,
 } from "react-icons/md";
-import { FiChevronRight } from "react-icons/fi";
+import { FiChevronRight} from "react-icons/fi";
 
 const AdminSidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }) => {
     const sidebarItems = [
+        {
+            id: 'statistical',
+            name: 'Thống kê',
+            icon: <MdInsights ventory className="w-5 h-5" />,
+            badge: null
+        },
         {
             id: 'products',
             name: 'Quản lý sản phẩm',

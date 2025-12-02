@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface IOrderService {
-    void addOrder(OrderCreateRequest request);
+    OrderResponse addOrder(OrderCreateRequest request);
 
     List<OrderDetailDto> getOrderDetailsByOrderId(Long orderId);
 
@@ -36,4 +36,5 @@ public interface IOrderService {
             LocalDate startDate,
             LocalDate endDate,
             Pageable pageable);
+    void updateIsPaid(Long orderId, boolean paidStatus);
 }

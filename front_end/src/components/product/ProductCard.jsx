@@ -2,6 +2,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiHeart, FiShoppingBag, FiEye, FiStar } from 'react-icons/fi';
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import {CartService } from '../../API/CartService';
 import { FavoriteContext } from '../../contexts/FavoriteContext.jsx';
 import { CurrencyContext } from '../../contexts/CurrencyContext.jsx'; // Import CurrencyContext
@@ -88,9 +89,10 @@ const ProductCard = ({ product, onClick }) => {
     handleProductClick();
   };
 
-  const rating = Math.floor(Math.random() * 2) + 4;
+  // const rating = Math.floor(Math.random() * 2) + 4;
+  const rating = product.rating;
   const reviewCount = Math.floor(Math.random() * 100) + 10;
-
+  console.log(rating);
   // Sử dụng hàm convertAndGetDisplayPrice với giá gốc từ database (VND)
   const displayBasePrice = convertAndGetDisplayPrice(product?.basePrice || 0);
   const displayOriginalPrice = convertAndGetDisplayPrice(product?.originalPrice || 0);
@@ -169,14 +171,17 @@ const ProductCard = ({ product, onClick }) => {
           {/* Rating */}
           <div className="flex items-center gap-2 mb-3">
             <div className="flex items-center">
-              {[...Array(5)].map((_, i) => (
-                  <FiStar
-                      key={i}
-                      className={`w-3.5 h-3.5 ${
-                          i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                      }`}
-                  />
-              ))}
+              {[...Array(5)].map((_, i) => {
+                const starValue = i + 1;
+
+                if (starValue <= rating) {
+                  return <FiStar key={i} className="w-4 h-4 text-yellow-400 fill-current" />;
+                } else if (starValue - rating <= 0.5) {
+                  return <FaStarHalfAlt key={i} className="w-4 h-4 text-yellow-400 fill-current" />;
+                } else {
+                  return <FiStar key={i} className="w-4 h-4 text-gray-300" />;
+                }
+              })}
             </div>
             <span className="text-xs text-gray-500">({reviewCount}) {t("product_card.review_count")}</span>
           </div>

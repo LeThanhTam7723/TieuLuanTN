@@ -5,6 +5,7 @@ import com.example.back_end.dto.request.product.ProductCreationRequest;
 import com.example.back_end.dto.request.product.ProductUpdateRequest;
 import com.example.back_end.dto.response.ApiResponse;
 import com.example.back_end.dto.response.IntrospectResponse;
+import com.example.back_end.dto.response.product.ProductCard;
 import com.example.back_end.dto.response.product.ProductDetailResponse;
 import com.example.back_end.dto.response.product.ProductResponse;
 import com.example.back_end.dto.response.product.ProductSummary;
@@ -144,6 +145,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts(pageable));
     }
 
+    @GetMapping("/productCard")
+    public ResponseEntity<PageResponse<ProductCard>> getAllProductCards(Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllProductCards(pageable));
+    }
+
     /**
      * Method to get featured products with pagination
      *
@@ -151,7 +157,7 @@ public class ProductController {
      * @return JSON body contains paginated list of featured product summaries
      */
     @GetMapping("/featured")
-    public ResponseEntity<PageResponse<ProductSummary>> getFeaturedProducts(Pageable pageable) {
+    public ResponseEntity<PageResponse<ProductCard>> getFeaturedProducts(Pageable pageable) {
         return ResponseEntity.ok(productService.getFeaturedProducts(pageable));
     }
 

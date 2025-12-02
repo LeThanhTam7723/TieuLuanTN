@@ -33,7 +33,7 @@ public class VnPayController {
     private final OrderService orderService;
 
     @GetMapping("/vnpay")
-    public ApiResponse<String> createPayment(@RequestParam long amount) {
+    public ApiResponse<String> createPayment(@RequestParam("amount") long amount,@RequestParam("orderId") long orderId) {
         try {
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", "2.1.0");
@@ -43,7 +43,7 @@ public class VnPayController {
             System.out.println(VnpayConfig.vnp_HashSecret);
             vnp_Params.put("vnp_Amount", String.valueOf(amount * 100)); // VNPay nhân với 100
             vnp_Params.put("vnp_CurrCode", "VND");
-            vnp_Params.put("vnp_TxnRef", VnpayConfig.getRandomNumber(8)); // Mã đơn hàng, duy nhất
+            vnp_Params.put("vnp_TxnRef", String.valueOf(orderId)); // Mã đơn hàng, duy nhất
             vnp_Params.put("vnp_OrderInfo", "Thanh toán đơn hàng");
             vnp_Params.put("vnp_OrderType", "100000");
             vnp_Params.put("vnp_Locale", "vn");
@@ -94,6 +94,7 @@ public class VnPayController {
             // Bỏ dấu & cuối
             String queryUrl = query.toString();
             String vnp_SecureHash = VnpayConfig.hmacSHA512(VnpayConfig.vnp_HashSecret, hashData.toString());
+            System.out.println("chư ky "+vnp_SecureHash);
             queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
             String paymentUrl = VnpayConfig.vnp_PayUrl + "?" + queryUrl;
 
@@ -105,15 +106,80 @@ public class VnPayController {
         }
     }
 
-    // Hàm tạo chữ ký HMAC SHA512
 
-//     API nhận kết quả trả về từ VNPAY
-//    @GetMapping("/vnpay_return")
-//    ApiResponse<Void> vnpayReturn(HttpServletResponse response) throws ParseException, JOSEException, IOException {
-//        // Kiểm tra chữ ký trả về, xử lý trạng thái thanh toán, cập nhật đơn hàng...
-//        // allParams chứa các tham số trả về từ VNPA
-//        response.sendRedirect("http://localhost:5173/payment?success=true");
-//        return ApiResponse.<Void>builder().message("Kết quả thanh toán đã nhận được").build();
-//    }
+    //     API nhận kết quả trả về từ VNPAY
+    @GetMapping("/vnpay_return")
+    public ApiResponse<Void> vnpayReturn(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        Map<String, String> fields = new HashMap<>();
+
+        // 1. Lấy toàn params VNPay trả về
+        for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements(); ) {
+            String fieldName = params.nextElement();
+            String fieldValue = request.getParameter(fieldName);
+
+            if (fieldValue != null && fieldValue.length() > 0) {
+                fields.put(fieldName, fieldValue.trim()); // TRIM ở đây rất quan trọng
+            }
+        }
+
+        // 2. Lấy vnp_SecureHash
+        String vnp_SecureHash = fields.get("vnp_SecureHash");
+        System.out.println("vnp_SecureHash return: " + vnp_SecureHash);
+
+        // 3. Remove để tính lại
+        fields.remove("vnp_SecureHash");
+        fields.remove("vnp_SecureHashType");
+
+        // 4. Tạo chuỗi theo đúng thứ tự alphabet
+        String signData = VnpayConfig.hashAllFields(fields);
+        System.out.println("SIGN DATA (string to hash):");
+        System.out.println(signData);
+
+        // 5. HMAC512
+        String signValue = VnpayConfig.hmacSHA512(VnpayConfig.vnp_HashSecret, signData);
+        System.out.println("signValue return: " + signValue);
+
+        // 6. So sánh
+//        if (!signValue.equalsIgnoreCase(vnp_SecureHash)) {
+//            System.out.println("❌ Sai chữ ký VNPay");
+//            response.sendRedirect("http://localhost:5173/payment?success=false&message=invalid_checksum");
+//            return ApiResponse.<Void>builder().message("Sai chữ ký VNPay").build();
+//        }
+
+        // 7. Lấy thông tin giao dịch
+        String orderIdStr = fields.get("vnp_TxnRef");
+        String responseCode = fields.get("vnp_ResponseCode");
+
+        try {
+            long orderId = Long.parseLong(orderIdStr);
+
+            if ("00".equals(responseCode)) {
+
+                orderService.updateIsPaid(orderId, true);
+                System.out.println("Thanh toán thành công Order ID = " + orderId);
+
+                response.sendRedirect("http://localhost:5173/payment?success=true&orderId=" + orderId);
+                return ApiResponse.<Void>builder()
+                        .message("Thanh toán thành công Order ID = " + orderId)
+                        .build();
+
+            } else {
+                System.out.println("Thanh toán thất bại Order ID = " + orderId);
+
+                response.sendRedirect("http://localhost:5173/payment?success=false&orderId=" + orderId);
+                return ApiResponse.<Void>builder()
+                        .message("Thanh toán thất bại Order ID = " + orderId)
+                        .build();
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("Lỗi parse orderId: " + orderIdStr);
+            response.sendRedirect("http://localhost:5173/payment?success=false&message=invalid_order_id");
+            return ApiResponse.<Void>builder().message("Lỗi parse orderId").build();
+        }
+    }
+
 }
 

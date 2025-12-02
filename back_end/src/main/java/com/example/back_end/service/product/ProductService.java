@@ -2,6 +2,7 @@ package com.example.back_end.service.product;
 
 import com.example.back_end.dto.request.product.ProductCreationRequest;
 import com.example.back_end.dto.request.product.ProductUpdateRequest;
+import com.example.back_end.dto.response.product.ProductCard;
 import com.example.back_end.dto.response.product.ProductDetailResponse;
 import com.example.back_end.dto.response.product.ProductResponse;
 import com.example.back_end.dto.response.product.ProductSummary;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.back_end.dto.response.PageResponse;
 
@@ -57,6 +59,7 @@ public class ProductService implements IProductService {
                 .slug(slug)
                 .description(request.getDescription())
                 .brand(brand)
+                .basePrice(request.getBasePrice())
                 .gender(gender)
                 .categories(categories)
                 .active(request.isActive())
@@ -147,11 +150,25 @@ public class ProductService implements IProductService {
     }
 
     @Override
-        public PageResponse<ProductSummary> getAllProducts(Pageable pageable) {
-            Page<Product> productPage = productRepository.findAll(pageable);
-            return PageResponse.<ProductSummary>builder()
+    public PageResponse<ProductSummary> getAllProducts(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return PageResponse.<ProductSummary>builder()
+            .content(productPage.getContent().stream()
+                    .map(productMapper::toSummary)
+                    .toList())
+            .pageNo(productPage.getNumber())
+            .pageSize(productPage.getSize())
+            .totalElements(productPage.getTotalElements())
+            .totalPages(productPage.getTotalPages())
+            .last(productPage.isLast())
+            .build();
+    }
+
+    public PageResponse<ProductCard> getAllProductCards(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return PageResponse.<ProductCard>builder()
                 .content(productPage.getContent().stream()
-                        .map(productMapper::toSummary)
+                        .map(productMapper::toProductCard)
                         .toList())
                 .pageNo(productPage.getNumber())
                 .pageSize(productPage.getSize())
@@ -177,11 +194,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public PageResponse<ProductSummary> getFeaturedProducts(Pageable pageable) {
+    public PageResponse<ProductCard> getFeaturedProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findByFeaturedTrueAndActiveTrue(pageable);
-        return PageResponse.<ProductSummary>builder()
+        return PageResponse.<ProductCard>builder()
                 .content(productPage.getContent().stream()
-                        .map(productMapper::toSummary)
+                        .map(productMapper::toProductCard)
                         .toList())
                 .pageNo(productPage.getNumber())
                 .pageSize(productPage.getSize())

@@ -9,7 +9,9 @@ import com.example.back_end.dto.response.product.*;
 import com.example.back_end.entity.*;
 import org.mapstruct.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.OptionalDouble;
 
 @Mapper(componentModel = "spring",
         uses = {BrandMapper.class, GenderMapper.class,
@@ -57,6 +59,12 @@ public interface ProductMapper {
     // LIST MAPPINGS
     List<ProductSummary> toSummaryList(List<Product> products);
 
+    @Mapping(target = "brandName", source = "brand.name")
+    @Mapping(target = "genderName", source = "gender.name")
+    @Mapping(target = "primaryImage", source = "images", qualifiedByName = "findPrimaryImage")
+    @Mapping(target = "rating", expression = "java(calculateAverageRating(product))")
+    ProductCard toProductCard(Product product);
+
     // CUSTOM MAPPING LOGIC
 //    @Named("findPrimaryImage")
 //    default ProductImageSummary findPrimaryImage(List<ProductImage> images) {
@@ -73,4 +81,14 @@ public interface ProductMapper {
 //                        .build())
 //                .orElse(null);
 //    }
+    default BigDecimal calculateAverageRating(Product product) {
+        return BigDecimal.valueOf(
+                product.getVariants().stream()
+                        .flatMap(v -> v.getReviews().stream())
+                        .mapToInt(Review::getRating)
+                        .average()
+                        .orElse(0.0)
+        );
+    }
+
 }

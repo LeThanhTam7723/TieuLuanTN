@@ -21,7 +21,7 @@ const AddressModal = ({ setShowAddressModal }) => {
   // Load tỉnh/thành từ API
   useEffect(() => {
     axios
-      .get("https://provinces.open-api.vn/api/?depth=1")
+      .get("https://34tinhthanh.com/api/provinces")
       .then((res) => setProvinceList(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -29,8 +29,11 @@ const AddressModal = ({ setShowAddressModal }) => {
   // Khi chọn tỉnh → load danh sách phường/xã
   const loadWards = (provinceCode) => {
     axios
-      .get(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
-      .then((res) => setWardList(res.data.wards))
+      .get(`https://34tinhthanh.com/api/wards?province_code=${provinceCode}`)
+      .then((res) => {
+        console.log("WARD API:", res.data);
+        setWardList(Array.isArray(res.data) ? res.data : []);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -55,24 +58,27 @@ const AddressModal = ({ setShowAddressModal }) => {
     });
 
     setProvinceSuggestions([]);
-    loadWards(province.code);
+    console.log(province);
+    loadWards(province.province_code);
   };
 
   // Autocomplete phường/xã
   const handleWardInput = (value) => {
     setNewAddress({ ...newAddress, ward: value });
 
-    if (!value.trim()) return setWardSuggestions([]);
+    if (!value.trim() || !Array.isArray(wardList)) {
+      return setWardSuggestions([]);
+    }
 
     const filtered = wardList.filter((w) =>
-      w.name.toLowerCase().includes(value.toLowerCase())
+      w.ward_name.toLowerCase().includes(value.toLowerCase())
     );
 
     setWardSuggestions(filtered);
   };
 
   const selectWard = (ward) => {
-    setNewAddress({ ...newAddress, ward: ward.name });
+    setNewAddress({ ...newAddress, ward: ward.ward_name });
     setWardSuggestions([]);
   };
   const validateAddressForm = () => {
@@ -188,7 +194,7 @@ const AddressModal = ({ setShowAddressModal }) => {
                 className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => selectWard(item)}
               >
-                {item.name}
+                {item.ward_name}
               </div>
             ))}
           </div>
@@ -234,7 +240,7 @@ const AddressModal = ({ setShowAddressModal }) => {
             onClick={() => {
               console.log("Saved:", newAddress);
               validateAddressForm();
-            //   setShowAddressModal(false);
+              setShowAddressModal(false);
             }}
           >
             Lưu

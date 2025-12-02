@@ -61,6 +61,17 @@ const OrderService = {
             console.error(`Error updating status for order ${orderId}:`, error);
             throw error;
         }
+    },
+    // Tạo đơn hàng mới
+    addOrder: async(body) => {
+        try {
+            const response = await axiosClient.post(`/order/add`,{body});
+            return response;
+        } catch (error) {
+            console.error(`Đặt hàng không thành công`);
+            throw error;
+        }
+
     }
 }
 export default OrderService;

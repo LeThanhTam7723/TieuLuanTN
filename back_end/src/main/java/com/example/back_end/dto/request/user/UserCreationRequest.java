@@ -28,5 +28,9 @@ public class UserCreationRequest {
     @Email(message = "Invalid email format")
     private String email;
 
+    @NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Invalid phone number format")
+    private String phone;
+
     private boolean active = true;
 }

@@ -30,7 +30,7 @@ const ProductTable = ({
                 {products.map((product) => (
                     <tr key={product.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{product.id}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{product.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 truncate max-w-[200px]">{product.name}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                             {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.basePrice)}
                         </td>

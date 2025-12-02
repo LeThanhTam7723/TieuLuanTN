@@ -2,6 +2,7 @@ package com.example.back_end.service.product;
 
 import com.example.back_end.dto.request.product.ProductCreationRequest;
 import com.example.back_end.dto.request.product.ProductUpdateRequest;
+import com.example.back_end.dto.response.product.ProductCard;
 import com.example.back_end.dto.response.product.ProductDetailResponse;
 import com.example.back_end.dto.response.product.ProductResponse;
 import com.example.back_end.dto.response.product.ProductSummary;
@@ -30,7 +31,7 @@ public interface IProductService {
     PageResponse<ProductSummary> getAllProducts(Pageable pageable);
     PageResponse<ProductSummary> getProductsByBrandSlug(String slug,Pageable pageable);
 
-    PageResponse<ProductSummary> getFeaturedProducts(Pageable pageable);
+    PageResponse<ProductCard> getFeaturedProducts(Pageable pageable);
 
     PageResponse<ProductSummary> searchProducts(String keyword, Pageable pageable);
 
@@ -57,4 +58,6 @@ public interface IProductService {
             BigDecimal minPrice,
             BigDecimal maxPrice,
             Pageable pageable);
+
+    PageResponse<ProductCard> getAllProductCards(Pageable pageable);
 } 

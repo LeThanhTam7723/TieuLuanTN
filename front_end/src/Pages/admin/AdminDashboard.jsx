@@ -5,22 +5,14 @@ import AdminSidebar from "../../components/admin/AdminSidebar.jsx";
 import ProductManagementPage from "./ProductManagementPage";
 import CategoryManagementPage from "./CategoryManagementPage";
 import OrderManagementPage from "./OrderManagementPage.jsx";
-import {
-    MdTrendingUp,
-    MdShoppingCart,
-    MdPeople,
-    MdInventory,
-    MdAttachMoney,
-    MdNotifications,
-    MdAnalytics,
-    MdCategory
-} from "react-icons/md";
 import {FiChevronRight} from "react-icons/fi";
 import UserManagementPage from "./UserManagementPage.jsx";
+import Analytics from "./AnalyticsPage.jsx";
+import AnalyticsPage from "./AnalyticsPage.jsx";
 
 const AdminDashboard = () => {
     const location = useLocation();
-    const [activeTab, setActiveTab] = useState('products');
+    const [activeTab, setActiveTab] = useState('statistical');
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     // Update activeTab based on URL pathname
@@ -28,16 +20,18 @@ const AdminDashboard = () => {
         const pathParts = location.pathname.split('/');
         const currentTab = pathParts[pathParts.length - 1];
 
-        if (['products', 'categories', 'users', 'orders'].includes(currentTab)) {
+        if (['statistical','products', 'categories', 'users', 'orders'].includes(currentTab)) {
             setActiveTab(currentTab);
         } else {
-            setActiveTab('products');
+            setActiveTab('statistical');
         }
     }, [location.pathname]);
 
     // Render main content based on active tab
     const renderMainContent = () => {
         switch (activeTab) {
+            case 'statistical':
+                return <AnalyticsPage/>;
             case 'products':
                 return <ProductManagementPage/>;
             case 'categories':

@@ -135,9 +135,7 @@ const CategoryManagementPage = () => {
     return (
         <div className="container mx-auto p-4 font-sans antialiased">
             <CustomMessageBox message={message} type={messageType} />
-
-            <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Quản lý danh mục</h1>
-
+            
             <CategorySearchBar
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}

@@ -4,6 +4,7 @@ import { FavoriteContext } from "../contexts/FavoriteContext";
 import AddressModal from "../components/address/AddressModal";
 import AddressService from "../API/AddressService";
 import DiscountService from "../API/DiscountService";
+import CheckOutService from "../API/CheckoutService";
 
 const CheckoutPage = () => {
   const [checkoutItems, setCheckoutItems] = useState([]);
@@ -13,7 +14,6 @@ const CheckoutPage = () => {
       setCheckoutItems(JSON.parse(data));
     }
   }, []);
-  console.log(checkoutItems);
 
   const [selectedAddress, setSelectedAddress] = useState({});
 
@@ -94,12 +94,64 @@ const CheckoutPage = () => {
       alert("Vui lòng chọn phương thức thanh toán!");
       return;
     }
-    setIsLoading(true);
-    setTimeout(() => {
+    const checkoutItemIds = checkoutItems.map(item => item.id);
+    console.log(checkoutItemIds);
+    try {
+      setIsLoading(true);
+      switch (paymentMethod) {
+        case "cod": {
+          const response = await CheckOutService.addOrder({
+            orderItems:checkoutItemIds,
+            receiver: selectedAddress.receiver,
+            phone: selectedAddress.phone,
+            address: selectedAddress.address,
+            idPaymentMethod: 1,
+            idStatus: 1,
+            total: subtotal
+          });
+          console.log("Đặt hàng COD thành công:", response.data);
+          setShowSuccess(true);   // Mở modal thành công
+          setCheckoutItems([]);
+          window.location.href = "/";
+          break;
+        }
+
+        // ---------------- VNPAY ----------------
+        case "vnpay": {
+          const response = await CheckOutService.addOrder({
+            orderItems:checkoutItemIds,
+            receiver: selectedAddress.receiver,
+            phone: selectedAddress.phone,
+            address: selectedAddress.address,
+            idPaymentMethod: 2,
+            idStatus: 1,
+            total: subtotal
+          });
+          const vnPayUrl = await CheckOutService.vnPay(subtotal,response.data.result.id);
+          const {code,result,message} = vnPayUrl.data;
+          console.log("Đặt hàng COD thành công:", response.data.result.id);
+          console.log(result);
+          window.location.href = result;
+          // setShowSuccess(true);   // Mở modal thành công
+          // setCheckoutItems([]);
+          // window.location.href = "/";
+          break;
+        }
+
+        default:
+          console.error("Lỗi đặt hàng:", error);
+          alert("Không tìm thấy phương thức thanh toán!");
+          break;
+      }
+
+    } catch (error) {
+      console.error("Lỗi đặt hàng:", error);
+      alert("Đặt hàng thất bại. Vui lòng thử lại!");
+    } finally {
       setIsLoading(false);
-      setShowSuccess(true);
-    }, 2000);
+    }
   };
+
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
