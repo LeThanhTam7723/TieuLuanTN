@@ -92,7 +92,6 @@ const ProductCard = ({ product, onClick }) => {
   // const rating = Math.floor(Math.random() * 2) + 4;
   const rating = product.rating;
   const reviewCount = Math.floor(Math.random() * 100) + 10;
-  console.log(rating);
   // Sử dụng hàm convertAndGetDisplayPrice với giá gốc từ database (VND)
   const displayBasePrice = convertAndGetDisplayPrice(product?.basePrice || 0);
   const displayOriginalPrice = convertAndGetDisplayPrice(product?.originalPrice || 0);

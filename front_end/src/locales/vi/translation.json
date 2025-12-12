@@ -183,7 +183,16 @@
       "saving": "Đang lưu...",
       "updateSuccess": "Cập nhật thông tin thành công",
       "updateFailed": "Cập nhật thông tin thất bại"
+    },
+    "address":{
+      "title":"Địa chỉ của tôi",
+       "noAddress" : "Chưa có địa chỉ nào",
+       "default" : "Mặc định",
+       "setDefault": "Đặt làm mặc định",
+       "delete": "Xóa",
+       "add":"Thêm địa chỉ mới"
     }
+
   },
   "passwordModal": {
     "title": "Đổi mật khẩu",
@@ -429,7 +438,7 @@
       },
       "products_ordered": "Sản phẩm đã đặt",
       "size": "Kích cỡ",
-      "review": "Đánh giá",
+      "review": "Đánh giá để nhận xu",
       "total_amount": "Tổng tiền:",
       "buy_again": "Mua lại",
       "details": "Chi tiết",

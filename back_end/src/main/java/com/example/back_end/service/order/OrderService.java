@@ -5,6 +5,8 @@ import com.example.back_end.dto.OrderDetailDto;
 import com.example.back_end.dto.OrderDto;
 import com.example.back_end.dto.StatusDto;
 import com.example.back_end.dto.request.OrderCreateRequest;
+import com.example.back_end.dto.response.product.ProductSummary;
+import com.example.back_end.dto.response.product.ProductVariantResponse;
 import com.example.back_end.dto.response.user.UserResponse;
 import com.example.back_end.entity.*;
 import com.example.back_end.mapper.OrderDetailMapper;
@@ -15,6 +17,7 @@ import com.example.back_end.dto.response.PageResponse;
 import com.example.back_end.entity.*;
 import com.example.back_end.exception.AppException;
 import com.example.back_end.exception.ErrorCode;
+import com.example.back_end.mapper.ProductMapper;
 import com.example.back_end.repository.*;
 import com.example.back_end.service.product.IProductImageService;
 import com.example.back_end.service.product.ProductImageService;
@@ -48,6 +51,8 @@ public class OrderService implements IOrderService {
     private final OrderMapper orderMapper;
     private final IProductImageService productImageService;
     private final ProductImageMapper productImageMapper;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     @Override
     public OrderResponse addOrder(OrderCreateRequest request) {
@@ -106,10 +111,14 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-
     public List<OrderDetailDto> getOrderDetailsByOrderId(Long orderId) {
         List<OrderDetail>orderDetails= orderDetailRepository.findByIdOrder_Id(orderId);
         List<OrderDetailDto> orderDetailDtos= orderDetails.stream().map(orderDetailMapper::toDto).collect(Collectors.toList());
+        for (OrderDetailDto a : orderDetailDtos){
+            Product product = productRepository.getReferenceById(a.getIdProduct().getProduct().getId());
+            ProductSummary productSummary = productMapper.toSummary(product);
+            a.getIdProduct().setProduct(productSummary);
+        }
         return orderDetailDtos;
     }
 

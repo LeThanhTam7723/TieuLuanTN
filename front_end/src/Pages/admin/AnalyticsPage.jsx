@@ -13,6 +13,8 @@ import {
   ArcElement,
   Title,
 } from "chart.js";
+import { useEffect, useState } from "react";
+import { AnalyticsService } from "../../API/AnalyticsService";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -44,15 +46,44 @@ const DashboardCard = ({ title, value, icon, percentage }) => {
   );
 };
 const AnalyticsPage = () => {
+    const [analytics,setAnalytics] = useState({});
+    const [revenue, setRevenue] = useState({});
+    const [bestSeller, setBestSeller] = useState({
+      variants: [],
+      quantities: []
+    });
+    const fetchRevenue = async () => {
+      const response = await AnalyticsService.getRevenueLast6Months();
+      console.log("API response:", response);
+      setRevenue(response.result);
+    };
+    const fetchProducts = async () => {
+      const response = await AnalyticsService.getAnalytics();
+      console.log("API response:", response);
+      setAnalytics(response.result);
+    };
+    const fetchBestSellers = async() => {
+      const response = await AnalyticsService.getTopSellingVariants();
+      console.log("API response:", response);
+      setBestSeller(response.result);
+    }
+
+    useEffect(() => {
+      fetchProducts();
+      fetchRevenue();
+      fetchBestSellers();
+    }, []);
+
     const lineChartData = {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        labels: revenue.months,
         datasets: [{
-        label: "Revenue",
-        data: [3000, 4500, 3500, 5000, 4800, 6000],
+        label: "Doanh thu",
+        data: revenue.revenues,
         borderColor: "rgb(59, 130, 246)",
         tension: 0.4
         }]
     };
+    // const [lineChartData,setLineChartData]= useState({});
 
     const pieChartData = {
         labels: ["Desktop", "Mobile", "Tablet"],
@@ -63,14 +94,33 @@ const AnalyticsPage = () => {
     };
 
     const barChartData = {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        labels: bestSeller.variants.map(v => v.product.name),
         datasets: [{
-        label: "Sales",
-        data: [65, 59, 80, 81, 56, 55],
+        label: "Số lượng bán ra",
+        data: bestSeller.quantities,
         backgroundColor: "rgba(59, 130, 246, 0.5)"
         }]
     };
 
+    const options = {
+      scales: {
+        x: {
+          ticks: {
+            callback: function(value) {
+              const label = this.getLabelForValue(value);
+              return label.length > 10 ? label.substring(0, 10) + "..." : label;
+            }
+          }
+        },
+        y: {
+          ticks: {
+            callback: function(value) {
+              return Number.isInteger(value) ? value : null;  
+            }
+          }
+        }
+      }
+    };
     const donutChartData = {
         labels: ["Electronics", "Clothing", "Food", "Others"],
         datasets: [{
@@ -79,6 +129,8 @@ const AnalyticsPage = () => {
         }]
     };
     
+    
+    
     return(
         <div className={`flex-1 ml-64} transition-all duration-300`}>
             {/* Dashboard Content */}
@@ -86,25 +138,25 @@ const AnalyticsPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <DashboardCard
                   title="Tổng số sản phẩm hoạt động"
-                  value="$54,375"
+                  value={analytics.totalProducts}
                   percentage="12.5"
                   icon={<FiUser />}
                 />
                 <DashboardCard
                   title="Tổng số đơn hàng"
-                  value="2,345"
+                  value={analytics.totalOrders}
                   percentage="8.2"
                   icon={<FiUser />}
                 />
                 <DashboardCard
                   title="Tổng số khách hàng"
-                  value="3.45%"
+                  value={analytics.totalCustomers}
                   percentage="5.6"
                   icon={<FiUser />}
                 />
                 <DashboardCard
                   title="Tổng số doanh thu"
-                  value="$123"
+                  value={analytics.totalRevenue+' đồng'}
                   percentage="10.2"
                   icon={<FiUser />}
                 />
@@ -112,19 +164,20 @@ const AnalyticsPage = () => {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
-                  <h3 className="text-xl font-bold mb-4">Revenue Trends</h3>
+                  <h3 className="text-xl font-bold mb-4">Doanh thu 6 tháng gần nhất</h3>
                   <Line data={lineChartData} options={{ responsive: true }} />
                 </div>
+                
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
-                  <h3 className="text-xl font-bold mb-4">User Distribution</h3>
-                  <Pie data={pieChartData} options={{ responsive: true }} />
+                  <h3 className="text-xl font-bold mb-4">Top 6 sản phẩm bán chạy nhất</h3>
+                  <Bar data={barChartData} options={options} />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
-                  <h3 className="text-xl font-bold mb-4">Monthly Performance</h3>
-                  <Bar data={barChartData} options={{ responsive: true }} />
+                  <h3 className="text-xl font-bold mb-4">User Distribution</h3>
+                  <Pie data={pieChartData} options={{ responsive: true }} />
                 </div>
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
                   <h3 className="text-xl font-bold mb-4">Product Categories</h3>

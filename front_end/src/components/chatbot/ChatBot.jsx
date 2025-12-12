@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { askGemini } from "../../API/AskGemini";
+import { askChatBot } from "../../API/ChatBotService";
 
 const ChatBot = () => {
     const [input, setInput] = useState("");
@@ -11,7 +11,7 @@ const ChatBot = () => {
         const userMsg = { sender: "user", text: input };
         setMessages(prev => [...prev, userMsg]);
 
-        const reply = await askGemini(input);
+        const reply = await askChatBot(input);
 
         const botMsg = { sender: "bot", text: reply };
         setMessages(prev => [...prev, botMsg]);

@@ -4,6 +4,7 @@ import { FiChevronLeft, FiChevronRight, FiArrowRight, FiShoppingBag, FiTrendingU
 import ProductService from '../API/ProductService';
 import ProductCard from '../components/product/ProductCard';
 import { useTranslation } from 'react-i18next'; // Import useTranslation
+import ChatBot from '../components/chatbot/ChatBot';
 
 const HERO_IMAGE = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=800&fit=crop&crop=center';
 const MEN_IMAGE = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop&crop=center';

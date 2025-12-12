@@ -2,13 +2,20 @@ import axios from 'axios';
 import React, { createContext, useEffect, useState } from 'react';
 import axiosClient from '../API/axiosClient.jsx';
 import { CartService } from '../API/CartService.jsx';
+import UserService from '../API/UserService.jsx';
 
 export const FavoriteContext = createContext();
 
 export const FavoriteProvider = ({ children }) => {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [cartItems, setCartItems] = useState([]);
+    const [coin,setCoin] = useState({});
     const [session, setSession] = useState(null);
+    const fetchCoins = async () => {
+      const response = await UserService.getCoin();
+      console.log("API xu response:", response);
+      setCoin(response.result);
+    };
     
     useEffect(() => {
       const fetchFavorites = async () => {
@@ -38,6 +45,7 @@ export const FavoriteProvider = ({ children }) => {
       };
       fetchFavorites();
       fetchCarts();
+      fetchCoins();
     }, [session]);
 
     const clearWishlist = () => {
@@ -91,7 +99,7 @@ export const FavoriteProvider = ({ children }) => {
   
    
   return (
-    <FavoriteContext.Provider value={{ wishlistItems,clearWishlist,session,setSession,removeFromWishlist,addToWishlist,cartItems,setCartItems,clearCart}}>
+    <FavoriteContext.Provider value={{ wishlistItems,clearWishlist,session,setSession,removeFromWishlist,addToWishlist,cartItems,setCartItems,clearCart,coin,setCoin}}>
       {children}
     </FavoriteContext.Provider>
   );

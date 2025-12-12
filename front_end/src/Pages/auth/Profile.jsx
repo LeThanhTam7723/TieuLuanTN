@@ -1,21 +1,26 @@
-import { useState, useEffect } from "react";
-import { FiSettings, FiLogOut, FiCamera, FiSave, FiLock, FiUser, FiMail, FiPhone,FiHome  } from "react-icons/fi";
-import { FaUserCircle } from "react-icons/fa";
+import { useState, useEffect, useContext } from "react";
+import { FiSettings,  FiCamera, FiSave, FiLock, FiUser, FiMail, FiPhone,FiHome ,FiCircle } from "react-icons/fi";
+import { FaCoins, FaMoneyBill, FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import UserService from "../../API/UserService";
 import { toast } from "react-toastify";
 import { checkAndRefreshSession, getTokenExpiryTime } from "../../utils/tokenUtils";
 import { useTranslation } from 'react-i18next';
+import AddressService from "../../API/AddressService";
+import AddressModal from "../../components/address/AddressModal";
+import { FavoriteContext } from "../../contexts/FavoriteContext";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [informationForm,setInformationForm] = useState("userProfile");
   const [avatarLoading, setAvatarLoading] = useState(false);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const { coin } = useContext(FavoriteContext);
+  
 
   const [userInfo, setUserInfo] = useState({
     fullname: "",
@@ -48,6 +53,27 @@ const Profile = () => {
 
     fetchUserProfile();
   }, [t, navigate]);
+  const [addresses, setAddresses] = useState([]);
+  const [showAddressModal, setShowAddressModal] = useState(false);
+  const fetchAddresses = async () => {
+      try {
+        const res = await AddressService.getAllAddresses();
+        const list = res.data.result; 
+        // Nếu backend trả về dữ liệu nằm trong res.data
+        setAddresses(list);
+        const defaultAddress = list.find(addr => addr.isDefault === true);
+        console.log(defaultAddress);
+        console.log(addresses);
+        // if (defaultAddress) {
+        //   setAddresses(defaultAddress);
+        // }
+      } catch (error) {
+        console.error("Lỗi khi load địa chỉ:", error);
+      }
+  };
+  useEffect(()=> {
+    fetchAddresses();
+  },[])
 
   const fetchUserProfile = async () => {
     try {
@@ -179,7 +205,6 @@ const Profile = () => {
         confirmPassword: passwordData.confirmPassword
       });
       toast.success(t('passwordModal.changePasswordSuccess'));
-      setShowPasswordModal(false);
       setPasswordData({
         currentPassword: "",
         newPassword: "",
@@ -197,6 +222,20 @@ const Profile = () => {
     localStorage.removeItem("session");
     navigate('/auth/login');
   };
+  
+
+  const setDefaultAddress = (id) => {
+    // gọi API hoặc cập nhật state
+  };
+
+  const deleteAddress = (id) => {
+    // gọi API hoặc cập nhật state
+  };
+
+  const openAddAddressModal = () => {
+    // mở modal thêm địa chỉ
+  };
+
 
   if (loading && !userInfo.fullname) {
     return (
@@ -281,7 +320,7 @@ const Profile = () => {
                 {/* Quick Actions */}
                 <div className="space-y-3">
                   <button
-                      onClick={() => setShowPasswordModal(true)}
+                      onClick={() => {setInformationForm("userProfile")}}
                       className="w-full flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-amber-50 text-gray-700 hover:text-amber-600 transition-all duration-300 group"
                   >
                     <div className="p-2 rounded-lg bg-white shadow-sm group-hover:bg-amber-100 transition-colors">
@@ -290,7 +329,7 @@ const Profile = () => {
                     <span className="font-medium">{t('profile.quickActions.userProfile')}</span>
                   </button>
                   <button
-                      onClick={() => setShowPasswordModal(true)}
+                      onClick={() => {setInformationForm("myAddress")}}
                       className="w-full flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-amber-50 text-gray-700 hover:text-amber-600 transition-all duration-300 group"
                   >
                     <div className="p-2 rounded-lg bg-white shadow-sm group-hover:bg-amber-100 transition-colors">
@@ -299,7 +338,7 @@ const Profile = () => {
                     <span className="font-medium">{t('profile.quickActions.myAddress')}</span>
                   </button>
                   <button
-                      onClick={() => setShowPasswordModal(true)}
+                      onClick={() => {setInformationForm("changePassword")}}
                       className="w-full flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-amber-50 text-gray-700 hover:text-amber-600 transition-all duration-300 group"
                   >
                     <div className="p-2 rounded-lg bg-white shadow-sm group-hover:bg-amber-100 transition-colors">
@@ -313,195 +352,272 @@ const Profile = () => {
 
             {/* Profile Form */}
             <div className="lg:col-span-2">
-              <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200/50 p-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-                  <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg">
-                    <FiSettings className="w-6 h-6 text-white" />
-                  </div>
-                  {t('profile.personalInfo.title')}
-                </h2>
+              {/**Thông tin cá nhân */}
+              {informationForm === "userProfile" && (
+                <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200/50 p-8">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg">
+                      <FiSettings className="w-6 h-6 text-white" />
+                    </div>
+                    {t('profile.personalInfo.title')}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Full Name */}
-                  <div className="group">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                      <FiUser className="w-4 h-4 text-amber-500" />
-                      {t('profile.personalInfo.fullname.label')}
-                    </label>
-                    <input
-                        type="text"
-                        name="fullname"
-                        value={userInfo.fullname}
-                        onChange={handleInputChange}
-                        className={`w-full px-4 py-3 rounded-xl border-2 bg-white/50 backdrop-blur-sm focus:outline-none focus:bg-white transition-all duration-300 ${
-                            errors.fullname
-                                ? 'border-red-300 focus:border-red-400'
-                                : 'border-gray-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100'
-                        }`}
-                        placeholder={t('profile.personalInfo.fullname.placeholder')}
-                    />
-                    {errors.fullname && (
-                        <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
-                          <span className="w-1 h-1 bg-red-500 rounded-full"></span>
-                          {errors.fullname}
-                        </p>
-                    )}
-                  </div>
+                    <div className="flex items-center">
+                      <FaCoins size={24} color="#f4b400" />
+                      {coin}
+                    </div>
+                  </h2>
 
-                  {/* Email */}
-                  <div className="group">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                      <FiMail className="w-4 h-4 text-amber-500" />
-                      {t('profile.personalInfo.email.label')}
-                    </label>
-                    <input
-                        type="email"
-                        value={userInfo.email}
-                        disabled
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-500 cursor-not-allowed"
-                        placeholder={t('profile.personalInfo.email.placeholder')}
-                    />
-                    <p className="mt-2 text-xs text-gray-500">{t('profile.personalInfo.email.note')}</p>
-                  </div>
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Full Name */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <FiUser className="w-4 h-4 text-amber-500" />
+                        {t('profile.personalInfo.fullname.label')}
+                      </label>
+                      <input
+                          type="text"
+                          name="fullname"
+                          value={userInfo.fullname}
+                          onChange={handleInputChange}
+                          className={`w-full px-4 py-3 rounded-xl border-2 bg-white/50 backdrop-blur-sm focus:outline-none focus:bg-white transition-all duration-300 ${
+                              errors.fullname
+                                  ? 'border-red-300 focus:border-red-400'
+                                  : 'border-gray-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100'
+                          }`}
+                          placeholder={t('profile.personalInfo.fullname.placeholder')}
+                      />
+                      {errors.fullname && (
+                          <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
+                            <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                            {errors.fullname}
+                          </p>
+                      )}
+                    </div>
 
-                  {/* Phone */}
-                  <div className="group">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                      <FiPhone className="w-4 h-4 text-amber-500" />
-                      {t('profile.personalInfo.phone.label')}
-                    </label>
-                    <input
-                        type="tel"
-                        name="phone"
-                        value={userInfo.phone}
-                        onChange={handleInputChange}
-                        className={`w-full px-4 py-3 rounded-xl border-2 bg-white/50 backdrop-blur-sm focus:outline-none focus:bg-white transition-all duration-300 ${
-                            errors.phone
-                                ? 'border-red-300 focus:border-red-400'
-                                : 'border-gray-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100'
-                        }`}
-                        placeholder={t('profile.personalInfo.phone.placeholder')}
-                    />
-                    {errors.phone && (
-                        <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
-                          <span className="w-1 h-1 bg-red-500 rounded-full"></span>
-                          {errors.phone}
-                        </p>
-                    )}
-                  </div>
+                    {/* Email */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <FiMail className="w-4 h-4 text-amber-500" />
+                        {t('profile.personalInfo.email.label')}
+                      </label>
+                      <input
+                          type="email"
+                          value={userInfo.email}
+                          disabled
+                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-500 cursor-not-allowed"
+                          placeholder={t('profile.personalInfo.email.placeholder')}
+                      />
+                      <p className="mt-2 text-xs text-gray-500">{t('profile.personalInfo.email.note')}</p>
+                    </div>
 
-                  {/* Submit Button */}
-                  <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-4 px-6 rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 focus:outline-none focus:ring-4 focus:ring-amber-100 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                  >
-                    {loading ? (
-                        <div className="flex items-center justify-center gap-2">
-                          <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-                          <span>{t('profile.personalInfo.saving')}</span>
-                        </div>
+                    {/* Phone */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                        <FiPhone className="w-4 h-4 text-amber-500" />
+                        {t('profile.personalInfo.phone.label')}
+                      </label>
+                      <input
+                          type="tel"
+                          name="phone"
+                          value={userInfo.phone}
+                          onChange={handleInputChange}
+                          className={`w-full px-4 py-3 rounded-xl border-2 bg-white/50 backdrop-blur-sm focus:outline-none focus:bg-white transition-all duration-300 ${
+                              errors.phone
+                                  ? 'border-red-300 focus:border-red-400'
+                                  : 'border-gray-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100'
+                          }`}
+                          placeholder={t('profile.personalInfo.phone.placeholder')}
+                      />
+                      {errors.phone && (
+                          <p className="mt-2 text-sm text-red-500 flex items-center gap-1">
+                            <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                            {errors.phone}
+                          </p>
+                      )}
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-4 px-6 rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 focus:outline-none focus:ring-4 focus:ring-amber-100 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    >
+                      {loading ? (
+                          <div className="flex items-center justify-center gap-2">
+                            <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                            <span>{t('profile.personalInfo.saving')}</span>
+                          </div>
+                      ) : (
+                          <div className="flex items-center justify-center gap-2">
+                            <FiSave className="w-5 h-5" />
+                            <span>{t('profile.personalInfo.saveChanges')}</span>
+                          </div>
+                      )}
+                    </button>
+                  </form>
+                </div>
+              )}
+              {/* Địa chỉ cá nhân */}
+              {informationForm === "myAddress" && (
+                <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200/50 p-8">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg">
+                      <FiSettings className="w-6 h-6 text-white" />
+                    </div>
+                    {t('profile.address.title')}
+                  </h2>
+
+                  {/* Danh sách địa chỉ */}
+                  <div className="space-y-4">
+                    {addresses.length === 0 ? (
+                      <p className="text-gray-500 italic">{t('profile.address.noAddress')}</p>
                     ) : (
-                        <div className="flex items-center justify-center gap-2">
-                          <FiSave className="w-5 h-5" />
-                          <span>{t('profile.personalInfo.saveChanges')}</span>
-                        </div>
-                    )}
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
+                      addresses.map((address, index) => (
+                        <div
+                          key={address.id}
+                          className="p-5 border border-gray-200 rounded-xl bg-white/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300"
+                        >
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="font-semibold text-gray-800">
+                                {address.receiver} | {address.phone}
+                              </p>
+                              <p className="text-gray-600 mt-1">{address.address}</p>
 
-        {/* Password Change Modal */}
-        {showPasswordModal && (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300">
-                <div className="p-6 border-b border-gray-100">
-                  <h3 className="text-xl font-bold text-gray-800 flex items-center gap-3">
+                              {address.isDefault && (
+                                <span className="mt-2 inline-block px-3 py-1 text-xs rounded-lg bg-amber-100 text-amber-700 font-semibold">
+                                  {t('profile.address.default')}
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="flex gap-3">
+                              {!address.isDefault && (
+                                <button
+                                  onClick={() => setDefaultAddress(address.id)}
+                                  className="text-amber-600 hover:text-amber-800 font-medium"
+                                >
+                                  {t('profile.address.setDefault')}
+                                </button>
+                              )}
+
+                              <button
+                                onClick={() => deleteAddress(address.id)}
+                                className="text-red-500 hover:text-red-700 font-medium"
+                              >
+                                {t('profile.address.delete')}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Nút thêm địa chỉ */}
+                  <div className="mt-8">
+                    <button
+                      onClick={()=> {setShowAddressModal(true)}}
+                      className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-4 px-6 rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 focus:outline-none focus:ring-4 focus:ring-amber-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    >
+                      + {t('profile.address.add')}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Đổi mật khẩu */}
+              {informationForm === "changePassword" && (
+                <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200/50 p-8">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
                     <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg">
                       <FiLock className="w-5 h-5 text-white" />
                     </div>
                     {t('passwordModal.title')}
-                  </h3>
+                  </h2>
+
+                  <form onSubmit={handlePasswordChange} className="p-6 space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        {t('passwordModal.currentPassword.label')}
+                      </label>
+                      <input
+                          type="password"
+                          value={passwordData.currentPassword}
+                          onChange={(e) => setPasswordData(prev => ({
+                            ...prev,
+                            currentPassword: e.target.value
+                          }))}
+                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none transition-all duration-300"
+                          required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        {t('passwordModal.newPassword.label')}
+                      </label>
+                      <input
+                          type="password"
+                          value={passwordData.newPassword}
+                          onChange={(e) => setPasswordData(prev => ({
+                            ...prev,
+                            newPassword: e.target.value
+                          }))}
+                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none transition-all duration-300"
+                          required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        {t('passwordModal.confirmNewPassword.label')}
+                      </label>
+                      <input
+                          type="password"
+                          value={passwordData.confirmPassword}
+                          onChange={(e) => setPasswordData(prev => ({
+                            ...prev,
+                            confirmPassword: e.target.value
+                          }))}
+                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none transition-all duration-300"
+                          required
+                      />
+                    </div>
+
+                    <div className="flex gap-3 pt-4">
+                      <button
+                          type="button"
+                          onClick={() => {}}
+                          className="flex-1 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-xl transition-colors duration-300 font-medium"
+                      >
+                        {t('passwordModal.cancel')}
+                      </button>
+                      <button
+                          type="submit"
+                          disabled={loading}
+                          className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-3 rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 focus:outline-none focus:ring-4 focus:ring-amber-100 transition-all duration-300 disabled:opacity-50"
+                      >
+                        {loading ? (
+                            <div className="flex items-center justify-center">
+                              <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                            </div>
+                        ) : (
+                            t('passwordModal.changePasswordBtn')
+                        )}
+                      </button>
+                    </div>
+                  </form>
                 </div>
-
-                <form onSubmit={handlePasswordChange} className="p-6 space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      {t('passwordModal.currentPassword.label')}
-                    </label>
-                    <input
-                        type="password"
-                        value={passwordData.currentPassword}
-                        onChange={(e) => setPasswordData(prev => ({
-                          ...prev,
-                          currentPassword: e.target.value
-                        }))}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none transition-all duration-300"
-                        required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      {t('passwordModal.newPassword.label')}
-                    </label>
-                    <input
-                        type="password"
-                        value={passwordData.newPassword}
-                        onChange={(e) => setPasswordData(prev => ({
-                          ...prev,
-                          newPassword: e.target.value
-                        }))}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none transition-all duration-300"
-                        required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      {t('passwordModal.confirmNewPassword.label')}
-                    </label>
-                    <input
-                        type="password"
-                        value={passwordData.confirmPassword}
-                        onChange={(e) => setPasswordData(prev => ({
-                          ...prev,
-                          confirmPassword: e.target.value
-                        }))}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 focus:outline-none transition-all duration-300"
-                        required
-                    />
-                  </div>
-
-                  <div className="flex gap-3 pt-4">
-                    <button
-                        type="button"
-                        onClick={() => setShowPasswordModal(false)}
-                        className="flex-1 px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-xl transition-colors duration-300 font-medium"
-                    >
-                      {t('passwordModal.cancel')}
-                    </button>
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-3 rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 focus:outline-none focus:ring-4 focus:ring-amber-100 transition-all duration-300 disabled:opacity-50"
-                    >
-                      {loading ? (
-                          <div className="flex items-center justify-center">
-                            <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-                          </div>
-                      ) : (
-                          t('passwordModal.changePasswordBtn')
-                      )}
-                    </button>
-                  </div>
-                </form>
-              </div>
+              )}
             </div>
-        )}
+          </div>
+        </div>
+        {
+          showAddressModal && (
+            <AddressModal setShowAddressModal={setShowAddressModal}/>
+          )
+        }
       </div>
   );
 };

@@ -281,7 +281,7 @@ const OrderHistory = () => {
                                     <div key={product.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
                                       <div className="relative">
                                         <img
-                                            src={product.idProduct.images?.[0]?.imageUrl || '/default-image.jpg'}
+                                            src={product.idProduct.images?.[0]?.imageUrl || product.idProduct.product.primaryImage.imageUrl}
                                             alt={product.idProduct.product.name}
                                             className="w-20 h-20 rounded-xl object-cover shadow-md"
                                         />

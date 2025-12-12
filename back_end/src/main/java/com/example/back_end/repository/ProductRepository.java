@@ -108,5 +108,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("maxPrice") BigDecimal maxPrice,
             Pageable pageable
     );
+    long countByActiveTrue();
 
 }

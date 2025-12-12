@@ -128,6 +128,14 @@ const UserService = {
             throw error;
         }
 
+    },
+    getCoin: async()=> {
+        try {
+            const response = await axiosClient.get(`/users/coin`);
+            return response.data; 
+        } catch (error) {
+            throw error;
+        }
     }
 };
 

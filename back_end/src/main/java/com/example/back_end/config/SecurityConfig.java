@@ -29,7 +29,7 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {"users/createUser",
             "auth/login", "auth/introspect", "/verifyRegister", "auth/register", "users/existUser", "/products/**",
             "/categories/**", "/users/**","/forgotPassword","/dialogflow/**" };
-    private final String[] PUBLIC_ENDPOINTS_GET = {"cart/listCartItem/**", "favorite/idUser/**","/order/**","address/**"};
+    private final String[] PUBLIC_ENDPOINTS_GET = {"cart/listCartItem/**", "favorite/idUser/**","/order/**","address/**","analytics/**"};
     private final String[] PUBLIC_ENDPOINTS_GET_PERMITALL = {"/users/**", "/categories/**", "/products/**",
             "/auth/verifyAccount", "/discount/**", "/genders/**", "/colors/**", "/sizes/**", "brands/**","/payment/vnpay/**","/payment/vnpay_return/**","/review/comments/**"};
     private final String[] PUBLIC_ENDPOINTS_PUT = {"/users/**", "/categories/**", "/products/**","/order/update","cart/**","address/**"};

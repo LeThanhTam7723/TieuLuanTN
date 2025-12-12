@@ -187,8 +187,17 @@
       "saving": "Saving...",
       "updateSuccess": "Information updated successfully",
       "updateFailed": "Failed to update information"
+    },
+    "address":{
+      "title":"My Address",
+      "noAddress" : "No Address",
+      "default" : "Default",
+      "setDefault": "Set default",
+      "delete": "Delete",
+      "add":"Add new address"
     }
   },
+  
   "passwordModal": {
     "title": "Change Password",
     "currentPassword": {

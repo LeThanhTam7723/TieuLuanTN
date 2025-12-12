@@ -121,9 +121,6 @@ public class CartDetailService implements ICartService{
                         .forEach(img -> System.out.println("Primary Image URL: " + img.getImageUrl()));
             });
         }
-//        listDto = list.stream()
-//                .map(cartDetail -> modelMapper.map(cartDetail, CartDetailDto.class))
-//                .collect(Collectors.toList());
         listDto = list.stream()
                 .map(cartDetail -> {
                     ProductVariantResponse variantResponse = modelMapper.map(cartDetail.getIdProduct(), ProductVariantResponse.class);

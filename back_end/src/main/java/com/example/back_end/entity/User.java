@@ -3,6 +3,7 @@ package com.example.back_end.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -46,4 +47,7 @@ public class User extends BaseEntity{
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
+
+    @Column(name = "coin", nullable = false)
+    private BigDecimal coin = BigDecimal.ZERO;
 }

@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Pageable;
 import com.example.back_end.dto.response.PageResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -411,6 +412,15 @@ public class UserController {
         return ApiResponse.<Void>builder()
                 .code(0)
                 .message("Cập nhật trạng thái người dùng thành công")
+                .build();
+    }
+
+    @GetMapping("/coin")
+    ApiResponse<BigDecimal> getCoinByUser(){
+        BigDecimal coin = userService.getUserCoin();
+        return ApiResponse.<BigDecimal>builder()
+                .code(0)
+                .result(coin)
                 .build();
     }
 }

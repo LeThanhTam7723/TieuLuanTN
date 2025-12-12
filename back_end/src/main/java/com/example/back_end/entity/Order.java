@@ -30,7 +30,7 @@ public class Order {
     @Column(name = "phone", nullable = false)
     private String phone;
 
-    @Column(name = "dateOrder", nullable = false)
+    @Column(name = "date_order", nullable = false)
     private LocalDate dateOrder;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -44,6 +44,6 @@ public class Order {
     @Column(name = "total", nullable = false)
     private BigDecimal total;
 
-    @Column(name = "is_Paid", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(name = "is_paid", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean isPaid;
 }

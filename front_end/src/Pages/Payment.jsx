@@ -5,6 +5,7 @@ import AddressModal from "../components/address/AddressModal";
 import AddressService from "../API/AddressService";
 import DiscountService from "../API/DiscountService";
 import CheckOutService from "../API/CheckoutService";
+import { FaCoins } from "react-icons/fa";
 
 const CheckoutPage = () => {
   const [checkoutItems, setCheckoutItems] = useState([]);
@@ -16,7 +17,7 @@ const CheckoutPage = () => {
   }, []);
 
   const [selectedAddress, setSelectedAddress] = useState({});
-
+  const { coin } = useContext(FavoriteContext);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showAddressListModal, setShowAddressListModal] = useState(false);
   const [showVoucherModal, setShowVoucherModal] = useState(false);
@@ -27,6 +28,7 @@ const CheckoutPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [savedAddresses ,setSavedAddresses] = useState([]);
   const [availableVouchers,setAvailableVouchers] = useState([]);
+  const [useCoin, setUseCoin] = useState(false);
   const handleSelectAddress = (address) => {
     setSelectedAddress(address);
     setShowAddressListModal(false);
@@ -76,8 +78,8 @@ const CheckoutPage = () => {
     ? (subtotal * selectedVoucher.discountValue)
     : selectedVoucher.discountValue
   : 0;
-
   const total = subtotal + shipping + tax - discount;
+  const totalAfter = useCoin ? total - coin : total;
 
   const handleApplyVoucher = () => {
     const voucher = availableVouchers.find(v => v.code === voucherCode.toUpperCase());
@@ -125,9 +127,9 @@ const CheckoutPage = () => {
             address: selectedAddress.address,
             idPaymentMethod: 2,
             idStatus: 1,
-            total: subtotal
+            total: totalAfter
           });
-          const vnPayUrl = await CheckOutService.vnPay(subtotal,response.data.result.id);
+          const vnPayUrl = await CheckOutService.vnPay(totalAfter,response.data.result.id);
           const {code,result,message} = vnPayUrl.data;
           console.log("Đặt hàng COD thành công:", response.data.result.id);
           console.log(result);
@@ -292,6 +294,16 @@ const CheckoutPage = () => {
                   <Ticket size={16} />
                   Chọn mã giảm giá
                 </button>
+                <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <input
+                    type="checkbox"
+                    checked={useCoin}
+                    onChange={(e) => setUseCoin(e.target.checked)}
+                  />
+                  <span>Chọn sử dụng {coin}</span>
+                  <FaCoins size={15} color="#f4b400" />
+                </label>
+
                 {selectedVoucher && (
                   <div className="mt-2 p-2 bg-green-50 text-green-700 text-sm rounded">
                     ✓ Đã áp dụng: {selectedVoucher.description}
@@ -320,14 +332,23 @@ const CheckoutPage = () => {
                 
                 {discount > 0 && (
                   <div className="flex justify-between text-green-600">
-                    <span>Giảm giá</span>
+                    <span>Giảm giá từ mã giảm</span>
                     <span>-{discount.toLocaleString('vi-VN')}₫</span>
+                  </div>
+                )}
+                {useCoin && (
+                  <div className="flex justify-between text-green-600">
+                    <div className="flex items-center gap-1">
+                      <p>Giảm giá từ</p>
+                      <FaCoins size={15} color="#f4b400" />
+                    </div>
+                    <span>-{coin.toLocaleString('vi-VN')}₫</span>
                   </div>
                 )}
                 
                 <div className="border-t pt-3 flex justify-between text-lg font-bold">
                   <span>Tổng cộng</span>
-                  <span className="text-red-600">{total.toLocaleString('vi-VN')}₫</span>
+                  <span className="text-red-600">{totalAfter.toLocaleString('vi-VN')}₫</span>
                 </div>
               </div>
 
