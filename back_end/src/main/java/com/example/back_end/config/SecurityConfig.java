@@ -28,11 +28,11 @@ public class SecurityConfig {
     // Xác thực yêu cầu
     private final String[] PUBLIC_ENDPOINTS_POST = {"users/createUser",
             "auth/login", "auth/introspect", "/verifyRegister", "auth/register", "users/existUser", "/products/**",
-            "/categories/**", "/users/**","/forgotPassword","/dialogflow/**" };
-    private final String[] PUBLIC_ENDPOINTS_GET = {"cart/listCartItem/**", "favorite/idUser/**","/order/**","address/**","analytics/**"};
+            "/categories/**", "/users/**","/forgotPassword","chatBot/**" };
+    private final String[] PUBLIC_ENDPOINTS_GET = {"cart/listCartItem/**", "favorite/idUser/**","/order/**","address/**","analytics/**","review/admin"};
     private final String[] PUBLIC_ENDPOINTS_GET_PERMITALL = {"/users/**", "/categories/**", "/products/**",
-            "/auth/verifyAccount", "/discount/**", "/genders/**", "/colors/**", "/sizes/**", "brands/**","/payment/vnpay/**","/payment/vnpay_return/**","/review/comments/**"};
-    private final String[] PUBLIC_ENDPOINTS_PUT = {"/users/**", "/categories/**", "/products/**","/order/update","cart/**","address/**"};
+            "/auth/verifyAccount", "/discount/**", "/genders/**", "/colors/**", "/sizes/**", "brands/**","/payment/vnpay/**","/payment/vnpay_return/**","/review/comments/**","chatBot/**"};
+    private final String[] PUBLIC_ENDPOINTS_PUT = {"/users/**", "/categories/**", "/products/**","/order/update","cart/**","address/**","review/admin/**"};
     private final String[] PUBLIC_ENDPOINTS_PATCH = {"/users/**", "/categories/**", "/products/**"};
     private final String[] PUBLIC_ENDPOINTS_DELETE = {"/users/**", "/categories/**", "/products/**", "/favorite/delete","cart/**","address/**"};
     private final String[] PUBLIC_ENDPOINTS_LOGIN = {"/logout", "/cart/updateItem", "/order/add", "/favorite/add","/review/**","/address/**"};

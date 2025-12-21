@@ -9,6 +9,7 @@ import {FiChevronRight} from "react-icons/fi";
 import UserManagementPage from "./UserManagementPage.jsx";
 import Analytics from "./AnalyticsPage.jsx";
 import AnalyticsPage from "./AnalyticsPage.jsx";
+import ReviewManagement from "./ReviewManagementPage.jsx";
 
 const AdminDashboard = () => {
     const location = useLocation();
@@ -40,6 +41,8 @@ const AdminDashboard = () => {
                 return <UserManagementPage/>;
             case 'orders':
                 return <OrderManagementPage/>;
+            case 'reviews':
+                return <ReviewManagement/>;
             default:
                 return <ProductManagementPage/>;
         }

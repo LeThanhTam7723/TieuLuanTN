@@ -18,6 +18,27 @@ const ReviewService = {
             throw error;
         }
     },
+    getReviewsByAdmin: async() => {
+        try {
+            const response = await axiosClient.get('/review/admin');
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    },
+    updateReplyByAdmin: async(reviewId, adminReply) => {
+        try {
+            const response = await axiosClient.put('/review/admin/reply',
+                {
+                    reviewId,
+                    adminReply
+                }
+            );
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 export default ReviewService;
 

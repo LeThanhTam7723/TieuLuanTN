@@ -4,10 +4,12 @@ import MainLayout from './layouts/MainLayout'
 import {AuthProvider} from "./contexts/AuthContext.jsx";
 import {CurrencyProvider} from "./contexts/CurrencyContext.jsx";
 import { FavoriteProvider } from './contexts/FavoriteContext.jsx';
+import ChatBot from './components/chatbot/ChatBot.jsx';
 
 function App() {
     return (
         <BrowserRouter>
+            <ChatBot/>
             <FavoriteProvider>
                 <AuthProvider>
                     <CurrencyProvider>

@@ -5,7 +5,7 @@ import { FiArrowUpRight, FiShoppingBag } from 'react-icons/fi';
 const PLACEHOLDER_IMAGE_URL = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center';
 
 const CategoryBrandCard = ({ brand }) => {
-  const imageUrl = brand?.brandImage?.imageUrl || PLACEHOLDER_IMAGE_URL;
+  const imageUrl = brand?.website || PLACEHOLDER_IMAGE_URL;
   const imageAltText = brand?.brandImage?.altText || brand?.name || 'Fashion brand';
 
   return (

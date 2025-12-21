@@ -125,6 +125,12 @@
             <artifactId>meilisearch-java</artifactId>
             <version>0.12.0</version>
         </dependency>
+        <!--webflux cho chat bot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>

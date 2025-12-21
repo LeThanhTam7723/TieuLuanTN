@@ -8,7 +8,7 @@ import ChatBot from '../components/chatbot/ChatBot';
 
 const HERO_IMAGE = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=800&fit=crop&crop=center';
 const MEN_IMAGE = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop&crop=center';
-const WOMEN_IMAGE = 'https://images.unsplash.com/photo-1494790108755-2616c5e8f3ee?w=600&h=400&fit=crop&crop=center';
+const WOMEN_IMAGE = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?fit=crop&w=600&h=400';
 const CASUAL_IMAGE = 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1200&h=600&fit=crop&crop=center';
 
 function HomePage() {

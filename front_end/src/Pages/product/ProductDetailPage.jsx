@@ -240,6 +240,31 @@ const ProductDetailPage = () => {
 
                           {/* Comment */}
                           <p className="text-gray-700">{review.comment}</p>
+                          {review.adminReply && (
+                            <div className="mt-3 ml-10 flex items-start space-x-3 bg-gray-50 border-l-4 border-blue-500 p-3 rounded-md">
+                              {/* Avatar admin */}
+                              <img
+                                src={review.repliedBy.imageUrl}
+                                alt="Admin"
+                                className="w-8 h-8 rounded-full border object-cover"
+                              />
+
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm font-semibold text-blue-600">
+                                    Phản hồi từ quản trị viên
+                                  </span>
+                                  <span className="text-xs text-gray-400">
+                                    {new Date(review.repliedAt).toLocaleDateString()}
+                                  </span>
+                                </div>
+
+                                <p className="text-sm text-gray-700 mt-1">
+                                  {review.adminReply}
+                                </p>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}

@@ -45,21 +45,21 @@ const CategoryCard = ({ category, genderSlug }) => {
           {/* Content Section */}
           <div className="absolute bottom-0 left-0 w-full p-6 text-white opacity-0 group-hover:opacity-100 transition-all duration-300">
             {/* Category Name */}
-            <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-1 group-hover:text-black transition-colors duration-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-1 group-hover:text-white transition-colors duration-200">
               {category?.name || 'Fashion Category'}
             </h3>
 
             {/* Description */}
             {category?.description && (
-                <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
+                <p className="text-sm text-white line-clamp-2 leading-relaxed">
                   {category.description}
                 </p>
             )}
 
             {/* Hover Effect Underline */}
-            <div className="mt-4 flex items-center text-sm font-medium text-gray-900 group-hover:text-black">
+            <div className="mt-4 flex items-center text-sm font-medium text-gray-900 group-hover:text-white">
               <span>Khám phá</span>
-              <div className="ml-2 h-px flex-1 bg-gray-200 group-hover:bg-gray-900 transition-colors duration-300" />
+              <div className="ml-2 h-px flex-1 bg-gray-200 group-hover:bg-white transition-colors duration-300" />
             </div>
           </div>
         </div>
