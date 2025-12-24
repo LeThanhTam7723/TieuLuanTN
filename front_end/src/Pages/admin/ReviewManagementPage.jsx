@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ReviewTable from "../../components/admin/review/ReviewTable";
 import ReviewReplyModal from "../../components/admin/review/ReviewReplyModal";
 import ReviewService from "../../API/ReviewService";
+import { Spin } from "antd";
 
 export default function ReviewManagement() {
   const [reviews, setReviews] = useState([]);
@@ -68,9 +69,13 @@ export default function ReviewManagement() {
 
   return (
     <div style={{ padding: 24 }}>
-      <h2>Quản lý đánh giá</h2>
+      <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Quản lý mã giảm giá</h1>
+      {loading ? (
+        <Spin size="large"/>
+      ) : (
+        <ReviewTable reviews={reviews} onReply={handleOpenReply} />
+      )}
 
-      <ReviewTable reviews={reviews} onReply={handleOpenReply} />
 
       <ReviewReplyModal
         open={open}

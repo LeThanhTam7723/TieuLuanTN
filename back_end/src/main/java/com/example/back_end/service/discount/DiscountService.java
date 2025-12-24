@@ -3,6 +3,7 @@ package com.example.back_end.service.discount;
 import com.example.back_end.dto.request.discount.DiscountCreationRequest;
 import com.example.back_end.dto.request.discount.DiscountUpdateRequest;
 import com.example.back_end.dto.response.discount.DiscountResponse;
+import com.example.back_end.dto.response.discount.DiscountResponseAdmin;
 import com.example.back_end.entity.Discount;
 import com.example.back_end.exception.AppException;
 import com.example.back_end.exception.ErrorCode;
@@ -51,6 +52,8 @@ public class DiscountService implements IDiscountService {
                 .usageLimit(request.getUsageLimit())
                 .discountType(request.getDiscountType())
                 .discountValue(request.getDiscountValue())
+                .minimumOrderAmount(request.getMinimumOrderAmount())
+                .active(request.isActive())
                 .build();
 
         Discount savedDiscount = discountRepository.save(discount);
@@ -77,9 +80,9 @@ public class DiscountService implements IDiscountService {
     }
 
     @Override
-    public List<DiscountResponse> getAllDiscounts() {
+    public List<DiscountResponseAdmin> getAllDiscounts() {
         return discountRepository.findAll().stream()
-                .map(discount -> modelMapper.map(discount, DiscountResponse.class))
+                .map(discount -> modelMapper.map(discount, DiscountResponseAdmin.class))
                 .collect(Collectors.toList());
     }
 

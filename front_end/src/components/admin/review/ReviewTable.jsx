@@ -44,6 +44,7 @@ export default function ReviewTable({ reviews, onReply }) {
 
   return (
     <Table
+      className="overflow-x-auto bg-white shadow-md rounded-lg"
       rowKey="id"
       columns={columns}
       dataSource={reviews}

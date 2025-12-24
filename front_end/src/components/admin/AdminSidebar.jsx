@@ -5,7 +5,8 @@ import {
     MdPeople,
     MdShoppingCart,
     MdInsights ,
-    MdReviews
+    MdReviews,
+    MdDiscount
 } from "react-icons/md";
 import { FiChevronRight} from "react-icons/fi";
 
@@ -45,6 +46,12 @@ const AdminSidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }) 
             id: 'reviews',
             name: 'Quản lý đánh giá',
             icon: <MdReviews className="w-5 h-5" />,
+            badge: null
+        },
+        {
+            id: 'discounts',
+            name: 'Quản lý mã giảm giá',
+            icon: <MdDiscount className="w-5 h-5" />,
             badge: null
         },
     ];

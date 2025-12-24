@@ -1,4 +1,4 @@
-package com.example.back_end.dto.request.discount;
+package com.example.back_end.dto.response.discount;
 
 import com.example.back_end.constant.DiscountType;
 import lombok.AllArgsConstructor;
@@ -12,13 +12,14 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DiscountCreationRequest {
+public class DiscountResponseAdmin {
+    private Long id;
     private String code;
-    private String description;
     private DiscountType discountType;
     private String discountName;
-    private BigDecimal discountValue;
+    private String description;
+    private double discountValue;
     private BigDecimal minimumOrderAmount;
     private Integer usageLimit;
-    private boolean active;
-} 
+    private Boolean active;
+}

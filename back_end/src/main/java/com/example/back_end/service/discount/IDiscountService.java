@@ -3,6 +3,7 @@ package com.example.back_end.service.discount;
 import com.example.back_end.dto.request.discount.DiscountCreationRequest;
 import com.example.back_end.dto.request.discount.DiscountUpdateRequest;
 import com.example.back_end.dto.response.discount.DiscountResponse;
+import com.example.back_end.dto.response.discount.DiscountResponseAdmin;
 import com.example.back_end.entity.Discount;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface IDiscountService {
     
     void deleteDiscount(Long id);
     
-    List<DiscountResponse> getAllDiscounts();
+    List<DiscountResponseAdmin> getAllDiscounts();
     
     DiscountResponse getDiscountById(Long id);
 }

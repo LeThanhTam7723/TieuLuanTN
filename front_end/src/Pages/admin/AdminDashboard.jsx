@@ -10,6 +10,7 @@ import UserManagementPage from "./UserManagementPage.jsx";
 import Analytics from "./AnalyticsPage.jsx";
 import AnalyticsPage from "./AnalyticsPage.jsx";
 import ReviewManagement from "./ReviewManagementPage.jsx";
+import VoucherPage from "./VoucherPage.jsx";
 
 const AdminDashboard = () => {
     const location = useLocation();
@@ -43,6 +44,8 @@ const AdminDashboard = () => {
                 return <OrderManagementPage/>;
             case 'reviews':
                 return <ReviewManagement/>;
+            case 'discounts':
+                return <VoucherPage/>;
             default:
                 return <ProductManagementPage/>;
         }

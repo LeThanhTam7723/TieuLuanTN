@@ -1,5 +1,6 @@
 package com.example.back_end.service;
 
+import com.example.back_end.dto.request.RefreshRequest;
 import com.example.back_end.dto.response.user.UserResponse;
 import com.example.back_end.dto.request.IntrospectRequest;
 import com.example.back_end.dto.request.LoginRequest;
@@ -84,7 +85,6 @@ public class AuthService {
 
         return AuthenticationResponse.builder()
                 .token(token)
-//                .expiryTime(token.expiryDate)
                 .build();
     }
 
@@ -96,8 +96,6 @@ public class AuthService {
         if(!user.getActive()){
             throw new AppException(ErrorCode.INACTIVE_ACC);
         }
-        System.out.println(user.getEmail());
-        System.out.println(user.getPassword());
         boolean authenticated =passwordEncoder.matches(request.getPassword(), user.getPassword());
         System.out.println(authenticated);
         if(!authenticated){
@@ -184,6 +182,28 @@ public class AuthService {
             throw new RuntimeException(e);
         }
 
+    }
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getToken());
+
+        var jit = signedJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken =
+                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signedJWT.getJWTClaimsSet().getSubject();
+
+        var user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .build();
     }
 
 
