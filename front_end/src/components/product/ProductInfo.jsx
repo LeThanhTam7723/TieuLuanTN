@@ -1,21 +1,56 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Star, Shield, Truck, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next'; // Import useTranslation
+import { FiStar } from 'react-icons/fi';
+import { FaStarHalfAlt } from "react-icons/fa";
+import { CurrencyContext } from '../../contexts/CurrencyContext';
 
 const ProductInfo = ({ product, reviewsCount }) => {
-  const { t } = useTranslation(); 
+  const { t ,i18n } = useTranslation(); 
+  const isEn = i18n.language === 'en';
+  // Lấy hàm convertAndGetDisplayPrice và formatCurrency từ CurrencyContext
+  const { convertAndGetDisplayPrice, formatCurrency, currentCurrency } = useContext(CurrencyContext);
+  const displayBasePrice=(basePrice) => {
+    return convertAndGetDisplayPrice(basePrice || 0);
+  } 
 
   if (!product) return null;
 
-  const renderStars = (rating = 0) => {
-    return Array.from({ length: 5 }, (_, index) => (
-        <Star
+  const renderStars = (rating = 4.5) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating - fullStars >= 0.5;
+
+    return Array.from({ length: 5 }, (_, index) => {
+      if (index < fullStars) {
+        return (
+          <FiStar
             key={index}
             size={16}
-            className={index < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
+            className="text-yellow-400 fill-yellow-400"
+          />
+        );
+      }
+
+      if (index === fullStars && hasHalfStar) {
+        return (
+          <FaStarHalfAlt
+            key={index}
+            size={16}
+            className="text-yellow-400 fill-yellow-400"
+          />
+        );
+      }
+
+      return (
+        <FiStar
+          key={index}
+          size={16}
+          className="text-gray-300"
         />
-    ));
-  };
+      );
+    });
+};
+
 
   const formatPrice = (price) => {
     // Sử dụng t() cho "Liên hệ"
@@ -46,13 +81,13 @@ const ProductInfo = ({ product, reviewsCount }) => {
 
         {/* Product Name */}
         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
-          {product.name}
+          {isEn ? product.nameEn : product.name}
         </h1>
 
         {/* Ratings & Reviews */}
         <div className="flex items-center gap-3">
           <div className="flex items-center">
-            {renderStars(product.averageRating)}
+            {renderStars(product.rating)}
           </div>
           <span className="text-sm font-medium text-gray-600">
           {/* Sử dụng t() cho số lượng đánh giá */}
@@ -63,20 +98,19 @@ const ProductInfo = ({ product, reviewsCount }) => {
         {/* Price */}
         <div className="flex items-baseline gap-3">
         <span className="text-4xl font-bold text-amber-600">
-          {formatPrice(product.basePrice)}
+          {formatCurrency(displayBasePrice(product.basePrice), currentCurrency)}
         </span>
           {product.discountedPrice && product.discountedPrice < product.basePrice && (
               <span className="text-xl text-gray-500 line-through">
-            {formatPrice(product.basePrice)}
           </span>
           )}
         </div>
 
         {/* Short Description */}
-        {product.shortDescription && (
-            <p className="text-gray-700 leading-relaxed max-w-lg">
-              {product.shortDescription}
-            </p>
+        {((isEn && product.descriptionEn) || (!isEn && product.description)) && (
+          <p className="text-gray-700 leading-relaxed max-w-lg">
+            {isEn ? product.descriptionEn : product.description}
+          </p>
         )}
 
         {/* Stock Status */}

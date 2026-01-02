@@ -179,11 +179,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public PageResponse<ProductSummary> getProductsByBrandSlug(String slug,Pageable pageable) {
+    public PageResponse<ProductCard> getProductsByBrandSlug(String slug,Pageable pageable) {
         Page<Product> productPage = productRepository.findByBrand_SlugAndActiveTrue(slug,pageable);
-        return PageResponse.<ProductSummary>builder()
+        return PageResponse.<ProductCard>builder()
                 .content(productPage.getContent().stream()
-                        .map(productMapper::toSummary)
+                        .map(productMapper::toProductCard)
                         .toList())
                 .pageNo(productPage.getNumber())
                 .pageSize(productPage.getSize())
@@ -296,7 +296,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public PageResponse<ProductSummary> getRelatedProducts(Long productId, Pageable pageable) {
+    public PageResponse<ProductCard> getRelatedProducts(Long productId, Pageable pageable) {
         Product product = productRepository.findByIdWithDetails(productId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
@@ -319,9 +319,9 @@ public class ProductService implements IProductService {
                 pageable
         );
 
-        return PageResponse.<ProductSummary>builder()
+        return PageResponse.<ProductCard>builder()
                 .content(relatedProducts.getContent().stream()
-                        .map(productMapper::toSummary)
+                        .map(productMapper::toProductCard)
                         .toList())
                 .pageNo(relatedProducts.getNumber())
                 .pageSize(relatedProducts.getSize())
@@ -331,7 +331,7 @@ public class ProductService implements IProductService {
                 .build();
     }
 
-    public PageResponse<ProductSummary> getFilteredProductsByCategorySlugWithFilter(
+    public PageResponse<ProductCard> getFilteredProductsByCategorySlugWithFilter(
             String categorySlug,
             List<Long> colorIds,
             List<Long> sizeIds,
@@ -348,10 +348,10 @@ public class ProductService implements IProductService {
                 categorySlug, colorIds, sizeIds, minPrice, maxPrice, pageable
         );
 
-        List<ProductSummary> summaries = productMapper.toSummaryList(productPage.getContent());
-
-        return PageResponse.<ProductSummary>builder()
-                .content(summaries)
+        return PageResponse.<ProductCard>builder()
+                .content(productPage.getContent().stream()
+                        .map(productMapper::toProductCard)
+                        .toList())
                 .pageNo(productPage.getNumber())
                 .pageSize(productPage.getSize())
                 .totalElements(productPage.getTotalElements())

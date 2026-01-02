@@ -187,7 +187,7 @@ public class ProductController {
     }
 
     @GetMapping("/brand/slug/{slug}")
-    public ResponseEntity<PageResponse<ProductSummary>> getProductsByBrandSlug(@PathVariable String slug,Pageable pageable) {
+    public ResponseEntity<PageResponse<ProductCard>> getProductsByBrandSlug(@PathVariable String slug,Pageable pageable) {
         return ResponseEntity.ok(productService.getProductsByBrandSlug(slug,pageable));
     }
 
@@ -251,7 +251,7 @@ public class ProductController {
      * @return JSON body contains paginated list of filtered product summaries
      */
     @GetMapping("/category/slug/{categorySlug}")
-    public ResponseEntity<PageResponse<ProductSummary>> getProductsByCategorySlug(
+    public ResponseEntity<PageResponse<ProductCard>> getProductsByCategorySlug(
             @PathVariable String categorySlug,
             @RequestParam(required = false) List<Long> colorIds,
             @RequestParam(required = false) List<Long> sizeIds,
@@ -259,7 +259,7 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice,
             Pageable pageable) {
 
-        PageResponse<ProductSummary> response = productService.getFilteredProductsByCategorySlugWithFilter(
+        PageResponse<ProductCard> response = productService.getFilteredProductsByCategorySlugWithFilter(
                 categorySlug, colorIds, sizeIds, minPrice, maxPrice, pageable
         );
         return ResponseEntity.ok(response);
@@ -273,7 +273,7 @@ public class ProductController {
      * @return JSON body contains paginated list of related product summaries
      */
     @GetMapping("/{id}/related")
-    public ResponseEntity<PageResponse<ProductSummary>> getRelatedProducts(
+    public ResponseEntity<PageResponse<ProductCard>> getRelatedProducts(
             @PathVariable Long id,
             Pageable pageable) {
         return ResponseEntity.ok(productService.getRelatedProducts(id, pageable));

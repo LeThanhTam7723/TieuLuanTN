@@ -29,7 +29,7 @@ public interface IProductService {
     boolean existsBySlug(String slug);
 
     PageResponse<ProductSummary> getAllProducts(Pageable pageable);
-    PageResponse<ProductSummary> getProductsByBrandSlug(String slug,Pageable pageable);
+    PageResponse<ProductCard> getProductsByBrandSlug(String slug,Pageable pageable);
 
     PageResponse<ProductCard> getFeaturedProducts(Pageable pageable);
 
@@ -49,9 +49,9 @@ public interface IProductService {
 
     PageResponse<ProductSummary> getProductsByCategorySlug(String categorySlug, Pageable pageable);
 
-    PageResponse<ProductSummary> getRelatedProducts(Long productId, Pageable pageable);
+    PageResponse<ProductCard> getRelatedProducts(Long productId, Pageable pageable);
 
-    PageResponse<ProductSummary> getFilteredProductsByCategorySlugWithFilter(
+    PageResponse<ProductCard> getFilteredProductsByCategorySlugWithFilter(
             String categorySlug,
             List<Long> colorIds,
             List<Long> sizeIds,

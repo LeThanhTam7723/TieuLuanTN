@@ -100,7 +100,9 @@ const ProductInfoForm = ({brands, categories, genders}) => {
                 className={`border rounded-lg p-3 max-h-40 overflow-y-auto ${errors.categoryIds ? 'border-red-500' : 'border-gray-300'}`}>
               {categories.length > 0 ? (
                   categories.map((category) => {
-                    const isChecked = watchedCategoryIds?.includes(String(category.id)); // <-- THAY ĐỔI TẠI ĐÂY
+                    const isChecked = watchedCategoryIds?.includes(category.id); // <-- THAY ĐỔI TẠI ĐÂY
+                    console.log(watchedCategoryIds);
+                    console.log(isChecked);
                     return (
                         <div key={category.id} className="flex items-center mb-2">
                           <input

@@ -48,6 +48,7 @@ public interface ProductMapper {
     @Mapping(target = "variants", source = "variants")
     @Mapping(target = "slug", source = "slug")
     @Mapping(target = "basePrice", source = "basePrice")
+    @Mapping(target = "rating", expression = "java(calculateAverageRating(product))")
     ProductDetailResponse toDetailResponse(Product product);
 
     @Mapping(target = "brandName", source = "brand.name")

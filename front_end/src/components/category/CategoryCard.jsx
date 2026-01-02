@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowUpRight, FiShoppingBag } from 'react-icons/fi';
+import {useTranslation} from "react-i18next";
 
 const PLACEHOLDER_IMAGE_URL = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center';
 
 const CategoryCard = ({ category, genderSlug }) => {
   const imageUrl = category?.categoryImage?.imageUrl || PLACEHOLDER_IMAGE_URL;
   const imageAltText = category?.categoryImage?.altText || category?.name || 'Fashion Category';
+  const {t} = useTranslation();
 
   return (
       <Link
@@ -58,7 +60,7 @@ const CategoryCard = ({ category, genderSlug }) => {
 
             {/* Hover Effect Underline */}
             <div className="mt-4 flex items-center text-sm font-medium text-gray-900 group-hover:text-white">
-              <span>Khám phá</span>
+              <span>{t('category_list.category_card.discover')}</span>
               <div className="ml-2 h-px flex-1 bg-gray-200 group-hover:bg-white transition-colors duration-300" />
             </div>
           </div>

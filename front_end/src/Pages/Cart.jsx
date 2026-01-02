@@ -49,6 +49,7 @@ const Cart = () => {
   const { cartItems,setCartItems } = useContext(FavoriteContext);
   const [selectedItems, setSelectedItems] = useState(new Set([]));
   const [removingItem, setRemovingItem] = useState(null);
+  const {t, i18n} = useTranslation();
 
   const tax = 0.1;
 
@@ -132,30 +133,10 @@ const Cart = () => {
       return false; // Nếu có lỗi thì coi token không hợp lệ
     }
   };
-  const {
-    convertAndGetDisplayPrice,
-    formatCurrency
-  } = useContext(CurrencyContext);
-  // useEffect(() => {
-  //   const check = async () => {
-  //     const session = JSON.parse(localStorage.getItem("session"));
-  //     if (session && session !== "undefined") {
-  //       const isValid = await checkToken(session.token);
-  //       console.log("Token valid:", isValid);
-  //       if (isValid) {
-  //         await listCartItem({userId: session.currentUser.id, token: session.token})
-  //             .then((res) => {
-  //               const {code, message, result} = res.data;
-  //               console.log(res.data);
-  //               setCartItems(result);
-  //             })
-  //       } else {
-  //         setCartItems([]);
-  //       }
-  //     }
-  //   };
-  //   check();
-  // }, []);
+  const { convertAndGetDisplayPrice, formatCurrency, currentCurrency } = useContext(CurrencyContext);
+  const displayBasePrice=(basePrice) => {
+    return convertAndGetDisplayPrice(basePrice || 0);
+  } 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4">
@@ -167,7 +148,7 @@ const Cart = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-2"
           >
-            Shopping Cart
+            {t('cart.title')}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: -20 }}
@@ -175,7 +156,7 @@ const Cart = () => {
             transition={{ delay: 0.1 }}
             className="text-gray-600"
           >
-            {selectedItems.size} of {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} selected
+            {selectedItems.size} {t('cart.of')} {cartItems.length} {cartItems.length === 1 ? t('cart.item') : t('cart.items')} {t('cart.selected')}
           </motion.p>
         </div>
 
@@ -195,7 +176,7 @@ const Cart = () => {
                       <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
                         <ShoppingCartIcon />
                       </div>
-                      Your Items
+                      {t('cart.your_items')}
                     </h2>
                     {cartItems.length > 0 && (
                       <button
@@ -219,7 +200,7 @@ const Cart = () => {
                       className="text-red-500 hover:text-red-600 hover:bg-red-50 px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 font-medium"
                     >
                       <TrashIcon />
-                      Clear Cart
+                      {t('cart.clear_button')}
                     </button>
                   )}
                 </div>
@@ -321,10 +302,10 @@ const Cart = () => {
 
                               <div className="text-right">
                                 <div className="text-xl font-bold text-gray-900">
-                                  ${(item.product.price * item.quantity).toFixed(2)}
+                                  {formatCurrency(displayBasePrice(item.product.price * item.quantity), currentCurrency)}
                                 </div>
                                 <div className="text-sm text-gray-500">
-                                  ${item.product.price.toFixed(2)} each
+                                  {formatCurrency(displayBasePrice(item.product.price), currentCurrency)}
                                 </div>
                               </div>
                             </div>
@@ -353,10 +334,10 @@ const Cart = () => {
                     <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
                       <TagIcon />
                     </div>
-                    Order Summary
+                    {t('cart.order_summary')}
                   </h3>
                   <p className="text-sm text-gray-600 mt-2">
-                    {selectedItems.size} {selectedItems.size === 1 ? 'item' : 'items'} selected
+                    {selectedItems.size} {selectedItems.size === 1 ? t('cart.item') : t('cart.items')} {t('cart.selected')}
                   </p>
                 </div>
 
@@ -364,17 +345,17 @@ const Cart = () => {
                   {/* Price Breakdown */}
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Subtotal</span>
-                      <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                      <span className="text-gray-600">{t('cart.order_subtotal')}</span>
+                      <span className="font-semibold">{formatCurrency(displayBasePrice(subtotal), currentCurrency)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Tax (10%)</span>
-                      <span className="font-semibold">${taxAmount.toFixed(2)}</span>
+                      <span className="text-gray-600">{t('cart.order_tax')}</span>
+                      <span className="font-semibold">{formatCurrency(displayBasePrice(taxAmount), currentCurrency)}</span>
                     </div>
                     <div className="border-t pt-3">
                       <div className="flex justify-between items-center">
-                        <span className="text-lg font-bold text-gray-900">Total</span>
-                        <span className="text-2xl font-bold text-gray-900">${total.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900">{t('cart.order_total')}</span>
+                        <span className="text-2xl font-bold text-gray-900">{formatCurrency(displayBasePrice(total), currentCurrency)}</span>
                       </div>
                     </div>
                   </div>
@@ -389,9 +370,11 @@ const Cart = () => {
                         : 'bg-gray-200 text-gray-500 cursor-not-allowed hover:scale-100 hover:shadow-lg'
                     }`}
                   >
-                    {selectedItems.size > 0 
-                      ? `Proceed to Checkout (${selectedItems.size} ${selectedItems.size === 1 ? 'item' : 'items'})` 
-                      : 'Select Items to Checkout'}
+                    {selectedItems.size > 0
+                      ? `${t('cart.checkout_span')} (${selectedItems.size} ${
+                          selectedItems.size === 1 ? t('cart.item') : t('cart.items')
+                        })`
+                      : t('cart.invalid_span')}
                   </button>
                 </div>
               </div>

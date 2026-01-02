@@ -190,12 +190,14 @@ const OrderManagementPage = () => {
                         onViewDetails={handleViewDetails}
                         onUpdateStatusClick={handleUpdateStatusClick}
                     />
-                    <Pagination
-                        page={page}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                    />
                 </>
+            )}
+            {!loading && !error && orders.length > 0 && (
+                <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
             )}
 
             {showDetailModal && (

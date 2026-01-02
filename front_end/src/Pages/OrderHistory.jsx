@@ -181,42 +181,35 @@ const OrderHistory = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-2">
-              {t("order_history_page.header.title")}
-            </h1>
-            <p className="text-gray-600">{t("order_history_page.header.description")}</p>
-          </div>
-
-          {/* Search and Filter */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="relative flex-1">
-                <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                    type="text"
-                    placeholder={t("order_history_page.search_filter.placeholder")}
-                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-
-              <div className="relative w-full lg:w-64">
-                <select
-                    className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-200"
-                    value={selectedStatus}
-                    onChange={(e) => setSelectedStatus(e.target.value)}
+          <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <h1 className="text-4xl font-bold leading-snug bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-2">
+                {t("order_history_page.header.title")}
+              </h1>
+              <p className="text-gray-600">{t("order_history_page.header.description")}</p>
+            </div>
+            <div className="flex flex-wrap gap-1 bg-white">
+              {[
+                { key: "all", label: t("order_history_page.search_filter.all_statuses") },
+                { key: "pending_payment", label: "Chờ thanh toán" },
+                { key: "processing", label: t("order_history_page.search_filter.pending") },
+                { key: "confirmed", label: t("order_history_page.search_filter.confirmed") },
+                { key: "shipping", label: t("order_history_page.search_filter.shipping") },
+                { key: "completed", label: t("order_history_page.search_filter.completed") },
+                { key: "cancelled", label: t("order_history_page.search_filter.cancelled") },
+              ].map(item => (
+                <button
+                  key={item.key}
+                  onClick={() => setSelectedStatus(item.key)}
+                  className={`px-3 py-3 text-sm font-medium transition
+                    ${selectedStatus === item.key
+                      ? "text-red-500 border-b-2 border-red-500"
+                      : "text-gray-600 hover:text-red-400"}
+                  `}
                 >
-                  <option value="all">{t("order_history_page.search_filter.all_statuses")}</option>
-                  <option value="pending">{t("order_history_page.search_filter.pending")}</option>
-                  <option value="confirmed">{t("order_history_page.search_filter.confirmed")}</option>
-                  <option value="shipping">{t("order_history_page.search_filter.shipping")}</option>
-                  <option value="completed">{t("order_history_page.search_filter.completed")}</option>
-                  <option value="cancelled">{t("order_history_page.search_filter.cancelled")}</option>
-                </select>
-                <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-              </div>
+                {item.label}
+              </button>
+              ))}
             </div>
           </div>
 
@@ -292,10 +285,10 @@ const OrderHistory = () => {
                                       <div className="flex-1">
                                         <h5 className="font-semibold text-gray-900 mb-1">{product.idProduct.product.name}</h5>
                                         <div className="flex items-center gap-4 text-sm text-gray-600">
-                                <span className="flex items-center gap-1">
-                                  <span className="w-3 h-3 rounded-full bg-blue-500"></span>
-                                  {product.idProduct.color.name}
-                                </span>
+                                          <span className="flex items-center gap-1">
+                                            <span className="w-3 h-3 rounded-full bg-blue-500"></span>
+                                            {product.idProduct.color.name}
+                                          </span>
                                           <span>{t("order_history_page.order_card.size")}: {product.idProduct.size.name}</span>
                                         </div>
                                       </div>
@@ -321,20 +314,27 @@ const OrderHistory = () => {
                               <div className="flex items-center justify-between mb-6">
                                 <span className="text-lg font-semibold text-gray-700">{t("order_history_page.order_card.total_amount")}</span>
                                 <span className="text-2xl font-bold text-gray-900">
-                          ${calculateOrderTotal(order.orderDetails).toFixed(2)}
-                        </span>
+                                  ${calculateOrderTotal(order.orderDetails).toFixed(2)}
+                                </span>
                               </div>
 
                               <div className="flex flex-wrap gap-3 justify-between items-center">
                                 <div className="flex gap-3">
-                                  <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 font-medium">
-                                    {t("order_history_page.order_card.buy_again")}
-                                  </button>
+                                  {(order.statusName === "completed") &&(
+                                    <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 font-medium">
+                                      {t("order_history_page.order_card.buy_again")}
+                                    </button>
+                                  )}
+                                  {(order.paid === false && order.paymentMethodTypePayment != "COD") && (
+                                      <button className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 font-medium">
+                                        Thanh toán ngay
+                                      </button>
+                                  )}
                                   <button className="px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium">
                                     {t("order_history_page.order_card.details")}
                                   </button>
                                 </div>
-                                {(order.statusName === "processing" || order.statusName === "confirmed") && (
+                                {(order.statusName === "processing" || order.statusName === "confirm") && (
                                     <button
                                         className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 font-medium"
                                         onClick={() => handleCancelClick({order})}

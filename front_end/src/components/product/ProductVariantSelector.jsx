@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { CurrencyContext } from '../../contexts/CurrencyContext';
 
 const ProductVariantSelector = ({ variants, selectedColor, selectedSize, onVariantChange }) => {
   const { t } = useTranslation();
@@ -121,12 +122,10 @@ const ProductVariantSelector = ({ variants, selectedColor, selectedSize, onVaria
     return 0;
   };
 
-  const formatPrice = (price) => {
-    if (price === null || price === undefined) {
-      return t('product_variant_selector.contact_for_price');
-    }
-    return price.toLocaleString('vi-VN') + '₫';
-  };
+  const { convertAndGetDisplayPrice, formatCurrency, currentCurrency } = useContext(CurrencyContext);
+    const displayBasePrice=(basePrice) => {
+      return convertAndGetDisplayPrice(basePrice || 0);
+    } 
 
   if (!variants || variants.length === 0) {
     return null;
@@ -238,7 +237,7 @@ const ProductVariantSelector = ({ variants, selectedColor, selectedSize, onVaria
                 <div>
                   <span className="text-gray-600">{t('product_variant_selector.price_label')}</span>
                   <span className="ml-2 font-semibold text-red-600">
-                {formatPrice(selectedVariant.price)}
+                {formatCurrency(displayBasePrice(selectedVariant.price), currentCurrency)}
               </span>
                 </div>
                 <div>

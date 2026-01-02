@@ -15,6 +15,7 @@ import com.example.back_end.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,13 +27,14 @@ public class AddressService implements IAddressService{
     private final AddressMapper addressMapper;
     private final AddressRepository addressRepository;
     @Override
+    @Transactional
     public AddressResponse createAddress(AddressRequest request) {
         UserResponse currentUser = userService.getCurrentUser();
-        System.out.println(request.isDefaultAddress());
         Address address = addressMapper.toEntity(request);
         address.setUser(userService.getUserById(currentUser.getId()));
+        if(request.isDefaultAddress()) addressRepository.unsetAllDefaultAddresses(currentUser.getId());
         Address savedAddress = addressRepository.save(address);
-        if (savedAddress == null || savedAddress.getId() == null) {
+        if (savedAddress.getId() == null) {
             throw new AppException(ErrorCode.BRAND_NOT_FOUND);
         }
         return addressMapper.toResponse(savedAddress);

@@ -1,6 +1,7 @@
 package com.example.back_end.service.wishlist;
 
 import com.example.back_end.dto.response.ApiResponse;
+import com.example.back_end.dto.response.product.ProductCard;
 import com.example.back_end.dto.response.product.ProductResponse;
 import com.example.back_end.entity.Favorite;
 import com.example.back_end.entity.Product;
@@ -86,13 +87,13 @@ public class FavoriteService implements IFavoriteService {
     }
 
     @Override
-    public List<ProductResponse> getFavoritesByUserId(Long userId) {
+    public List<ProductCard> getFavoritesByUserId(Long userId) {
         List<Favorite> favorites = favoriteRepository.findByIdUser_Id(userId);
-        List<ProductResponse> result = new ArrayList<>();
+        List<ProductCard> result = new ArrayList<>();
         for (Favorite a : favorites) {
             Product product = productRepository.findById(a.getIdProduct().getId())
                     .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-            ProductResponse newOne = productMapper.toResponse(product);
+            ProductCard newOne = productMapper.toProductCard(product);
             result.add(newOne);
         }
         return result;

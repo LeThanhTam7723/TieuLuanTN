@@ -124,7 +124,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<OrderDto> getOrderByUserId(Long userId) {
-        List<Order> orders =  orderRepository.findByIdUser_Id(userId);
+        List<Order> orders =  orderRepository.findByIdUser_IdOrderByDateOrderDesc(userId);
         List<OrderDto> orderDtos = orders.stream().map((element) -> modelMapper.map(element, OrderDto.class)).collect(Collectors.toList());
         for(OrderDto a : orderDtos){
             a.setOrderDetails(getOrderDetailsByOrderId(a.getIdOrder()));
@@ -170,7 +170,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<OrderResponse> getOrdersByUser(Long userId) {
-        List<Order> orders = orderRepository.findByIdUser_Id(userId);
+        List<Order> orders = orderRepository.findByIdUser_IdOrderByDateOrderDesc(userId);
         return orders.stream()
                 .map(order -> modelMapper.map(order, OrderResponse.class))
                 .collect(Collectors.toList());

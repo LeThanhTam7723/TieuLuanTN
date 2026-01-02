@@ -10,9 +10,11 @@ import RelatedProducts from '../../components/product/RelatedProducts';
 import FacebookComment from '../../components/commentFB/FacebookComment';
 import ReviewService from '../../API/ReviewService';
 import {useTranslation} from "react-i18next";
+import RecentlyViewedProducts from '../../components/product/RecentlyViewedProducts ';
 
 const ProductDetailPage = () => {
-  const { t } = useTranslation();
+  const { t , i18n  } = useTranslation();
+  const isEn = i18n.language === 'en';
   const { slug } = useParams();
   const navigate = useNavigate();
 
@@ -69,27 +71,6 @@ const ProductDetailPage = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
-  // const reviews = [
-  //   {
-  //     userResponse: {
-  //       name: "Nguyễn Văn A",
-  //       avatarUrl: "https://i.pravatar.cc/150?img=1"
-  //     },
-  //     rating: 4,
-  //     comment: "Sản phẩm tốt, sẽ ủng hộ tiếp!",
-  //     createdAt: "2025-06-06T12:34:56"
-  //   },
-  //   {
-  //     userResponse: {
-  //       name: "Trần Thị B",
-  //       avatarUrl: "https://i.pravatar.cc/150?img=2"
-  //     },
-  //     rating: 5,
-  //     comment: "Tuyệt vời, giao hàng nhanh!",
-  //     createdAt: "2025-06-05T09:21:00"
-  //   }
-  // ];
-  
 
   if (loading) {
     return (
@@ -195,10 +176,11 @@ const ProductDetailPage = () => {
           <div className="mb-12">
             <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-4">{t('product_detail.description')}</h2>
-              <div
-                className="prose prose-gray max-w-none"
-                dangerouslySetInnerHTML={{ __html: product.description }}
-              />
+              {((isEn && product.descriptionEn) || (!isEn && product.description)) && (
+                <p className="text-gray-700">
+                  {isEn ? product.descriptionEn : product.description}
+                </p>
+              )}
             </div>
             <FacebookComment url={'https://your-public-url.com/product/'+product.id} />
             <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
@@ -279,6 +261,9 @@ const ProductDetailPage = () => {
         {/* Related Products */}
         <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
           <RelatedProducts productId={product.id} />
+        </div>
+        <div className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
+          <RecentlyViewedProducts/>
         </div>
       </div>
 

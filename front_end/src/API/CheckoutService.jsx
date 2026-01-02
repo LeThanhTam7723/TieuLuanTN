@@ -17,9 +17,19 @@ const CheckOutService = {
             const response = await axiosClient.get(`/payment/vnpay`,{params:{amount,orderId}});
             return response;
         } catch (error) {
-            console.error(`Đặt hàng không thành công`);
+            console.error(`Thanh toán vnpay không thành công`);
             throw error;
         }
+    },
+    payPal: async(body)=>{
+        try {
+            const response = await axiosClient.post(`/paypal/pay`,body);
+            return response;
+        } catch (error) {
+            console.error(`Thanh toán paypal không thành công`);
+            throw error;
+        }
+
     }
 }
 

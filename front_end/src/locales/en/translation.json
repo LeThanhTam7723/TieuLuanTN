@@ -280,6 +280,9 @@
     },
     "errors": {
       "loading_categories_log": "Error loading categories:"
+    },
+    "category_card": {
+      "discover":"discover"
     }
   },
   "product_info": {
@@ -342,7 +345,8 @@
   "product_detail": {
     "description": "Product description",
     "review": "Reviews",
-    "review_comment": "There is no review yet."
+    "review_comment": "There is no review yet.",
+    "related_product": "Related product"
   },
   "product_list": {
     "product_heading": "Product",
@@ -378,8 +382,12 @@
     "add_to_wishlist": "Add to wishlist"
   },
   "cart": {
+    "selected":"selected",
+    "item":"item",
+    "items":"items",
+    "of":"of",
     "continue_shopping": "Continue Shopping",
-    "title": "Cart",
+    "title": "Shopping Cart",
     "in_your_cart": "in your cart",
     "your_items": "Your Items",
     "empty_cart": "Your cart is empty.",
@@ -389,15 +397,9 @@
     "order_summary": "Order Summary",
     "order_subtotal": "Subtotal:",
     "order_tax": "Tax (10%):",
-    "discount": "Discount",
     "order_total": "Total",
-    "promo_code": "Promo code",
-    "promo_apply": "Apply",
-    "promo_code_applied": "Promo code has been applied!",
-    "promo_code_heading": "Try: \"SAVE20\" or \"WELCOME10\"",
-    "checkout_span": "Secure checkout",
-    "order_shipping_heading": "Free shipping over 20$",
-    "order_return_heading": "30-day return policy"
+    "checkout_span": "Proceed to checkout",
+    "invalid_span": "Select items to checkout"
   },
   "wishlist": {
     "title": "Your Wishlist",
@@ -409,7 +411,6 @@
     "add_to_cart": "Add to cart",
     "remove": "Remove",
     "removing": "Removing..."
-
   },
   "order_history_page": {
     "header": {
@@ -439,7 +440,8 @@
         "completed": "Completed",
         "processing": "Processing",
         "cancelled": "Cancelled",
-        "shipping": "Shipping"
+        "shipping": "Shipping",
+        "confirmed": "Confirmed"
       },
       "products_ordered": "Products ordered",
       "size": "Size",
@@ -512,5 +514,70 @@
       "in_vietnam": "in Vietnam",
       "payment_methods": "Payment Methods:"
     }
+  },
+  "checkout": {
+    "title": "Checkout",
+
+    "products": {
+      "title": "products",
+      "unitPrice": "Unit price",
+      "totalPrice":"Total price",
+      "quantity": "Quantity",
+      "size": "Size",
+      "color": "Color"
+    },
+
+    "address": {
+      "title": "Shipping Information",
+      "add_new": "Add new address",
+      "select": "Select address",
+      "default": "Default"
+    },
+
+    "payment": {
+      "title": "Payment Method",
+      "cod": "Cash on Delivery (COD)",
+      "vnpay": "VNPay Payment",
+      "paypal": "Paypal Payment"
+    },
+
+    "voucher": {
+      "title": "Voucher",
+      "placeholder": "Enter voucher code",
+      "apply": "Apply",
+      "select": "Select voucher",
+      "coin":"Use coin",
+      "applied": "Applied",
+      "not_eligible": "Not eligible",
+      "eligible": "Eligible",
+      "min_order_alert": "Your order does not meet the minimum amount to use this voucher."
+    },
+
+    "summary": {
+      "title": "Order Summary",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping Fee",
+      "tax": "VAT (10%)",
+      "discount_voucher": "Voucher Discount",
+      "discount_coin": "Coin Discount",
+      "total": "Total"
+    },
+
+    "actions": {
+      "place_order": "Place Order",
+      "processing": "Processing...",
+      "close": "Close"
+    },
+
+    "security": {
+      "safe_payment": "Secure & Safe Payment"
+    },
+
+    "success": {
+      "title": "Order Placed Successfully!",
+      "message": "Thank you for your purchase. We will send you a confirmation email shortly.",
+      "continue": "Continue Shopping"
+    }
   }
+
 }

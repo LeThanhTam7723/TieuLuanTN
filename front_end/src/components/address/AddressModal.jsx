@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import AddressService from "../../API/AddressService";
 
-const AddressModal = ({ setShowAddressModal }) => {
+const AddressModal = ({ onSuccess,setShowAddressModal }) => {
   const [newAddress, setNewAddress] = useState({
     fullName: "",
     phoneNumber: "",
@@ -237,9 +238,17 @@ const AddressModal = ({ setShowAddressModal }) => {
 
           <button
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            onClick={() => {
+            onClick={async() => {
+              if(!validateAddressForm()){
+                return;
+              }
               console.log("Saved:", newAddress);
-              validateAddressForm();
+              const response = await AddressService.createAddresses({"receiver":newAddress.fullName,
+                "phone":newAddress.phoneNumber,
+                "address":"Tỉnh "+newAddress.province+","+ newAddress.ward+","+ newAddress.address,
+                "isDefault": newAddress.isDefault});
+              onSuccess(response.result);
+              // response.result.isDefault ? set
               setShowAddressModal(false);
             }}
           >

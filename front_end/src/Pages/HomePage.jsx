@@ -12,13 +12,12 @@ const WOMEN_IMAGE = 'https://images.unsplash.com/photo-1483985988355-763728e1935
 const CASUAL_IMAGE = 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1200&h=600&fit=crop&crop=center';
 
 function HomePage() {
-  const { t } = useTranslation(); // Khởi tạo hook useTranslation
-
+  const { t,i18n  } = useTranslation(); // Khởi tạo hook useTranslation
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loadingFeaturedProducts, setLoadingFeaturedProducts] = useState(true);
   const [errorFeatured, setErrorFeatured] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  console.log("a");
+  // console.log(i18n.language);
 
   const productsContainerRef = useRef(null);
   const navigate = useNavigate();

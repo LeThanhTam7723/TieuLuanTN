@@ -15,7 +15,7 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findByIdUser_Id(Long userId);
+    List<Order> findByIdUser_IdOrderByDateOrderDesc(Long userId);
 
     @Query("SELECT o FROM Order o WHERE " +
             "(:keyword IS NULL OR :keyword = '' OR " +

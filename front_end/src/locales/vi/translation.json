@@ -276,6 +276,9 @@
     },
     "errors": {
       "loading_categories_log": "Lỗi khi tải danh mục:"
+    },
+    "category_card": {
+      "discover":"Khám phá"
     }
   },
   "product_info": {
@@ -374,6 +377,10 @@
     "add_to_wishlist": "Thêm vào yêu thích"
   },
   "cart": {
+    "selected":"được chọn",
+    "item":"sản phẩm",
+    "items":"sản phẩm",
+    "of":"trong",
     "continue_shopping": "Tiếp Tục Mua Sắm",
     "title": "Giỏ hàng",
     "in_your_cart": "trong giỏ hàng",
@@ -387,13 +394,8 @@
     "order_tax": "Thuế (10%):",
     "discount": "Giảm giá",
     "order_total": "Tổng Cộng",
-    "promo_code": "Mã Promo",
-    "promo_apply": "Áp dụng",
-    "promo_code_applied": "Mã Promo đã được áp dụng!",
-    "promo_code_heading": "Thử: \"SAVE20\" hoặc \"WELCOME10\"",
-    "checkout_span": "An toàn thanh toán",
-    "order_shipping_heading": "Miễn ship với đơn trên 500k",
-    "order_return_heading": "Chính sách 30 ngày đổi trả"
+    "checkout_span": "Tiến hàng thanh toán",
+    "invalid_span": "Chọn để thành toán"
   },
   "wishlist": {
     "title": "Danh sách yêu thích của bạn",
@@ -434,7 +436,8 @@
         "completed": "Đã giao",
         "processing": "Đang xử lý",
         "cancelled": "Đã hủy",
-        "shipping": "Đang giao"
+        "shipping": "Đang giao",
+        "confirmed": "Đã xác nhận"
       },
       "products_ordered": "Sản phẩm đã đặt",
       "size": "Kích cỡ",
@@ -507,5 +510,70 @@
       "in_vietnam": "tại Việt Nam",
       "payment_methods": "Phương thức thanh toán:"
     }
+  },
+  "checkout": {
+    "title": "Thanh toán",
+
+    "products": {
+      "title": "sản phẩm",
+      "unitPrice": "Đơn giá",
+      "totalPrice":"Total price",
+      "quantity": "Số lượng",
+      "size": "Size",
+      "color": "Màu"
+    },
+
+    "address": {
+      "title": "Thông tin giao hàng",
+      "add_new": "Thêm địa chỉ mới",
+      "select": "Chọn địa chỉ",
+      "default": "Mặc định"
+    },
+
+    "payment": {
+      "title": "Phương thức thanh toán",
+      "cod": "Thanh toán khi nhận hàng (COD)",
+      "vnpay": "Thanh toán VNPay",
+      "paypal": "Thanh toán Paypal"
+    },
+
+    "voucher": {
+      "title": "Mã giảm giá",
+      "placeholder": "Nhập mã voucher",
+      "apply": "Áp dụng",
+      "select": "Chọn mã giảm giá",
+      "coin":"Sử dụng xu",
+      "applied": "Đã áp dụng",
+      "not_eligible": "Không đủ điều kiện",
+      "eligible": "Đủ điều kiện",
+      "min_order_alert": "Đơn hàng của bạn chưa đủ để sử dụng voucher này."
+    },
+
+    "summary": {
+      "title": "Chi tiết thanh toán",
+      "subtotal": "Tạm tính",
+      "shipping": "Phí vận chuyển",
+      "tax": "Thuế VAT (10%)",
+      "discount_voucher": "Giảm giá từ mã giảm",
+      "discount_coin": "Giảm giá từ xu",
+      "total": "Tổng cộng"
+    },
+
+    "actions": {
+      "place_order": "Đặt hàng",
+      "processing": "Đang xử lý...",
+      "close": "Đóng"
+    },
+
+    "security": {
+      "safe_payment": "Thanh toán an toàn & bảo mật"
+    },
+
+    "success": {
+      "title": "Đặt hàng thành công!",
+      "message": "Cảm ơn bạn đã mua hàng. Chúng tôi sẽ gửi email xác nhận cho bạn ngay.",
+      "continue": "Tiếp tục mua sắm"
+    }
   }
+
 }

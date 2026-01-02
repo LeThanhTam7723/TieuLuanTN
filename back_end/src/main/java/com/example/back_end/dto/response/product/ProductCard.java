@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 public class ProductCard {
     private Long id;
     private String name;
+    private String nameEn;
     private BigDecimal basePrice;
     private String brandName;
     private BigDecimal rating;
