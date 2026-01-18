@@ -2,8 +2,8 @@ import React, {useState, useEffect} from "react";
 import {useLocation} from "react-router-dom";
 import AdminHeader from "../../components/admin/AdminHeader.jsx";
 import AdminSidebar from "../../components/admin/AdminSidebar.jsx";
-import ProductManagementPage from "./ProductManagementPage";
-import CategoryManagementPage from "./CategoryManagementPage";
+import ProductManagementPage from "./ProductManagementPage.jsx";
+import CategoryManagementPage from "./CategoryManagementPage.jsx";
 import OrderManagementPage from "./OrderManagementPage.jsx";
 import {FiChevronRight} from "react-icons/fi";
 import UserManagementPage from "./UserManagementPage.jsx";
@@ -11,6 +11,7 @@ import Analytics from "./AnalyticsPage.jsx";
 import AnalyticsPage from "./AnalyticsPage.jsx";
 import ReviewManagement from "./ReviewManagementPage.jsx";
 import VoucherPage from "./VoucherPage.jsx";
+import ChatManagement from "./ChatManagementPage.jsx";
 
 const AdminDashboard = () => {
     const location = useLocation();
@@ -46,16 +47,18 @@ const AdminDashboard = () => {
                 return <ReviewManagement/>;
             case 'discounts':
                 return <VoucherPage/>;
+            case 'chats':
+                return <ChatManagement/>;
             default:
                 return <ProductManagementPage/>;
         }
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="h-screen flex flex-col">
             <AdminHeader/>
 
-            <div className="flex">
+            <div className="flex flex-1 overflow-hidden">
                 <AdminSidebar
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
@@ -63,10 +66,10 @@ const AdminDashboard = () => {
                     setIsCollapsed={setIsCollapsed}
                 />
 
-                <main className={`flex-1 transition-all duration-300 ${isCollapsed ? 'ml-0' : 'ml-0'}`}>
-                    <div className="p-6">
-                        {renderMainContent()}
-                    </div>
+                <main className={`flex-1 overflow-y-auto transition-all duration-300 ${isCollapsed ? 'ml-0' : 'ml-0'}`}>
+                    {/* <div className="p-6"> */}
+                    {renderMainContent()}
+                    {/* </div> */}
                 </main>
             </div>
         </div>

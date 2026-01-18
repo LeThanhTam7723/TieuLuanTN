@@ -1,10 +1,8 @@
 import axiosClient from "./axiosClient";
 const ReviewService = {
-    addReview: async(idProduct,idUser,rating,comment,token)=> {
+    addReview: async(idProduct,idUser,rating,comment,orderItemId)=> {
         try {
-            const response = await axiosClient.post('/review/add',{idProduct,idUser,rating,comment},
-                {headers:{Authorization: `Bearer ${token}`}}
-            );
+            const response = await axiosClient.post('/review/add',{idProduct,idUser,rating,comment,orderItemId});
             return response;
         } catch (error) {
             throw error;

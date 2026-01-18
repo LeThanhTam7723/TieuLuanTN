@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import ProductImageService from '../../../API/ProductImageService';
 import CustomMessageBox from '../../common/CustomMessageBox';
+import ProductVariantService from '../../../API/ProductVariantService';
 
 const ProductImageFormModal = ({ productId, onClose, showCustomMessage }) => {
     const [images, setImages] = useState([]);
@@ -9,6 +10,17 @@ const ProductImageFormModal = ({ productId, onClose, showCustomMessage }) => {
     const [showImageForm, setShowImageForm] = useState(false);
     const [imageFile, setImageFile] = useState(null); // File để upload
     const [imageFormErrors, setImageFormErrors] = useState({});
+    const [altTextOptions, setAltTextOptions] = useState([]);
+    const fetchVariants = async()=>{
+        try {
+            const res = await ProductVariantService.getVariantsByProductId(productId);
+            setAltTextOptions(res);
+        } catch (error) {
+            console.log("Lỗi load biến thể");
+        }
+    }
+
+
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -29,6 +41,7 @@ const ProductImageFormModal = ({ productId, onClose, showCustomMessage }) => {
             }
         };
         fetchImages();
+        fetchVariants();
     }, [productId, showCustomMessage]);
 
 
@@ -197,54 +210,86 @@ const ProductImageFormModal = ({ productId, onClose, showCustomMessage }) => {
                 {showImageForm && (
                     <form onSubmit={handleSaveImage} className="bg-gray-50 p-6 rounded-lg shadow-inner mb-6">
                         <h4 className="text-xl font-semibold mb-4 text-gray-800">{editingImage?.id ? 'Chỉnh sửa hình ảnh' : 'Thêm hình ảnh'}</h4>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="imageFile">
-                                File hình ảnh: {editingImage?.id && <span className="text-gray-500 text-xs">(Để trống nếu không muốn thay đổi ảnh)</span>}
-                            </label>
-                            <input
-                                type="file"
-                                id="imageFile"
-                                name="imageFile"
-                                onChange={handleImageFormChange}
-                                className={`shadow-sm appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 ${imageFormErrors.imageFile ? 'border-red-500' : 'border-gray-300'}`}
-                            />
-                            {imageFormErrors.imageFile && <p className="text-red-500 text-xs mt-1">{imageFormErrors.imageFile}</p>}
-                        </div>
+                        
                         {/* Preview ảnh nếu có */}
-                        {editingImage?.imageUrl && (
+                        <div className="grid grid-cols-2 gap-4">
                             <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-semibold mb-2">Ảnh hiện tại:</label>
-                                <img src={editingImage.imageUrl} alt="Current Image Preview" className="w-32 h-32 object-cover rounded-md border" />
+                                <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="imageFile">
+                                    File hình ảnh: {editingImage?.id && <span className="text-gray-500 text-xs">(Để trống nếu không muốn thay đổi ảnh)</span>}
+                                </label>
+                                <input
+                                    type="file"
+                                    id="imageFile"
+                                    name="imageFile"
+                                    onChange={handleImageFormChange}
+                                    className={`shadow-sm appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 ${imageFormErrors.imageFile ? 'border-red-500' : 'border-gray-300'}`}
+                                />
+                                {imageFormErrors.imageFile && <p className="text-red-500 text-xs mt-1">{imageFormErrors.imageFile}</p>}
                             </div>
-                        )}
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="altText">
-                                Alt Text:
-                            </label>
-                            <input
-                                type="text"
-                                id="altText"
-                                name="altText"
-                                value={editingImage?.altText || ''}
-                                onChange={handleImageFormChange}
-                                className={`shadow-sm appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 ${imageFormErrors.altText ? 'border-red-500' : 'border-gray-300'}`}
-                                placeholder="Mô tả hình ảnh"
-                            />
-                            {imageFormErrors.altText && <p className="text-red-500 text-xs mt-1">{imageFormErrors.altText}</p>}
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="altText">
+                                    Alt Text:
+                                </label>
+                                <input
+                                    type="text"
+                                    id="altText"
+                                    name="altText"
+                                    value={editingImage?.altText || ''}
+                                    onChange={handleImageFormChange}
+                                    className={`shadow-sm appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 ${imageFormErrors.altText ? 'border-red-500' : 'border-gray-300'}`}
+                                    placeholder="Mô tả hình ảnh"
+                                />
+                                {imageFormErrors.altText && <p className="text-red-500 text-xs mt-1">{imageFormErrors.altText}</p>}
+                            </div>
                         </div>
-                        <div className="flex items-center mb-4">
-                            <input
-                                type="checkbox"
-                                id="primaryImage"
-                                name="primary"
-                                checked={editingImage?.primary || false}
-                                onChange={handleImageFormChange}
-                                className="mr-2 h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-                            />
-                            <label className="text-gray-700 text-sm font-semibold" htmlFor="primaryImage">
-                                Đặt làm ảnh chính
-                            </label>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                {editingImage?.imageUrl && (
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-semibold mb-2">Ảnh hiện tại:</label>
+                                    <img src={editingImage.imageUrl} alt="Current Image Preview" className="w-32 h-32 object-cover rounded-md border" />
+                                </div>
+                                )}
+                                <div className="flex items-center mb-4">
+                                    <input
+                                        type="checkbox"
+                                        id="primaryImage"
+                                        name="primary"
+                                        checked={editingImage?.primary || false}
+                                        onChange={handleImageFormChange}
+                                        className="mr-2 h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                    />
+                                    <label className="text-gray-700 text-sm font-semibold" htmlFor="primaryImage">
+                                        Đặt làm ảnh chính
+                                    </label>
+                                </div>
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="altText">
+                                    Chọn biến thể cho ảnh:
+                                </label>
+                                <select
+                                    id="altText"
+                                    name="altText"
+                                    value={editingImage?.altText || ''}
+                                    onChange={handleImageFormChange}
+                                    className={`shadow-sm appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                        imageFormErrors.altText ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                >
+                                    <option value="">-- Chọn mô tả hình ảnh --</option>
+
+                                    {altTextOptions.map((option, index) => (
+                                        <option key={index} value={option.sku}>
+                                            {option.sku}
+                                        </option>
+                                    ))}
+                                </select>
+
+                            </div>
+
                         </div>
+                        
                         <div className="flex justify-end gap-4">
                             <button
                                 type="button"

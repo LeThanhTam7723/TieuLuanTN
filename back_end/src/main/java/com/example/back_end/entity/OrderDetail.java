@@ -29,4 +29,12 @@ public class OrderDetail {
 
     @Column(name = "totalPrice", nullable = false)
     private BigDecimal totalPrice;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_review")
+    private Review review;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_refund")
+    private Refund refund;
 }

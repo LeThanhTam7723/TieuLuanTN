@@ -18,20 +18,6 @@ public class ChatBotService implements IChatBotService{
     private final WebClient webClient;
     private final Map<String, List<Map<String, String>>> sessions = new ConcurrentHashMap<>();
 
-    /**
-     * sessions = {
-     *   "tam-123": [
-     *     { role: "system", content: "Bạn là trợ lý tư vấn thời trang" },
-     *     { role: "user", content: "Tôi tên là Tâm" },
-     *     { role: "assistant", content: "Chào Tâm, ..." },
-     *     { role: "user", content: "Tên tôi là gì?" },
-     *     { role: "assistant", content: "Bạn tên là Tâm" }
-     *   ],
-     *   "user-456": [...]
-     * }
-     * @param builder
-     */
-
     public ChatBotService(WebClient.Builder builder) {
         this.webClient = builder.baseUrl("http://localhost:11434").build();
     }

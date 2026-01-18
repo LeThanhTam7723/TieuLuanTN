@@ -3,7 +3,7 @@ import AppRoutes from '../routes/AppRoutes';
 import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { FavoriteProvider } from '../contexts/FavoriteContext.jsx';
+import ChatBot from '../components/chatbot/ChatBot';
 
 function MainLayout() {
   const location = useLocation();
@@ -13,6 +13,7 @@ function MainLayout() {
     <>
       {/* <FavoriteProvider> */}
       {!hideHeaderFooter && <Header/>}
+      {!hideHeaderFooter && <ChatBot/>}
       <AppRoutes />
       {/* </FavoriteProvider> */}
       

@@ -10,6 +10,7 @@ import com.example.back_end.exception.AppException;
 import com.example.back_end.exception.ErrorCode;
 import com.example.back_end.mapper.ReviewMapper;
 import com.example.back_end.repository.ReviewRepository;
+import com.example.back_end.service.order.IOrderService;
 import com.example.back_end.service.product.ProductService;
 import com.example.back_end.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,11 @@ public class ReviewService implements IReviewService{
     private final ReviewMapper reviewMapper;
     private final ProductService productService;
     private final IUserService userService;
+    private final IOrderService orderService;
     @Override
     public void addReview(ReviewRequest request) {
-        Review a = reviewMapper.toEntity(request);
-        reviewRepository.save(a);
+        Review a =reviewRepository.save(reviewMapper.toEntity(request));
+        orderService.addReview(request.getOrderItemId(),a);
     }
 
     @Override

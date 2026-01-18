@@ -12,4 +12,5 @@ public class ReviewRequest {
     private Long idUser;
     private int rating; // 1 đến 5 sao
     private String comment;
+    private Long orderItemId;
 }

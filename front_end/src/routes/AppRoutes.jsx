@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import routes from './Routers';
+import ChatBot from '../components/chatbot/ChatBot';
 
 function AppRoutes() {
   return (

@@ -13,7 +13,7 @@ import { CurrencyContext } from "../contexts/CurrencyContext";
 const CheckoutPage = () => {
   const { t , i18n  } = useTranslation();
   const isEn = i18n.language === 'en';
-  const { convertAndGetDisplayPrice, formatCurrency, currentCurrency } = useContext(CurrencyContext);
+  const { convertAndGetDisplayPrice, formatCurrency, currentCurrency, convertVndToUsdRealtime } = useContext(CurrencyContext);
   const displayBasePrice=(basePrice) => {
     return convertAndGetDisplayPrice(basePrice || 0);
   } 
@@ -140,7 +140,7 @@ const CheckoutPage = () => {
             address: selectedAddress.address,
             idPaymentMethod: 1,
             idStatus: 1,
-            total: subtotal
+            total: totalAfter
           });
           console.log("Đặt hàng COD thành công:", response.data);
           setShowSuccess(true);   // Mở modal thành công
@@ -181,7 +181,7 @@ const CheckoutPage = () => {
             idStatus: 1,
             total: totalAfter
           });
-          const paypalURL = await CheckOutService.payPal({orderId:response.data.result.id,totalAfter:totalAfter});
+          const paypalURL = await CheckOutService.payPal({orderId:response.data.result.id,totalAfter:convertVndToUsdRealtime(totalAfter)});
           const {code,result,message} = paypalURL.data;
           console.log("Tiến hành thanh toán paypal thành công:", response.data.result.id);
           console.log(result);

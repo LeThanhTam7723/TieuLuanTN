@@ -54,7 +54,8 @@ public enum ErrorCode {
     ROLE_NOT_EXISTED(1034, "Role not existed", HttpStatus.NOT_FOUND),
     CART_NOT_EXISTED(1035, "Cart not existed", HttpStatus.NOT_FOUND),
     CART_ITEM_NOT_EXISTED(1036, "Cart item not existed", HttpStatus.NOT_FOUND),
-    REVIEW_NOT_EXISTED(1037, "Review not existed", HttpStatus.NOT_FOUND);
+    REVIEW_NOT_EXISTED(1037, "Review not existed", HttpStatus.NOT_FOUND),
+    ORDER_REFUND_EXISTED(1038, "Order item đã có yêu cầu hoàn tiền", HttpStatus.NOT_FOUND);
 
     private final int code;
     private final String message;

@@ -9,7 +9,6 @@ import ChatBot from './components/chatbot/ChatBot.jsx';
 function App() {
     return (
         <BrowserRouter>
-            <ChatBot/>
             <FavoriteProvider>
                 <AuthProvider>
                     <CurrencyProvider>

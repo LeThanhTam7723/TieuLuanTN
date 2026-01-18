@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { FiSearch, FiChevronDown, FiShoppingBag, FiStar, FiInfo, FiChevronUp, FiX, FiPackage, FiTruck, FiCheckCircle, FiXCircle, FiClock, FiCalendar, FiCreditCard, FiMapPin } from "react-icons/fi";
+import { useContext, useEffect, useState } from "react";
+import {FiChevronDown, FiShoppingBag, FiStar, FiInfo, FiChevronUp, FiX, FiPackage, FiTruck, FiCheckCircle, FiXCircle, FiCalendar, FiCreditCard} from "react-icons/fi";
 import { introspect } from "../API/AuthService";
 import axiosClient from "../API/axiosClient";
 import {useTranslation} from "react-i18next";
@@ -20,8 +20,8 @@ const OrderHistory = () => {
 
   const [expandedOrders, setExpandedOrders] = useState({});
   const [selectedStatus, setSelectedStatus] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const [orderList, setOrderList] = useState([]);
+  const [orderItemId,setOrderItemId] = useState(null);
   const checkToken = async (token) => {
     try {
       const response = await introspect({token});
@@ -60,7 +60,9 @@ const OrderHistory = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [cancelReason, setCancelReason] = useState("");
+
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showViewReviewModal, setShowViewReviewModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
@@ -152,25 +154,42 @@ const OrderHistory = () => {
     setCancelReason("");
   };
 
-  const handleReviewClick = (product) => {
+  const handleReviewClick = (product,idOrderItem) => {
     setSelectedProduct(product);
     setShowReviewModal(true);
     setReviewRating(0);
     setReviewComment("");
+    setOrderItemId(idOrderItem);
+    console.log("id của orderItem đc chọn "+orderItemId);
   };
 
-  const handleSubmitReview = () => {
-    console.log("Review submitted", {
-      productId: selectedProduct.id,
-      rating: reviewRating,
-      comment: reviewComment
-    });
-    console.log(selectedProduct);
-    ReviewService.addReview(selectedProduct.idProduct.id,session.currentUser.id,reviewRating,reviewComment,session.token);
-    setShowReviewModal(false);
-    setSelectedProduct(null);
-    setReviewRating(0);
-    setReviewComment("");
+  const handleViewReviewClick = (product) => {
+    setSelectedProduct(product);
+    setShowViewReviewModal(true);
+  };
+
+  const handleSubmitReview = async() => {
+    try {
+      await ReviewService.addReview(selectedProduct.idProduct.id,session.currentUser.id,reviewRating,reviewComment,orderItemId);
+      // Cập nhật orderList để đánh dấu sản phẩm đã có review
+      setOrderList(prevOrders => 
+        prevOrders.map(order => ({
+          ...order,
+          orderDetails: order.orderDetails.map(item => 
+            item.id === orderItemId 
+              ? { ...item, review: { rating: reviewRating, comment: reviewComment } }
+              : item
+          )
+        }))
+      );
+      
+      setShowReviewModal(false);
+      setSelectedProduct(null);
+      setReviewRating(0);
+      setReviewComment("");
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    }
   };
 
   const calculateOrderTotal = (orderDetails) => {
@@ -294,13 +313,22 @@ const OrderHistory = () => {
                                       </div>
                                       <div className="text-right">
                                         <div className="text-lg font-bold text-gray-900">${product.totalPrice.toFixed(2)}</div>
-                                        {order.statusName === "completed" && (
+                                        {(order.statusName === "completed" && product.review ===null) && (
                                             <button
-                                                onClick={() => handleReviewClick(product)}
+                                                onClick={() => handleReviewClick(product,product.id)}
                                                 className="mt-2 px-3 py-1 text-sm bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-lg hover:from-yellow-500 hover:to-orange-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                                             >
                                               <FiStar className="w-4 h-4 inline mr-1" />
                                               {t("order_history_page.order_card.review")}
+                                            </button>
+                                        )}
+                                        {(order.statusName === "completed" && product.review !==null) && (
+                                            <button
+                                                onClick={() => handleViewReviewClick(product)}
+                                                className="mt-2 px-3 py-1 text-sm bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-lg hover:from-yellow-500 hover:to-orange-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                            >
+                                              <FiStar className="w-4 h-4 inline mr-1" />
+                                              Xem đánh giá
                                             </button>
                                         )}
                                       </div>
@@ -465,6 +493,55 @@ const OrderHistory = () => {
                 </div>
               </div>
             </div>
+        )}
+        {showViewReviewModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform animate-in fade-in zoom-in duration-200">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold text-gray-900">Đánh giá của bạn</h3>
+                <button
+                  onClick={() => setShowViewReviewModal(false)}
+                  className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg p-2 transition-colors duration-200"
+                >
+                  <FiX className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-gray-700 mb-4 font-medium">{selectedProduct?.idProduct?.product?.name}</p>
+                
+                {/* Display stars (read-only) */}
+                <div className="flex items-center justify-center gap-2 mb-6">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FiStar
+                      key={star}
+                      className={`w-8 h-8 ${
+                        star <= selectedProduct?.review?.rating 
+                          ? 'text-yellow-400 fill-current' 
+                          : 'text-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+                
+                {/* Display comment (read-only) */}
+                <div className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
+                  <p className="text-gray-700 whitespace-pre-wrap">
+                    {selectedProduct?.review?.comment || "Không có nhận xét"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setShowViewReviewModal(false)}
+                  className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 font-medium"
+                >
+                  Đóng
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
   );

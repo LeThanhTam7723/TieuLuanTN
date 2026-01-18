@@ -6,6 +6,7 @@ import com.example.back_end.dto.OrderDto;
 import com.example.back_end.dto.request.OrderCreateRequest;
 import com.example.back_end.dto.response.PageResponse;
 import com.example.back_end.dto.response.order.OrderResponse;
+import com.example.back_end.entity.Review;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
@@ -37,4 +38,5 @@ public interface IOrderService {
             LocalDate endDate,
             Pageable pageable);
     void updateIsPaid(Long orderId, boolean paidStatus);
+    void addReview(Long orderDetailId, Review review);
 }

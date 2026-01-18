@@ -60,6 +60,16 @@ export const CurrencyProvider = ({ children }) => {
         return priceInUSD * targetCurrencyRateVsUsd;
     };
 
+    const convertVndToUsdRealtime  = (priceInBaseCurrency)=> {
+        const vndToUsdRateFromApi = exchangeRates['vnd'];
+        if (!vndToUsdRateFromApi) {
+            console.warn("Không có tỷ giá VND -> USD. Không thể chuyển đổi.");
+            return ; // Fallback: trả về giá gốc VND
+        }
+        const priceInUSD = priceInBaseCurrency / vndToUsdRateFromApi;
+        return Number(priceInUSD.toFixed(1));
+    };
+
     /**
      * Định dạng số thành chuỗi tiền tệ theo chuẩn quốc tế.
      * @param {number} amount - Số tiền cần định dạng.
@@ -168,7 +178,8 @@ export const CurrencyProvider = ({ children }) => {
             formatCurrency,
             changeCurrency,
             isLoadingRates,
-            errorLoadingRates
+            errorLoadingRates,
+            convertVndToUsdRealtime
         }}>
             {children}
         </CurrencyContext.Provider>

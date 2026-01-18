@@ -28,6 +28,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -94,8 +95,6 @@ public class OrderService implements IOrderService {
         for (CartDetail cartDetail : cartDetails) {
             ProductVariant product = cartDetail.getIdProduct();
             Integer cartQuantity = cartDetail.getQuantity();
-//            System.out.println(product.getId());
-
             OrderDetail oderDetail = new OrderDetail();
             oderDetail.setIdOrder(order);
             oderDetail.setIdProduct(product);
@@ -242,6 +241,12 @@ public class OrderService implements IOrderService {
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         order.setPaid(paidStatus);
         orderRepository.save(order);
+    }
+
+    @Transactional
+    @Override
+    public void addReview(Long orderDetailId, Review review) {
+        orderDetailRepository.updateReview(orderDetailId, review);
     }
     // update trạng thái thanh toán.
 
