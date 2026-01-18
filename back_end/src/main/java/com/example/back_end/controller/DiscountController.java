@@ -4,6 +4,7 @@ import com.example.back_end.dto.request.discount.DiscountCreationRequest;
 import com.example.back_end.dto.request.discount.DiscountUpdateRequest;
 import com.example.back_end.dto.response.ApiResponse;
 import com.example.back_end.dto.response.discount.DiscountResponse;
+import com.example.back_end.dto.response.discount.DiscountResponseAdmin;
 import com.example.back_end.entity.Discount;
 import com.example.back_end.service.discount.DiscountService;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class DiscountController {
      * @param request: Discount creation request containing code, name, description, and sale percent
      * @return JSON body contains created discount information
      */
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN', 'SCOPE_MANAGER')")
     public ResponseEntity<DiscountResponse> createDiscount(@RequestBody DiscountCreationRequest request) {
         return ResponseEntity.ok(discountService.createDiscount(request));
@@ -79,8 +80,8 @@ public class DiscountController {
      * @return JSON body contains list of all discounts
      */
     @GetMapping
-    public ResponseEntity<List<DiscountResponse>> getAllDiscounts() {
-        return ResponseEntity.ok(discountService.getAllDiscounts());
+    public ApiResponse<List<DiscountResponseAdmin>> getAllDiscounts() {
+        return ApiResponse.<List<DiscountResponseAdmin>>builder().result(discountService.getAllDiscounts()).build();
     }
 
     /**
@@ -92,5 +93,9 @@ public class DiscountController {
     @GetMapping("/{id}")
     public ResponseEntity<DiscountResponse> getDiscountById(@PathVariable Long id) {
         return ResponseEntity.ok(discountService.getDiscountById(id));
+    }
+    @GetMapping("/activated")
+    public ResponseEntity<List<DiscountResponse>> getAllDiscountsByActiveTrue() {
+        return ResponseEntity.ok(discountService.findByActive(true));
     }
 }

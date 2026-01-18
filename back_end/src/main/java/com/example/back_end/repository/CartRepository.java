@@ -1,6 +1,7 @@
 package com.example.back_end.repository;
 
 import com.example.back_end.entity.Cart;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

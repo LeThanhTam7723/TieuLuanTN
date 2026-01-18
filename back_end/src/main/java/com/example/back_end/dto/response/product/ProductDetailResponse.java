@@ -18,11 +18,14 @@ import java.util.List;
 public class ProductDetailResponse {
     private Long id;
     private String name;
+    private String nameEn;
     private String description;
+    private String descriptionEn;
     private String slug;
     private BrandDto brand;
     private GenderDto gender;
     private BigDecimal basePrice;
+    private BigDecimal rating;
     private List<CategoryResponse> categories = new ArrayList<>();
     private List<ProductImageResponse> images = new ArrayList<>();
     private List<ProductVariantResponse> variants = new ArrayList<>();

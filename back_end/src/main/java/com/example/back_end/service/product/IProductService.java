@@ -2,6 +2,7 @@ package com.example.back_end.service.product;
 
 import com.example.back_end.dto.request.product.ProductCreationRequest;
 import com.example.back_end.dto.request.product.ProductUpdateRequest;
+import com.example.back_end.dto.response.product.ProductCard;
 import com.example.back_end.dto.response.product.ProductDetailResponse;
 import com.example.back_end.dto.response.product.ProductResponse;
 import com.example.back_end.dto.response.product.ProductSummary;
@@ -28,8 +29,9 @@ public interface IProductService {
     boolean existsBySlug(String slug);
 
     PageResponse<ProductSummary> getAllProducts(Pageable pageable);
+    PageResponse<ProductCard> getProductsByBrandSlug(String slug,Pageable pageable);
 
-    PageResponse<ProductSummary> getFeaturedProducts(Pageable pageable);
+    PageResponse<ProductCard> getFeaturedProducts(Pageable pageable);
 
     PageResponse<ProductSummary> searchProducts(String keyword, Pageable pageable);
 
@@ -47,13 +49,15 @@ public interface IProductService {
 
     PageResponse<ProductSummary> getProductsByCategorySlug(String categorySlug, Pageable pageable);
 
-    PageResponse<ProductSummary> getRelatedProducts(Long productId, Pageable pageable);
+    PageResponse<ProductCard> getRelatedProducts(Long productId, Pageable pageable);
 
-    PageResponse<ProductSummary> getFilteredProductsByCategorySlugWithFilter(
+    PageResponse<ProductCard> getFilteredProductsByCategorySlugWithFilter(
             String categorySlug,
             List<Long> colorIds,
             List<Long> sizeIds,
             BigDecimal minPrice,
             BigDecimal maxPrice,
             Pageable pageable);
+
+    PageResponse<ProductCard> getAllProductCards(Pageable pageable);
 } 

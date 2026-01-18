@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -415,5 +416,11 @@ public class UserService implements IUserService {
         // Đảo ngược trạng thái active
         user.setActive(!user.getActive());
         userRepository.save(user); // Lưu lại thay đổi
+    }
+
+    @Override
+    public BigDecimal getUserCoin() {
+        UserResponse currentUser = getCurrentUser();
+        return userRepository.findCoinByUserId(currentUser.getId());
     }
 }

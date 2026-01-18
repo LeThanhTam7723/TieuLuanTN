@@ -46,4 +46,9 @@ public class ProductVariant extends BaseEntity {
     @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     private List<ProductImage> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idProduct", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Review> reviews = new ArrayList<>();
+
 }

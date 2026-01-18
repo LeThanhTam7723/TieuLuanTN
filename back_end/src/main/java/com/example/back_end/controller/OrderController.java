@@ -9,6 +9,7 @@ import com.example.back_end.dto.response.ApiResponse;
 import com.example.back_end.dto.response.PageResponse;
 import com.example.back_end.dto.response.order.OrderResponse;
 import com.example.back_end.service.order.IOrderService;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +34,9 @@ public class OrderController {
      * @return JSON body contains success message if order created successfully
      */
     @PostMapping("/add")
-    public ApiResponse<Void> createOrder(@RequestBody OrderCreateRequest request) {
-        orderService.addOrder(request);
-        return ApiResponse.<Void>builder().build();
+    public ApiResponse<OrderResponse> createOrder(@RequestBody OrderCreateRequest request) {
+        OrderResponse response = orderService.addOrder(request);
+        return ApiResponse.<OrderResponse>builder().result(response).build();
     }
 
     @GetMapping("/individual/{userId}")
@@ -139,7 +140,7 @@ public class OrderController {
             @RequestParam(name = "statusId", required = false) Integer statusId,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            Pageable pageable) {
+            @PageableDefault(size = 10) Pageable pageable) {
         return ApiResponse.<PageResponse<OrderResponse>>builder()
                 .code(0)
                 .message("Tìm kiếm và lọc đơn hàng thành công")

@@ -2,6 +2,7 @@ package com.example.back_end.controller;
 
 import com.example.back_end.dto.request.IntrospectRequest;
 import com.example.back_end.dto.request.LoginRequest;
+import com.example.back_end.dto.request.RefreshRequest;
 import com.example.back_end.dto.response.ApiResponse;
 import com.example.back_end.dto.response.AuthenticationResponse;
 import com.example.back_end.dto.response.IntrospectResponse;
@@ -87,5 +88,11 @@ public class AuthController {
             System.out.println("invalid-verification");
         }
         return ApiResponse.<Void>builder().build();
+    }
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        var result = authService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
     }
 }

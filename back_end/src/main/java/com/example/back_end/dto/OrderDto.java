@@ -22,4 +22,5 @@ public class OrderDto {
     private String paymentMethodTypePayment;
     private String statusName;
     private List<OrderDetailDto> orderDetails;
+    private boolean isPaid;
 }

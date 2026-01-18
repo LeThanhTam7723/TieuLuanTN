@@ -1,16 +1,18 @@
 package com.example.back_end.mapper;
 
+import com.example.back_end.config.ImageMapperUtil;
 import com.example.back_end.dto.request.product.ProductVariantCreationRequest;
 import com.example.back_end.dto.request.product.ProductVariantUpdateRequest;
 import com.example.back_end.dto.response.product.ProductVariantResponse;
 import com.example.back_end.dto.response.product.ProductVariantSummary;
+import com.example.back_end.entity.ProductImage;
 import com.example.back_end.entity.ProductVariant;
 import org.mapstruct.*;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring",
-        uses = {SizeMapper.class, ColorMapper.class, ProductImageMapper.class})
+        uses = {SizeMapper.class, ColorMapper.class, ProductImageMapper.class, ImageMapperUtil.class})
 public interface ProductVariantMapper {
 
     // CREATE MAPPING
@@ -30,6 +32,7 @@ public interface ProductVariantMapper {
     // RESPONSE MAPPING
     @Mapping(target = "color", source = "color")
     @Mapping(target = "size", source = "size")
+//    @Mapping(target = "primaryImage", source = "images", qualifiedByName = "findPrimaryImage")
     ProductVariantResponse toResponse(ProductVariant variant);
 
     List<ProductVariantResponse> toResponseList(List<ProductVariant> variants);
@@ -37,6 +40,7 @@ public interface ProductVariantMapper {
     // SUMMARY MAPPING
     @Mapping(target = "size", source = "size")
     @Mapping(target = "color", source = "color")
+//    @Mapping(target = "primaryImage", expression = "java(findPrimaryImage(product.getImages()))")
     ProductVariantSummary toSummary(ProductVariant variant);
 
     List<ProductVariantSummary> toSummaryList(List<ProductVariant> variants);

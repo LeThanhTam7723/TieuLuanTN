@@ -1,6 +1,8 @@
 package com.example.back_end.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -12,9 +14,9 @@ import java.util.*;
 
 public class VnpayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:5173/payment?success=true";
+    public static String vnp_ReturnUrl = "http://localhost:8080/api/payment/vnpay_return";
     public static String vnp_TmnCode = "CO15G38U";
-    public static String vnp_HashSecret = "E8D8CZ8PITHCQQBZQGMR11GXLOUXSC5K";
+    public static String vnp_HashSecret = "IPD79VS4HNZR3V4QWL44OU0GV6G5AW9W";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {

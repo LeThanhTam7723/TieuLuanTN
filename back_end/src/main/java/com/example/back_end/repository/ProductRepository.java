@@ -27,6 +27,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByBrandIdAndActiveTrue(Long brandId);
 
+    Page<Product> findByBrand_SlugAndActiveTrue(String slug, Pageable pageable);
+
     List<Product> findByGenderIdAndActiveTrue(Long genderId);
 
     List<Product> findByGenderName(String genderName);
@@ -106,5 +108,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("maxPrice") BigDecimal maxPrice,
             Pageable pageable
     );
+    long countByActiveTrue();
 
 }

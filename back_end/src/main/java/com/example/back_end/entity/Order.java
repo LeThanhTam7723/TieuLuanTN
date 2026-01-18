@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -29,7 +30,7 @@ public class Order {
     @Column(name = "phone", nullable = false)
     private String phone;
 
-    @Column(name = "dateOrder", nullable = false)
+    @Column(name = "date_order", nullable = false)
     private LocalDate dateOrder;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -39,4 +40,10 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_status", nullable = false)
     private Status idStatus;
+
+    @Column(name = "total", nullable = false)
+    private BigDecimal total;
+
+    @Column(name = "is_paid", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean isPaid;
 }

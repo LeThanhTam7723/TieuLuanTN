@@ -25,4 +25,13 @@ public class Review {
     private int rating; // 1 đến 5 sao
     private String comment;
     private LocalDateTime createdAt;
+    // ===== PHẢN HỒI =====
+    @Column(columnDefinition = "TEXT")
+    private String adminReply;
+
+    private LocalDateTime repliedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "replied_by")
+    private User repliedBy;
 }

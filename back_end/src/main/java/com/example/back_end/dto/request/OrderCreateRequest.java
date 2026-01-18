@@ -7,18 +7,20 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class OrderCreateRequest {
-    private Long idUser;
+    private List<Long> orderItems;
     private String receiver;
     private String phone;
     private String address;
     private int idPaymentMethod;
     private int idStatus;
-    private double total;
+    private BigDecimal total;
 }

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +40,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(u.phone) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<User> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+
+
+    @Query("SELECT COUNT(u) FROM User u JOIN u.roles r WHERE r.name = :roleName AND u.active = true")
+    Long countActiveUsersByRole(@Param("roleName") String roleName);
+
+    @Query("SELECT u.coin FROM User u WHERE u.id = :userId")
+    BigDecimal findCoinByUserId(@Param("userId") Long userId);
+
 }
 

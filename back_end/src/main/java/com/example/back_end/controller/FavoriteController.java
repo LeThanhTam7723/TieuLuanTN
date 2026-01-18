@@ -2,6 +2,7 @@ package com.example.back_end.controller;
 
 import com.example.back_end.dto.request.FavoriteRequest;
 import com.example.back_end.dto.response.ApiResponse;
+import com.example.back_end.dto.response.product.ProductCard;
 import com.example.back_end.dto.response.product.ProductResponse;
 import com.example.back_end.service.wishlist.FavoriteService;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,8 @@ public class FavoriteController {
     }
 
     @GetMapping("/idUser/{userId}")
-    public ApiResponse<List<ProductResponse>> getFavoritesByUserId(@PathVariable Long userId) {
-        return ApiResponse.<List<ProductResponse>>builder().result(favoriteService.getFavoritesByUserId(userId)).build();
+    public ApiResponse<List<ProductCard>> getFavoritesByUserId(@PathVariable Long userId) {
+        return ApiResponse.<List<ProductCard>>builder().result(favoriteService.getFavoritesByUserId(userId)).build();
     }
 
     @GetMapping("/check")

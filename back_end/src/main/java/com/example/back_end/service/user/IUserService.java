@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import com.example.back_end.dto.response.PageResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public interface IUserService {
@@ -59,4 +60,5 @@ public interface IUserService {
 
     // Bật/Tắt trạng thái user (ADMIN)
     void toggleUserActiveStatus(Long userId);
+    BigDecimal getUserCoin();
 }

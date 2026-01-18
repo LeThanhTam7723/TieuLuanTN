@@ -5,6 +5,9 @@ import com.example.back_end.dto.OrderDetailDto;
 import com.example.back_end.dto.OrderDto;
 import com.example.back_end.dto.StatusDto;
 import com.example.back_end.dto.request.OrderCreateRequest;
+import com.example.back_end.dto.response.product.ProductSummary;
+import com.example.back_end.dto.response.product.ProductVariantResponse;
+import com.example.back_end.dto.response.user.UserResponse;
 import com.example.back_end.entity.*;
 import com.example.back_end.mapper.OrderDetailMapper;
 import com.example.back_end.mapper.OrderMapper;
@@ -14,6 +17,7 @@ import com.example.back_end.dto.response.PageResponse;
 import com.example.back_end.entity.*;
 import com.example.back_end.exception.AppException;
 import com.example.back_end.exception.ErrorCode;
+import com.example.back_end.mapper.ProductMapper;
 import com.example.back_end.repository.*;
 import com.example.back_end.service.product.IProductImageService;
 import com.example.back_end.service.product.ProductImageService;
@@ -24,6 +28,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -47,34 +52,49 @@ public class OrderService implements IOrderService {
     private final OrderMapper orderMapper;
     private final IProductImageService productImageService;
     private final ProductImageMapper productImageMapper;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     @Override
-    public void addOrder(OrderCreateRequest request) {
-        Cart cart = cartRepository.findByUser_IdAndIsOrdered(request.getIdUser(),false)
+    public OrderResponse addOrder(OrderCreateRequest request) {
+        UserResponse currentUser = userService.getCurrentUser();
+        System.out.println(request.getOrderItems());
+        Cart cart = cartRepository.findByUser_IdAndIsOrdered(currentUser.getId(),false)
                 .orElseThrow(() -> new IllegalArgumentException("Cart không tồn tại cho User này."));
-        List<CartDetail> cartDetails = cartDetailRepository.findAllByIdCart(cart);
+        List<Long> cartItemIds = request.getOrderItems();
+        if (cartItemIds == null || cartItemIds.isEmpty()) {
+            throw new IllegalArgumentException("Không có sản phẩm nào được chọn để đặt hàng.");
+        }
+        List<CartDetail> cartDetails = cartDetailRepository.findAllById(cartItemIds);
+        for (CartDetail detail : cartDetails) {
+            if (!detail.getIdCart().getId().equals(cart.getId())) {
+                throw new IllegalArgumentException("Phát hiện sản phẩm không thuộc giỏ hàng của bạn.");
+            }
+        }
+
         if (cartDetails.isEmpty()) {
-            throw new IllegalArgumentException("Giỏ hàng trống, không thể đặt đơn.");
+            throw new IllegalArgumentException("Không tìm thấy các sản phẩm cần đặt.");
         }
         PaymentMethod paymentMethod = paymentRepository.findById(request.getIdPaymentMethod())
                 .orElseThrow(() -> new IllegalArgumentException("Phương thức thanh toán không hợp lệ."));
         Status status = statusRepository.findById(request.getIdStatus())
                 .orElseThrow(() -> new IllegalArgumentException("Trạng thái không tồn tại."));
         Order order = new Order();
-        order.setIdUser(userService.getUserById(request.getIdUser()));
+        order.setIdUser(userService.getUserById(currentUser.getId()));
         order.setDateOrder(LocalDate.now());
         order.setAddress(request.getAddress());
         order.setIdPaymentMethod(paymentMethod);
         order.setIdStatus(status);
         order.setReceiver(request.getReceiver());
         order.setPhone(request.getPhone());
-        orderRepository.save(order);
+        order.setTotal(request.getTotal());
+        order=orderRepository.save(order);
+        OrderResponse response = modelMapper.map(order, OrderResponse.class);
+        System.out.println("Đơn hàng mới tạo"+response);
 
         for (CartDetail cartDetail : cartDetails) {
             ProductVariant product = cartDetail.getIdProduct();
             Integer cartQuantity = cartDetail.getQuantity();
-            System.out.println(product.getId());
-
             OrderDetail oderDetail = new OrderDetail();
             oderDetail.setIdOrder(order);
             oderDetail.setIdProduct(product);
@@ -85,24 +105,25 @@ public class OrderService implements IOrderService {
 
             orderDetailRepository.save(oderDetail);
         }
-        cart.setOrdered(true);
-        cartRepository.save(cart);
-
-//        cartDetailRepository.deleteAll(cartDetails);
-
+        cartDetailRepository.deleteAll(cartDetails);
+        return response;
     }
 
     @Override
-
     public List<OrderDetailDto> getOrderDetailsByOrderId(Long orderId) {
         List<OrderDetail>orderDetails= orderDetailRepository.findByIdOrder_Id(orderId);
         List<OrderDetailDto> orderDetailDtos= orderDetails.stream().map(orderDetailMapper::toDto).collect(Collectors.toList());
+        for (OrderDetailDto a : orderDetailDtos){
+            Product product = productRepository.getReferenceById(a.getIdProduct().getProduct().getId());
+            ProductSummary productSummary = productMapper.toSummary(product);
+            a.getIdProduct().setProduct(productSummary);
+        }
         return orderDetailDtos;
     }
 
     @Override
     public List<OrderDto> getOrderByUserId(Long userId) {
-        List<Order> orders =  orderRepository.findByIdUser_Id(userId);
+        List<Order> orders =  orderRepository.findByIdUser_IdOrderByDateOrderDesc(userId);
         List<OrderDto> orderDtos = orders.stream().map((element) -> modelMapper.map(element, OrderDto.class)).collect(Collectors.toList());
         for(OrderDto a : orderDtos){
             a.setOrderDetails(getOrderDetailsByOrderId(a.getIdOrder()));
@@ -148,7 +169,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<OrderResponse> getOrdersByUser(Long userId) {
-        List<Order> orders = orderRepository.findByIdUser_Id(userId);
+        List<Order> orders = orderRepository.findByIdUser_IdOrderByDateOrderDesc(userId);
         return orders.stream()
                 .map(order -> modelMapper.map(order, OrderResponse.class))
                 .collect(Collectors.toList());
@@ -213,4 +234,20 @@ public class OrderService implements IOrderService {
                 .last(orderPage.isLast())
                 .build();
     }
+
+    @Override
+    public void updateIsPaid(Long orderId, boolean paidStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        order.setPaid(paidStatus);
+        orderRepository.save(order);
+    }
+
+    @Transactional
+    @Override
+    public void addReview(Long orderDetailId, Review review) {
+        orderDetailRepository.updateReview(orderDetailId, review);
+    }
+    // update trạng thái thanh toán.
+
 }

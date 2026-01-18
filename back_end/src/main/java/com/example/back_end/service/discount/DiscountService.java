@@ -3,6 +3,7 @@ package com.example.back_end.service.discount;
 import com.example.back_end.dto.request.discount.DiscountCreationRequest;
 import com.example.back_end.dto.request.discount.DiscountUpdateRequest;
 import com.example.back_end.dto.response.discount.DiscountResponse;
+import com.example.back_end.dto.response.discount.DiscountResponseAdmin;
 import com.example.back_end.entity.Discount;
 import com.example.back_end.exception.AppException;
 import com.example.back_end.exception.ErrorCode;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,18 @@ public class DiscountService implements IDiscountService {
     }
 
     @Override
+    public List<DiscountResponse> findByActive(Boolean active) {
+        List<Discount> discounts = discountRepository.findByActive(active);
+        if (discounts == null) {
+            return new ArrayList<>();
+        }
+        return discounts.stream()
+                .map(discount -> modelMapper.map(discount, DiscountResponse.class))
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
     public DiscountResponse createDiscount(DiscountCreationRequest request) {
         if (discountRepository.findByCode(request.getCode()) != null) {
             throw new AppException(ErrorCode.DISCOUNT_CODE_EXISTS);
@@ -35,7 +49,11 @@ public class DiscountService implements IDiscountService {
                 .code(request.getCode())
                 .discountName(request.getDiscountName())
                 .description(request.getDescription())
-                .salePercent(request.getSalePercent())
+                .usageLimit(request.getUsageLimit())
+                .discountType(request.getDiscountType())
+                .discountValue(request.getDiscountValue())
+                .minimumOrderAmount(request.getMinimumOrderAmount())
+                .active(request.isActive())
                 .build();
 
         Discount savedDiscount = discountRepository.save(discount);
@@ -48,8 +66,6 @@ public class DiscountService implements IDiscountService {
                 .orElseThrow(() -> new AppException(ErrorCode.DISCOUNT_NOT_FOUND));
 
         discount.setDiscountName(request.getDiscountName());
-        discount.setDescription(request.getDescription());
-        discount.setSalePercent(request.getSalePercent());
 
         Discount updatedDiscount = discountRepository.save(discount);
         return modelMapper.map(updatedDiscount, DiscountResponse.class);
@@ -64,9 +80,9 @@ public class DiscountService implements IDiscountService {
     }
 
     @Override
-    public List<DiscountResponse> getAllDiscounts() {
+    public List<DiscountResponseAdmin> getAllDiscounts() {
         return discountRepository.findAll().stream()
-                .map(discount -> modelMapper.map(discount, DiscountResponse.class))
+                .map(discount -> modelMapper.map(discount, DiscountResponseAdmin.class))
                 .collect(Collectors.toList());
     }
 

@@ -1,7 +1,9 @@
 package com.example.back_end.repository;
 
+import com.example.back_end.dto.response.analytics.TopSellingProductResponse;
 import com.example.back_end.entity.ProductVariant;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +21,5 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
     List<ProductVariant> findByProductIdInAndActiveTrue(List<Long> productIds);
 
     Optional<ProductVariant> findBySkuAndActiveTrue(String sku);
+
 } 

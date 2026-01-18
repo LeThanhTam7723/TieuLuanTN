@@ -19,6 +19,7 @@ import java.util.List;
 public class ProductVariantResponse {
     private Long id;
     private ProductSummary product;
+//    private ProductImageSummary primaryImage;
     private SizeDto size;
     private ColorDto color;
     private String sku;
