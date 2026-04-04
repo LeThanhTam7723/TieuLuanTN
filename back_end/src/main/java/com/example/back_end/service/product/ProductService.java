@@ -56,8 +56,10 @@ public class ProductService implements IProductService {
 
         Product product = Product.builder()
                 .name(request.getName())
+                .nameEn(request.getNameEn())
                 .slug(slug)
                 .description(request.getDescription())
+                .descriptionEn(request.getDescriptionEn())
                 .brand(brand)
                 .basePrice(request.getBasePrice())
                 .gender(gender)

@@ -39,19 +39,6 @@ public class CartDetailService implements ICartService{
 
     @Override
     public void updateCartItem(CartRequest request) {
-        UserResponse currentUser = userService.getCurrentUser();
-//        Cart cart = cartRepository.findByUser_IdAndIsOrdered(currentUser.getId(), false)
-//                .orElseGet(() -> {
-//                    Cart newOne = new Cart();
-//                    newOne.setUser(userService.getUserById(currentUser.getId()));
-//                    newOne.setOrdered(false);
-//                    cartRepository.save(newOne);
-//                    return newOne;
-//                });
-//        ProductVariant product = productService.getById(request.getIdProduct());
-//        ProductVariant product = variantRepository.findById(request.getIdProduct())
-//                .orElseThrow(() -> new AppException(ErrorCode.VARIANT_NOT_FOUND));
-//        System.out.println(product.getId());
         CartDetail cartDetail = cartDetailRepository.findById(request.getIdCartItem())
                 .orElseThrow(() -> new AppException(ErrorCode.CART_ITEM_NOT_EXISTED));
         System.out.println(cartDetail.getIdProduct().getId());

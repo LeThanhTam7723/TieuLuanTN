@@ -420,7 +420,7 @@
     "search_filter": {
       "placeholder": "Search orders by product name...",
       "all_statuses": "All statuses",
-      "pending": "Pending",
+      "processing": "Pending",
       "confirmed": "Confirmed",
       "shipping": "Shipping",
       "completed": "Completed",

@@ -7,7 +7,7 @@ import DiscountService from "../API/DiscountService";
 import CheckOutService from "../API/CheckoutService";
 import { FaCoins } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { CurrencyContext } from "../contexts/CurrencyContext";
 
 const CheckoutPage = () => {
@@ -48,6 +48,7 @@ const CheckoutPage = () => {
       setTitleShowSuccess("Đặt hàng thanh công!");
     }
   }, [searchParams]);
+  const navigate = useNavigate();
   
   const [isLoading, setIsLoading] = useState(false);
   const [savedAddresses ,setSavedAddresses] = useState([]);
@@ -555,10 +556,10 @@ const CheckoutPage = () => {
                   Cảm ơn bạn đã mua hàng. Chúng tôi sẽ gửi email xác nhận cho bạn ngay.
                 </p>
                 <button
-                  onClick={() => {setShowSuccess(false);}}
+                  onClick={() => {navigate('/');setShowSuccess(false);}}
                   className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"
                 >
-                  Tiếp tục mua sắm
+                  {t("cart.continue_shopping")}
                 </button>
               </div>
             </div>

@@ -2,6 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import StatusService from '../../../API/StatusService'; // Đảm bảo đường dẫn đúng
 
+const STATUS_FLOW = {
+    processing: ["confirmed", "shipping", "completed", "cancelled"],
+    confirmed: ["shipping", "completed", "cancelled"],
+    shipping: ["completed"],
+    completed: [],
+    cancelled: []
+};
 const UpdateOrderStatusModal = ({ order, onClose, onUpdate }) => {
     // order là đối tượng OrderResponse từ OrderTable, chứa id và idStatus
     const [selectedStatusId, setSelectedStatusId] = useState('');
@@ -9,6 +16,11 @@ const UpdateOrderStatusModal = ({ order, onClose, onUpdate }) => {
     const [loadingStatuses, setLoadingStatuses] = useState(true);
     const [errorStatuses, setErrorStatuses] = useState(null);
 
+    // Lấy trạng thái hiện tại của đơn hàng
+    const currentStatusName = order?.status?.name;
+    const allowedNextStatuses = STATUS_FLOW[currentStatusName] || [];
+    const isLocked = allowedNextStatuses.length === 0;
+    
     useEffect(() => {
         const fetchStatuses = async () => {
             setLoadingStatuses(true);
@@ -36,7 +48,7 @@ const UpdateOrderStatusModal = ({ order, onClose, onUpdate }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (order && selectedStatusId) {
+        if (order && !isLocked && selectedStatusId) {
             onUpdate(order.id, parseInt(selectedStatusId));
         } else {
             // Có thể thêm thông báo lỗi nếu cần
@@ -61,6 +73,14 @@ const UpdateOrderStatusModal = ({ order, onClose, onUpdate }) => {
                 {/* Modal Body */}
                 <form onSubmit={handleSubmit} className="p-6">
                     <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Trạng thái hiện tại
+                        </label>
+                        <div className="px-3 py-2 border rounded bg-gray-100 text-gray-800">
+                        {currentStatusName}
+                        </div>
+                    </div>
+                    <div className="mb-4">
                         <label htmlFor="statusSelect" className="block text-sm font-medium text-gray-700 mb-2">
                             Chọn trạng thái mới:
                         </label>
@@ -77,9 +97,13 @@ const UpdateOrderStatusModal = ({ order, onClose, onUpdate }) => {
                                 required
                             >
                                 <option value="">-- Chọn trạng thái --</option>
-                                {statuses.map((status) => (
+                                {statuses
+                                .filter((status) =>
+                                    allowedNextStatuses.includes(status.name)
+                                )
+                                .map((status) => (
                                     <option key={status.id} value={status.id}>
-                                        {status.name}
+                                    {status.name}
                                     </option>
                                 ))}
                             </select>

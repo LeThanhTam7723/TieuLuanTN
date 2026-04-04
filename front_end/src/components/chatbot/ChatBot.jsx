@@ -3,8 +3,10 @@ import ChatBotService from "../../API/ChatBotService";
 import { db } from "../../firebase/config";
 import { push, ref, set ,query, orderByChild, equalTo,get,onChildAdded, onValue} from "firebase/database";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const ChatBot = () => {
+  const navigate = useNavigate();
   const {user, isAdmin, loading} = useAuth();
   const [openAI, setOpenAI] = useState(false);
   const [openFirebase, setOpenFirebase] = useState(false);
@@ -24,6 +26,7 @@ const ChatBot = () => {
   const session = JSON.parse(localStorage.getItem("session"));
   const [userId, setUserId] = useState(null); 
   const messagesEndRef = useRef(null);
+  
   //Tìm hoặc tạo conversation
   const findOrCreateConversation = async () => {
     try {
@@ -145,6 +148,13 @@ const ChatBot = () => {
     }
   };
   // Phần xử lý tin nhắn từ firebase
+  const handleToggleChatFB =  () => {
+    if (!session?.currentUser?.id) {
+      navigate('/auth/login');
+      return;
+    }
+    setOpenFirebase(true);
+  };
   
   const sendMessageFirebase = async () => {
     if (!inputFirebase.trim() || loadingFirebase || !conversationId) return;
@@ -262,7 +272,7 @@ const ChatBot = () => {
       {!openFirebase && (!isAdmin) && (
         <div className="fixed bottom-6 right-6 z-[9999]">
           <button
-            onClick={() => setOpenFirebase(true)}
+            onClick={() => handleToggleChatFB()}
             onMouseEnter={() => setShowFirebaseTooltip(true)}
             onMouseLeave={() => setShowFirebaseTooltip(false)}
             className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-500 to-red-500 text-white font-bold text-sm shadow-2xl hover:shadow-orange-500/50 hover:scale-110 transition-all duration-300 flex items-center justify-center group relative"

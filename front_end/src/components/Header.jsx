@@ -84,7 +84,7 @@ const Header = () => {
                 console.log("User roles:", userRoles);
 
                 if (currentSession.currentUser?.imageUrl) {
-                    setUserAvatar(user?.imageUrl);
+                    setUserAvatar(currentSession.currentUser?.imageUrl);
                 } else {
                     setUserAvatar(null);
                 }

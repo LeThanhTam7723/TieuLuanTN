@@ -17,5 +17,6 @@ public interface ReviewMapper {
     Review toEntity(ReviewRequest request);
 
     @Mapping(target = "userResponse", source = "user")
+    @Mapping(target = "productSummary", source = "idProduct")
     ReviewResponse toResponse(Review review);
 }

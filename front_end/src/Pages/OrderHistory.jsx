@@ -1,21 +1,34 @@
 import { useContext, useEffect, useState } from "react";
-import {FiChevronDown, FiShoppingBag, FiStar, FiInfo, FiChevronUp, FiX, FiPackage, FiTruck, FiCheckCircle, FiXCircle, FiCalendar, FiCreditCard} from "react-icons/fi";
+import {FiChevronDown, FiShoppingBag, FiStar, FiInfo, FiChevronUp, FiX, FiPackage, FiTruck, FiCheckCircle, FiXCircle, FiCalendar, FiCreditCard,FiUpload,FiImage } from "react-icons/fi";
 import { introspect } from "../API/AuthService";
 import axiosClient from "../API/axiosClient";
 import {useTranslation} from "react-i18next";
 import ReviewService from "../API/ReviewService";
 import { FavoriteContext } from "../contexts/FavoriteContext";
 import OrderService from "../API/OrderService";
+import { CurrencyContext } from "../contexts/CurrencyContext";
 
 const OrderHistory = () => {
   const { session } = useContext(FavoriteContext);
-  const { t } = useTranslation();
+  const { t , i18n  } = useTranslation();
+  const { convertAndGetDisplayPrice, formatCurrency, currentCurrency, convertVndToUsdRealtime } = useContext(CurrencyContext);
+  const displayBasePrice=(basePrice) => {
+    return convertAndGetDisplayPrice(basePrice || 0);
+  } 
   const cancelReasons = [
     t("order_history_page.cancel_modal.reasons.change_address"),
     t("order_history_page.cancel_modal.reasons.change_payment"),
     t("order_history_page.cancel_modal.reasons.found_better_price"),
     t("order_history_page.cancel_modal.reasons.changed_mind"),
     t("order_history_page.cancel_modal.reasons.other_reason")
+  ];
+  const refundReasons = [
+    "Sản phẩm bị lỗi/hư hỏng",
+    "Sản phẩm không đúng mô tả",
+    "Sản phẩm không vừa size",
+    "Giao nhầm sản phẩm",
+    "Chất lượng không như mong đợi",
+    "Lý do khác"
   ];
 
   const [expandedOrders, setExpandedOrders] = useState({});
@@ -60,12 +73,15 @@ const OrderHistory = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [cancelReason, setCancelReason] = useState("");
-
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showViewReviewModal, setShowViewReviewModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
+  const [showRefundModal, setShowRefundModal] = useState(false);
+  const [refundReason, setRefundReason] = useState("");
+  const [refundImages, setRefundImages] = useState([]);
+  const [refundDescription, setRefundDescription] = useState("");
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -120,8 +136,8 @@ const OrderHistory = () => {
         return t("order_history_page.order_card.status.cancelled");
       case "shipping":
         return t("order_history_page.order_card.status.shipping");
-      case "pending":
-        return t("order_history_page.order_card.status.pending");
+      case "processing":
+        return t("order_history_page.order_card.status.processing");
       case "confirmed":
         return t("order_history_page.order_card.status.confirmed");
       default:
@@ -130,9 +146,22 @@ const OrderHistory = () => {
   };
 
   const filteredOrders = orderList.filter(order => {
-    const matchesStatus = selectedStatus === "all" || order.statusName === selectedStatus;
+    let matchesStatus = true;
+
+    if (selectedStatus === "all") {
+      matchesStatus = true;
+    } 
+    else if (selectedStatus === "pending_payment") {
+      matchesStatus =
+        order.paid === false && order.paymentMethodTypePayment != "COD" && order.statusName !== "cancelled"
+    } 
+    else {
+      matchesStatus = order.statusName === selectedStatus;
+    }
+
     return matchesStatus;
   });
+
 
   const toggleOrderExpand = (orderId) => {
     setExpandedOrders(prev => ({
@@ -192,6 +221,46 @@ const OrderHistory = () => {
     }
   };
 
+  // Refund functions
+  const handleRefundClick = (product, idOrderItem) => {
+    setSelectedProduct(product);
+    setOrderItemId(idOrderItem);
+    setShowRefundModal(true);
+    setRefundReason("");
+    setRefundImages([]);
+    setRefundDescription("");
+  };
+
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const imageUrls = files.map(file => URL.createObjectURL(file));
+    setRefundImages(prev => [...prev, ...imageUrls]);
+  };
+
+  const removeImage = (index) => {
+    setRefundImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmitRefund = () => {
+    console.log("Refund request submitted", {
+      productId: selectedProduct.idProduct.id,
+      orderItemId: orderItemId,
+      reason: refundReason,
+      description: refundDescription,
+      images: refundImages
+    });
+
+    // TODO: Call API to submit refund request
+    // RefundService.createRefund(...)
+
+    setShowRefundModal(false);
+    setSelectedProduct(null);
+    setRefundReason("");
+    setRefundImages([]);
+    setRefundDescription("");
+    setOrderItemId(null);
+  };
+
   const calculateOrderTotal = (orderDetails) => {
     return orderDetails.reduce((total, item) => total + item.totalPrice, 0);
   };
@@ -211,7 +280,7 @@ const OrderHistory = () => {
               {[
                 { key: "all", label: t("order_history_page.search_filter.all_statuses") },
                 { key: "pending_payment", label: "Chờ thanh toán" },
-                { key: "processing", label: t("order_history_page.search_filter.pending") },
+                { key: "processing", label: t("order_history_page.search_filter.processing") },
                 { key: "confirmed", label: t("order_history_page.search_filter.confirmed") },
                 { key: "shipping", label: t("order_history_page.search_filter.shipping") },
                 { key: "completed", label: t("order_history_page.search_filter.completed") },
@@ -312,7 +381,10 @@ const OrderHistory = () => {
                                         </div>
                                       </div>
                                       <div className="text-right">
-                                        <div className="text-lg font-bold text-gray-900">${product.totalPrice.toFixed(2)}</div>
+                                        <div className="text-lg font-bold text-gray-900">{formatCurrency(displayBasePrice(product.totalPrice), currentCurrency)}</div>
+                                        <div className="mt-2 flex flex-col items-end gap-2">
+                                          
+                                        </div>
                                         {(order.statusName === "completed" && product.review ===null) && (
                                             <button
                                                 onClick={() => handleReviewClick(product,product.id)}
@@ -331,6 +403,25 @@ const OrderHistory = () => {
                                               Xem đánh giá
                                             </button>
                                         )}
+                                        {(order.statusName === "completed" && product.refund === null) && (
+                                            <button
+                                                onClick={()=>handleRefundClick(product,product.id)}
+                                                className="mt-2 px-3 py-1 text-sm bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-lg
+                                                  hover:from-red-600 hover:to-rose-700 transition-all duration-200
+                                                  shadow-md hover:shadow-lg transform hover:scale-105"
+                                            >
+                                              Trả hàng
+                                            </button>
+                                        )}
+                                        {(order.statusName === "completed" && product.refund !== null) && (
+                                            <button
+                                                className="mt-2 px-3 py-1 text-sm bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-lg
+                                                  hover:from-red-600 hover:to-rose-700 transition-all duration-200
+                                                  shadow-md hover:shadow-lg transform hover:scale-105"
+                                            >
+                                              Xem yêu cầu trả hàng
+                                            </button>
+                                        )}
                                       </div>
                                     </div>
                                 ))}
@@ -342,7 +433,7 @@ const OrderHistory = () => {
                               <div className="flex items-center justify-between mb-6">
                                 <span className="text-lg font-semibold text-gray-700">{t("order_history_page.order_card.total_amount")}</span>
                                 <span className="text-2xl font-bold text-gray-900">
-                                  ${calculateOrderTotal(order.orderDetails).toFixed(2)}
+                                  {formatCurrency(displayBasePrice(calculateOrderTotal(order.orderDetails)), currentCurrency)}
                                 </span>
                               </div>
 
@@ -353,7 +444,7 @@ const OrderHistory = () => {
                                       {t("order_history_page.order_card.buy_again")}
                                     </button>
                                   )}
-                                  {(order.paid === false && order.paymentMethodTypePayment != "COD") && (
+                                  {(order.paid === false && order.paymentMethodTypePayment != "COD" && order.statusName !== "cancelled") && (
                                       <button className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 font-medium">
                                         Thanh toán ngay
                                       </button>
@@ -538,6 +629,122 @@ const OrderHistory = () => {
                   className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 font-medium"
                 >
                   Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {showRefundModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl transform animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold text-gray-900">Yêu cầu hoàn tiền</h3>
+                <button
+                  onClick={() => setShowRefundModal(false)}
+                  className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg p-2 transition-colors duration-200"
+                >
+                  <FiX className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-gray-700 mb-4 font-medium">{selectedProduct?.idProduct?.product?.name}</p>
+                
+                {/* Reason Selection */}
+                <div className="mb-4">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    Lý do hoàn tiền <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={refundReason}
+                    onChange={(e) => setRefundReason(e.target.value)}
+                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  >
+                    <option value="">Chọn lý do...</option>
+                    {refundReasons.map((reason, index) => (
+                      <option key={index} value={reason}>{reason}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Description */}
+                <div className="mb-4">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    Mô tả chi tiết
+                  </label>
+                  <textarea
+                    value={refundDescription}
+                    onChange={(e) => setRefundDescription(e.target.value)}
+                    placeholder="Vui lòng mô tả chi tiết vấn đề của sản phẩm..."
+                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none"
+                    rows="3"
+                  />
+                </div>
+
+                {/* Image Upload */}
+                <div className="mb-4">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    Hình ảnh minh chứng <span className="text-red-500">*</span>
+                  </label>
+                  
+                  {/* Upload Button */}
+                  <label className="flex items-center justify-center gap-2 w-full border-2 border-dashed border-gray-300 rounded-xl px-4 py-6 cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-all duration-200">
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                    <FiUpload className="w-5 h-5 text-gray-400" />
+                    <span className="text-sm text-gray-600">Chọn ảnh từ thiết bị</span>
+                  </label>
+
+                  {/* Preview Images */}
+                  {refundImages.length > 0 && (
+                    <div className="grid grid-cols-3 gap-3 mt-4">
+                      {refundImages.map((image, index) => (
+                        <div key={index} className="relative group">
+                          <img
+                            src={image}
+                            alt={`Preview ${index + 1}`}
+                            className="w-full h-24 object-cover rounded-lg border-2 border-gray-200"
+                          />
+                          <button
+                            onClick={() => removeImage(index)}
+                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                          >
+                            <FiX className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <p className="text-xs text-gray-500 mt-2">
+                    <FiImage className="inline w-3 h-3 mr-1" />
+                    Tối đa 5 ảnh. Hỗ trợ JPG, PNG
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowRefundModal(false)}
+                  className="px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium"
+                >
+                  Hủy
+                </button>
+                <button
+                  onClick={handleSubmitRefund}
+                  disabled={!refundReason || refundImages.length === 0}
+                  className={`px-6 py-3 rounded-xl text-white font-medium transition-all duration-200 ${
+                    refundReason && refundImages.length > 0
+                      ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-md hover:shadow-lg transform hover:scale-105'
+                      : 'bg-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  Gửi yêu cầu
                 </button>
               </div>
             </div>

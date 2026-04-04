@@ -2,6 +2,7 @@ package com.example.back_end.dto;
 
 import com.example.back_end.dto.response.product.ProductSummary;
 import com.example.back_end.dto.response.product.ProductVariantResponse;
+import com.example.back_end.dto.response.refund.RefundResponse;
 import com.example.back_end.dto.response.review.ReviewResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,4 +21,5 @@ public class OrderDetailDto {
     private Integer quantity;
     private BigDecimal totalPrice;
     private ReviewResponse review;
+    private RefundResponse refund;
 }

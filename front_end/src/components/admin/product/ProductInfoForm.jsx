@@ -2,18 +2,18 @@ import React from 'react';
 import {useFormContext} from 'react-hook-form';
 
 const ProductInfoForm = ({brands, categories, genders}) => {
-  const {register, formState: {errors}, watch} = useFormContext(); // Thêm watch để theo dõi giá trị categoryIds
+  const {register, formState: {errors}, watch} = useFormContext();
 
-  const watchedCategoryIds = watch('categoryIds'); // Theo dõi giá trị của categoryIds
+  const watchedCategoryIds = watch('categoryIds');
 
   return (
       <>
         <h3 className="text-2xl font-semibold mb-4 text-gray-700 border-b pb-2">Thông tin sản phẩm</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          {/* Tên sản phẩm */}
+          {/* Tên sản phẩm (Tiếng Việt) */}
           <div>
             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="name">
-              Tên sản phẩm: <span className="text-red-500">*</span>
+              Tên sản phẩm (Tiếng Việt): <span className="text-red-500">*</span>
             </label>
             <input
                 type="text"
@@ -24,6 +24,22 @@ const ProductInfoForm = ({brands, categories, genders}) => {
             />
             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
           </div>
+
+          {/* Tên sản phẩm (Tiếng Anh) */}
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="nameEn">
+              Tên sản phẩm (English): <span className="text-red-500">*</span>
+            </label>
+            <input
+                type="text"
+                id="nameEn"
+                {...register('nameEn')}
+                className={`shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ${errors.nameEn ? 'border-red-500' : 'border-gray-300'}`}
+                placeholder="Enter product name"
+            />
+            {errors.nameEn && <p className="text-red-500 text-xs mt-1">{errors.nameEn.message}</p>}
+          </div>
+
           {/* Slug */}
           <div>
             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="slug">
@@ -38,6 +54,7 @@ const ProductInfoForm = ({brands, categories, genders}) => {
             />
             {errors.slug && <p className="text-red-500 text-xs mt-1">{errors.slug.message}</p>}
           </div>
+
           {/* Giá gốc */}
           <div>
             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="basePrice">
@@ -53,6 +70,7 @@ const ProductInfoForm = ({brands, categories, genders}) => {
             />
             {errors.basePrice && <p className="text-red-500 text-xs mt-1">{errors.basePrice.message}</p>}
           </div>
+
           {/* Thương hiệu */}
           <div>
             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="brandId">
@@ -72,6 +90,7 @@ const ProductInfoForm = ({brands, categories, genders}) => {
             </select>
             {errors.brandId && <p className="text-red-500 text-xs mt-1">{errors.brandId.message}</p>}
           </div>
+
           {/* Giới tính */}
           <div>
             <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="genderId">
@@ -91,6 +110,7 @@ const ProductInfoForm = ({brands, categories, genders}) => {
             </select>
             {errors.genderId && <p className="text-red-500 text-xs mt-1">{errors.genderId.message}</p>}
           </div>
+
           {/* Danh mục (Sử dụng Checkbox) */}
           <div>
             <label className="block text-gray-700 text-sm font-semibold mb-2">
@@ -100,15 +120,13 @@ const ProductInfoForm = ({brands, categories, genders}) => {
                 className={`border rounded-lg p-3 max-h-40 overflow-y-auto ${errors.categoryIds ? 'border-red-500' : 'border-gray-300'}`}>
               {categories.length > 0 ? (
                   categories.map((category) => {
-                    const isChecked = watchedCategoryIds?.includes(category.id); // <-- THAY ĐỔI TẠI ĐÂY
-                    console.log(watchedCategoryIds);
-                    console.log(isChecked);
+                    const isChecked = watchedCategoryIds?.includes(String(category.id));
                     return (
                         <div key={category.id} className="flex items-center mb-2">
                           <input
                               type="checkbox"
                               id={`category-${category.id}`}
-                              value={category.id} // Giá trị của checkbox vẫn là số, không sao
+                              value={category.id}
                               {...register('categoryIds')}
                               checked={isChecked}
                               className="form-checkbox h-4 w-4 text-blue-600 rounded"
@@ -127,19 +145,37 @@ const ProductInfoForm = ({brands, categories, genders}) => {
           </div>
         </div>
 
-        {/* Mô tả sản phẩm */}
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="description">
-            Mô tả:
-          </label>
-          <textarea
-              id="description"
-              {...register('description')}
-              rows="5"
-              className="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 border-gray-300"
-              placeholder="Nhập mô tả chi tiết sản phẩm"
-          ></textarea>
-          {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
+        {/* Mô tả sản phẩm - Grid 2 cột */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Mô tả (Tiếng Việt) */}
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="description">
+              Mô tả (Tiếng Việt):
+            </label>
+            <textarea
+                id="description"
+                {...register('description')}
+                rows="5"
+                className="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 border-gray-300"
+                placeholder="Nhập mô tả chi tiết sản phẩm"
+            ></textarea>
+            {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
+          </div>
+
+          {/* Mô tả (Tiếng Anh) */}
+          <div>
+            <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="descriptionEn">
+              Mô tả (English):
+            </label>
+            <textarea
+                id="descriptionEn"
+                {...register('descriptionEn')}
+                rows="5"
+                className="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 border-gray-300"
+                placeholder="Enter product description"
+            ></textarea>
+            {errors.descriptionEn && <p className="text-red-500 text-xs mt-1">{errors.descriptionEn.message}</p>}
+          </div>
         </div>
 
         {/* Checkbox Nổi bật */}

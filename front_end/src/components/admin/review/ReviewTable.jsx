@@ -9,7 +9,7 @@ export default function ReviewTable({ reviews, onReply }) {
     },
     {
       title: "Sản phẩm",
-      dataIndex: ["userResponse", "email"],
+      dataIndex: ["productSummary", "product", "name"],
       key: "product",
     },
     {

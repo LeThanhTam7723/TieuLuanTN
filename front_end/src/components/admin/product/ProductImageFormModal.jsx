@@ -280,7 +280,7 @@ const ProductImageFormModal = ({ productId, onClose, showCustomMessage }) => {
                                     <option value="">-- Chọn mô tả hình ảnh --</option>
 
                                     {altTextOptions.map((option, index) => (
-                                        <option key={index} value={option.sku}>
+                                        <option key={index} value={option.id}>
                                             {option.sku}
                                         </option>
                                     ))}

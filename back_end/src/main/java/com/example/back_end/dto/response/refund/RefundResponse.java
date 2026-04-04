@@ -5,11 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RefundResponse {
-    private Long refundId;
-    private RefundStatus status;
+    private Long id;
     private String reason;
+    private RefundStatus status;
+    private List<String> imageUrls;
 }

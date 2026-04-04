@@ -3,8 +3,12 @@ package com.example.back_end.service.refund;
 import com.example.back_end.dto.request.refund.RefundRequest;
 import com.example.back_end.dto.response.refund.RefundResponse;
 
+import java.util.List;
+
 public interface IRefundService {
-    RefundResponse requestRefund(RefundRequest dto);
+    void requestRefund(RefundRequest dto);
     void approveRefund(Long refundId);
     void rejectRefund(Long refundId);
+    void refundedRefund(Long refundId);
+
 }

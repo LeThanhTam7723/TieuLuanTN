@@ -40,7 +40,7 @@ public class ChatBotService implements IChatBotService{
         messages.add(Map.of("role", "user", "content", prompt));
 
         Map<String, Object> body = new HashMap<>();
-        body.put("model", "llama3.2-viet");
+        body.put("model", "llama3.2-viet:latest");
         body.put("messages", messages);
         body.put("stream", false);
 
@@ -58,7 +58,6 @@ public class ChatBotService implements IChatBotService{
 
             String answer = node.get("message").get("content").asText();
 
-            // 🔥 RẤT QUAN TRỌNG: append câu trả lời của AI
             messages.add(Map.of("role", "assistant", "content", answer));
 
             return answer;

@@ -22,8 +22,15 @@ public class ProductCreationRequest {
     @Size(min = 3, max = 100, message = "Product name must be between 3 and 100 characters")
     private String name;
 
+    @NotBlank(message = "Product name is required")
+    @Size(min = 3, max = 100, message = "Product name must be between 3 and 100 characters")
+    private String nameEn;
+
     @Size(max = 2000, message = "Description cannot exceed 2000 characters")
     private String description;
+
+    @Size(max = 2000, message = "Description cannot exceed 2000 characters")
+    private String descriptionEn;
 
     @NotNull(message = "Base price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Base price must be greater than 0")

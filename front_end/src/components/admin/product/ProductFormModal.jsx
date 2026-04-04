@@ -105,7 +105,9 @@ const ProductFormModal = ({ title, product, onSubmit, onClose, showCustomMessage
     const handleSubmitMainProduct = (data) => {
         const dataToSubmit = {
             name: data.name,
+            nameEn:data.nameEn,
             description: data.description || null,
+            descriptionEn: data.descriptionEn ||null,
             basePrice: parseFloat(data.basePrice),
             slug: data.slug,
             brandId: Number(data.brandId),

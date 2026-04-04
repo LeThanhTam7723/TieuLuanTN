@@ -90,31 +90,51 @@ export default function VoucherFormModal({ onClose, onSuccess, voucher}) {
             setForm({ ...form, description: e.target.value });
             }}
           />
-          <input
-            type="number"
-            className="w-full border p-2 rounded"
-            placeholder="Số lượng sử dụng"
-            value={Number(form.usageLimit)}
-            onChange={e => setForm({ ...form, usageLimit: e.target.value })}
-          />
+         <div className="flex items-center gap-3">
+            <label className=" text-sm font-medium text-gray-700">
+              Số lượng sử dụng
+            </label>
+            <input
+              type="number"
+              className="flex-1 border p-2 rounded"
+              value={form.usageLimit}
+              onChange={(e) =>
+                setForm({ ...form, usageLimit: Number(e.target.value) })
+              }
+            />
+          </div>
 
-          <input
-            type="number"
-            className="w-full border p-2 rounded"
-            placeholder="Giá trị giảm"
-            value={Number(form.discountValue)}
-            onChange={e => setForm({ ...form, discountValue: e.target.value })}
-          />
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium text-gray-700">
+              Giá trị giảm
+            </label>
+            <input
+              type="number"
+              className="flex-1 border p-2 rounded"
+              value={form.discountValue}
+              onChange={(e) =>
+                setForm({ ...form, discountValue: Number(e.target.value) })
+              }
+            />
+          </div>
 
-          <input
-            type="number"
-            className="w-full border p-2 rounded"
-            placeholder="Đơn tối thiểu"
-            value={Number(form.minimumOrderAmount)}
-            onChange={e =>
-              setForm({ ...form, minimumOrderAmount: e.target.value })
-            }
-          />
+          {/* Đơn tối thiểu */}
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-medium text-gray-700">
+              Đơn tối thiểu
+            </label>
+            <input
+              type="number"
+              className="flex-1 border p-2 rounded"
+              value={form.minimumOrderAmount}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  minimumOrderAmount: Number(e.target.value),
+                })
+              }
+            />
+          </div>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-700">
               Hoạt động

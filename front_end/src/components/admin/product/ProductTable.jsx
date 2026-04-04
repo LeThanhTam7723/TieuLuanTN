@@ -23,7 +23,7 @@ const ProductTable = ({
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Giới tính</th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Nổi bật</th>
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Hoạt động</th>
-                    <th className="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider">Hành động</th> {/* Căn giữa tiêu đề */}
+                    <th className="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider">Hành động</th> 
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-100">

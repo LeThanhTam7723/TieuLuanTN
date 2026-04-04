@@ -55,7 +55,9 @@ public enum ErrorCode {
     CART_NOT_EXISTED(1035, "Cart not existed", HttpStatus.NOT_FOUND),
     CART_ITEM_NOT_EXISTED(1036, "Cart item not existed", HttpStatus.NOT_FOUND),
     REVIEW_NOT_EXISTED(1037, "Review not existed", HttpStatus.NOT_FOUND),
-    ORDER_REFUND_EXISTED(1038, "Order item đã có yêu cầu hoàn tiền", HttpStatus.NOT_FOUND);
+    ORDER_REFUND_EXISTED(1038, "Order item đã có yêu cầu hoàn tiền", HttpStatus.NOT_FOUND),
+    ONLY_FIVE_PICTURES(1039, "Chỉ tối đa 5 ảnh", HttpStatus.BAD_REQUEST),
+    ;
 
     private final int code;
     private final String message;
